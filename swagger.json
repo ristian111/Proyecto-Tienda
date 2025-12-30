@@ -1,0 +1,1381 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Tienda",
+    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos y Faturas de una tienda.",
+    "version": "1.1.0"
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000"
+    }
+  ],
+  "tags":[
+    {
+    "name": "Categorías",
+    "description": "Todo sobre la gestión de Categorías"
+    },
+    {
+    "name": "Clientes",
+    "description": "Todo sobre la gestión de Clientes"
+    },
+    {
+    "name": "Productos",
+    "description": "Todo sobre la gestión de Productos"
+    },
+    {
+    "name": "Inventarios",
+    "description": "Todo sobre la gestión de Inventarios"
+    },
+    {
+    "name": "Usuarios",
+    "description": "Todo sobre la gestión de Usuarios"
+    },
+    {
+    "name": "Pedidos",
+    "description": "Todo sobre la gestión de Pedidos"
+    },
+    {
+    "name": "Facturas",
+    "description": "Todo sobre la gestión de Facturas"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  
+  "paths": {
+    "/categorias": {
+      "get": {
+        "tags":["Categorías"],
+        "summary": "Listar todos las categorías",
+        "description":"Este endpoint permite obtener un listado completo de las categorías registrados en el sistema. La respuesta incluye información básica como nombre, descripción y referencia de cada categoría.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de categorías.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "descripcion": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "nombre": "Alimentos por lb",
+                        "descripcion": "Destinado a productos que se venden por libras",
+                        "referencia": "5a0a22fa-83b9-45b8-b37d-bbe5b45b7838"
+                      }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Categorías"],
+        "summary": "Registrar una nueva categoría",
+        "description": "Este endpoint permite registrar una nueva categoría en el sistema. Requiere enviar un objeto JSON con los datos de la categoría como nombre y decripción.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "descripcion"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "descripcion": { "type": "string" }
+                },
+                "example": {
+                  "nombre": "Alimentos por lb",
+                  "descripcion": "Destinado a productos que se venden por libras"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la categoría fue registrada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Categoria registrada exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categorias/{ref}": {
+      "put": {
+        "tags":["Categorías"],
+        "summary": "Editar categoría existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "descripcion"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "descripcion": { "type": "string" }
+                },
+                "example": {
+                  "nombre": "Alimentos por lb",
+                  "descripcion": "Destinado a productos que se venden por libras"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la categoria fue editada correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Categoria Editada"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Categorías"],
+        "summary": "Eliminar una categoria por referencia",
+        "description":"Este endpoint permite eliminar una categoria del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una categoria existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la categoria fue eliminada correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Categoria Eliminada"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/clientes": {
+      "get": {
+        "tags":["Clientes"],
+        "summary": "Listar todos los clientes",
+        "description":"Este endpoint permite obtener un listado completo de los clientes registrados en el sistema. La respuesta incluye información básica como nombre, teléfono, dirección y referencia de cada cliente.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de clientes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "teléfono": { "type": "string" },
+                      "dirección": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "nombre": "Pedro",
+                        "teléfono": "3048831247",
+                        "dirección": "Cra 45 #12-65",
+                        "referencia": "9a0a22ba-83b9-45b8-b37d-bbe5b45b7562"
+                      }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Clientes"],
+        "summary": "Registrar un nuevo cliente",
+        "description": "Este endpoint permite registrar un nuevo cliente en el sistema. Requiere enviar un objeto JSON con los datos del cliente como nombre, teléfono y dirección",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "telefono", "direccion"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "telefono": { "type": "string" },
+                  "direccion": { "type": "string" }
+                },
+                "example": {
+                  "nombre": "Pedro",
+                  "telefono": "3048831247",
+                  "direccion": "Cra 45 #12-65"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el cliente fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Cliente Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/clientes/{ref}": {
+      "put": {
+        "tags":["Clientes"],
+        "summary": "Editar cliente existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "telefono", "direccion"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "telefono": { "type": "string" },
+                  "direccion": { "type": "string" }
+                },
+                "example": {
+                  "nombre": "Pedro",
+                  "telefono": "3048831247",
+                  "direccion": "Cra 45 #12-65"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el cliente fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Cliente Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Clientes"],
+        "summary": "Eliminar un cliente por referencia",
+        "description":"Este endpoint permite eliminar un cliente del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un cliente existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el cliente fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Cliente Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/productos": {
+      "get": {
+        "tags":["Productos"],
+        "summary": "Listar todos los productos",
+        "description":"Este endpoint permite obtener un listado completo de los productos registrados en el sistema. La respuesta incluye información básica como nombre, precio de venta, precio de compra, unidad por medida, referencia de cada categoria y referencia de cada producto.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de productos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "precio_venta": { "type": "float" },
+                      "precio_compra": { "type": "float" },
+                      "unidad_medida": { "type": "string" },
+                      "ref_categoria": { "type": "integer" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "nombre": "Arroz",
+                        "precio_venta": 7500,
+                        "precio_compra": 5000,
+                        "unidad_medida": "1 lb",
+                        "ref_categoria": "3a0a22fa-83b9-45b8-b37d-bbe5b45b7838",
+                        "referencia": "5a0f22ba-83b9-45b8-b37d-bbe5b45b7838"
+                      }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Productos"],
+        "summary": "Registrar un nuevo producto",
+        "description": "Este endpoint permite registrar un nuevo producto en el sistema. Requiere enviar un objeto JSON con los datos del producto como nombre, precio de venta, precio de compra, unidad por medida y referencia de la categoria.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "precio_venta": { "type": "float" },
+                  "precio_compra": { "type": "float" },
+                  "unidad_medida": { "type": "string" },
+                  "ref_categoria": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Arroz",
+                    "precio_venta": 7500,
+                    "precio_compra": 5000,
+                    "unidad_medida": "1 lb",
+                    "ref_categoria": ""
+                }     
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el producto fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Producto Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/productos/{ref}": {
+      "put": {
+        "tags":["Productos"],
+        "summary": "Editar producto existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "precio_venta": { "type": "float" },
+                  "precio_compra": { "type": "float" },
+                  "unidad_medida": { "type": "string" },
+                  "ref_categoria": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Arroz",
+                    "precio_venta": 7500,
+                    "precio_compra": 5000,
+                    "unidad_medida": "1 lb",
+                    "ref_categoria": ""
+                  }     
+                }
+              }
+            }
+          },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el producto fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Producto Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Productos"],
+        "summary": "Eliminar un producto por referencia",
+        "description":"Este endpoint permite eliminar un producto del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un producto existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el producto fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Producto Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/inventarios": {
+      "get": {
+        "tags":["Inventarios"],
+        "summary": "Listar todos los inventarios",
+        "description":"Este endpoint permite obtener un listado completo de los inventarios registrados en el sistema. La respuesta incluye información básica como producto_id, cantidad_actual, cantidad_reservada, punto_reorden, ultima_actualización y referencia de cada inventario.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de inventarios.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ref_producto": { "type": "string" },
+                      "cantidad_actual": { "type": "integer" },
+                      "cantidad_reservada": { "type": "integer" },
+                      "punto_reorden": { "type": "integer" },
+                      "ultima_actualización": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "ref_producto": "3a0f22ba-83b9-45b8-b37d-bbe5b45b7838",
+                        "cantidad_actual": 20,
+                        "cantidad_reservada": 4,
+                        "punto_reorden": 7,
+                        "ultima_actualización": "2025-12-18 17:30:28",
+                        "referencia": "7a0g22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Inventarios"],
+        "summary": "Registrar un nuevo inventario",
+        "description": "Este endpoint permite registrar un nuevo inventario en el sistema. Requiere enviar un objeto JSON con los datos del inventario como producto_id, cantidad_actual, cantidad_reservada y punto_reorden.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_producto", "cantidad_actual", "cantidad_reservada", "punto_reorden"],
+                "properties": {
+                  "ref_producto": { "type": "string" },
+                  "cantidad_actual": { "type": "integer" },
+                  "cantidad_reservada": { "type": "integer" },
+                  "punto_reorden": { "type": "integer" }
+                },
+                "example": 
+                  {
+                    "ref_producto": "",
+                    "cantidad_actual": 20,
+                    "cantidad_reservada": 4,
+                    "punto_reorden": 7
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el inventario fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Inventario Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/inventarios/{ref}": {
+      "put": {
+        "tags":["Inventarios"],
+        "summary": "Editar inventario existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_producto", "cantidad_actual", "cantidad_reservada", "punto_reorden"],
+                "properties": {
+                  "ref_producto": { "type": "string" },
+                  "cantidad_actual": { "type": "integer" },
+                  "cantidad_reservada": { "type": "integer" },
+                  "punto_reorden": { "type": "integer" }
+                },
+                "example": 
+                  {
+                    "ref_producto": "",
+                    "cantidad_actual": 20,
+                    "cantidad_reservada": 4,
+                    "punto_reorden": 7
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el inventario fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Inventario Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Inventarios"],
+        "summary": "Eliminar un inventario por referencia",
+        "description":"Este endpoint permite eliminar un inventario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un inventario existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el inventario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Inventario Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/usuarios": {
+      "get": {
+        "tags":["Usuarios"],
+        "summary": "Listar todos los usuarios",
+        "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de usuarios.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "username": { "type": "string" },
+                      "password_hash": { "type": "string" },
+                      "rol": { "type": "string" },
+                      "ultimo_acceso": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "producto_id": "Juan",
+                        "username": "JuanADMINISTRADOR",
+                        "password_hash": "A123-AU2U3$ja",
+                        "rol": "Administrador",
+                        "ultimo_acceso": "2025-12-18 17:30:28",
+                        "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                    }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Usuarios"],
+        "summary": "Registrar un nuevo usuario",
+        "description": "Este endpoint permite registrar un nuevo usuario en el sistema. Requiere enviar un objeto JSON con los datos del usuario como nombre, username, password_hash y rol.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "username", "password_hash", "rol"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "username": { "type": "string" },
+                  "password_hash": { "type": "string" },
+                  "rol": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Juan",
+                    "username": "JuanADMINISTRADOR",
+                    "password_hash": "A123-AU2U3$ja",
+                    "rol": "Administrador"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{ref}": {
+      "put": {
+        "tags":["Usuarios"],
+        "summary": "Editar usuario existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "username", "password_hash", "rol"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "username": { "type": "string" },
+                  "password_hash": { "type": "string" },
+                  "rol": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Juan",
+                    "username": "JuanADMINISTRADOR",
+                    "password_hash": "A123-AU2U3$ja",
+                    "rol": "Administrador"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Usuarios"],
+        "summary": "Eliminar un usuario por referencia",
+        "description":"Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un usuario existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/pedidos": {
+      "get": {
+        "tags":["Pedidos"],
+        "summary": "Listar todos los pedidos",
+        "description":"Este endpoint permite obtener un listado completo de los pedidos registrados en el sistema. La respuesta incluye información básica como ref_cliente, ref_usuario, estado, total, direccion_entrega, fecha_hora y referencia de cada pedido.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de pedidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ref_cliente": { "type": "string" },
+                      "ref_usuario": { "type": "string" },
+                      "estado": { "type": "string" },
+                      "total": { "type": "float" },
+                      "direccion_entrega": { "type": "string" },
+                      "fecha_hora": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "ref_cliente": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                        "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                        "estado": "pendiente",
+                        "total": 35500,
+                        "direccion_entrega": "Cra 10b #54 - 103",
+                        "fecha_hora": "2025-12-18 17:30:28",
+                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Pedidos"],
+        "summary": "Registrar un nuevo pedido",
+        "description": "Este endpoint permite registrar un nuevo pedido en el sistema. Requiere enviar un objeto JSON con los datos del pedido como ref_cliente, ref_usuario, estado, total y direccion_entrega.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_cliente", "ref_usuario", "estado", "total", "direccion_entrega"],
+                "properties": {
+                  "ref_cliente": { "type": "string" },
+                  "ref_usuario": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "total": { "type": "float" },
+                  "direccion_entrega": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "ref_cliente": "",
+                    "ref_usuario": "",
+                    "estado": "pendiente",
+                    "total": 27500,
+                    "direccion_entrega": "Cra 10b #54 - 103"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el pedido fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Pedido Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pedidos/{ref}": {
+      "put": {
+        "tags":["Pedidos"],
+        "summary": "Editar pedido existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_cliente", "ref_usuario", "estado", "total", "direccion_entrega"],
+                "properties": {
+                  "ref_cliente": { "type": "string" },
+                  "ref_usuario": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "total": { "type": "float" },
+                  "direccion_entrega": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "ref_cliente": "",
+                    "ref_usuario": "",
+                    "estado": "pendiente",
+                    "total": 27500,
+                    "direccion_entrega": "Cra 10b #54 - 103"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el pedido fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Pedido Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Pedidos"],
+        "summary": "Eliminar un pedido por referencia",
+        "description":"Este endpoint permite eliminar un pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un pedido existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el pedido fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Pedido Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/facturas": {
+      "get": {
+        "tags":["Facturas"],
+        "summary": "Listar todas las facturas",
+        "description":"Este endpoint permite obtener un listado completo de las facturas registradas en el sistema. La respuesta incluye información básica como ref_pedido, numero_factura, total, estado, fecha_emision y referencia de cada factura.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de facturas.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "ref_pedido": { "type": "string" },
+                      "numero_factura": { "type": "string" },
+                      "estado": { "type": "string" },
+                      "total": { "type": "float" },
+                      "fecha_emision": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                        "numero_factura": "FAC 001",
+                        "estado": "emitida",
+                        "total": 8700,
+                        "fecha_emision": "2025-12-18 17:30:28",
+                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Facturas"],
+        "summary": "Registrar una nueva factura",
+        "description": "Este endpoint permite registrar una nueva factura en el sistema. Requiere enviar un objeto JSON con los datos de la factura como ref_pedido, numero_factura, total, estado.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_pedido", "numero_factura", "estado", "total"],
+                "properties": {
+                  "ref_pedido": { "type": "string" },
+                  "numero_factura": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "total": { "type": "float" }
+                },
+                "example": 
+                  {
+                    "ref_pedido": "",
+                    "numero_factura": "FAC 001",
+                    "estado": "pagada",
+                    "total": 50000
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la factura fue registrada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Factura Registrada"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/facturas/{ref}": {
+      "put": {
+        "tags":["Facturas"],
+        "summary": "Editar factura existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["ref_pedido", "numero_factura", "estado", "total"],
+                "properties": {
+                  "ref_pedido": { "type": "string" },
+                  "numero_factura": { "type": "string" },
+                  "estado": { "type": "string" },
+                  "total": { "type": "float" }
+                },
+                "example": 
+                  {
+                    "ref_pedido": "",
+                    "numero_factura": "FAC 001",
+                    "estado": "pagada",
+                    "total": 50000
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la factura fue editada correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Factura Editada"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Facturas"],
+        "summary": "Eliminar una factura por referencia",
+        "description":"Este endpoint permite eliminar una factura del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una factura existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que la factura fue eliminada correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Factura Eliminada"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    }
+  }
+}
