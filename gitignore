@@ -1,3 +1,5 @@
 **/.venv/
-**/.env/
-**/requirements.txt/
+.env
+
+__pycache__/
+*.pyc
