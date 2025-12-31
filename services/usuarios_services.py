@@ -67,3 +67,16 @@ def obtener_usuario_por_uuid(uuid):
     except Exception as e: raise e
     finally: 
         if cursor: cursor.close()
+
+def obtener_usuario_por_username(user):
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor(DictCursor)
+        sql = ("SELECT uuid, username, password_hash, rol FROM usuarios WHERE username = %s")
+        cursor.execute(sql,(user,))
+        return cursor.fetchone()
+    except Exception as e: 
+        raise e
+    finally: 
+        if cursor: 
+            cursor.close()

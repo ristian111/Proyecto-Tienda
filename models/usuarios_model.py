@@ -17,4 +17,3 @@ class Usuario:
             'rol'          : self.rol,
             'ultimo_acceso': self.ultimo_acceso
         }
-    

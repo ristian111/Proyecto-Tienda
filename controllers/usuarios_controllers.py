@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app
-from services.usuarios_service import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_uuid
+from services.usuarios_services import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_uuid
 
 def usu_listado():
     datos = listar_usuarios()
@@ -35,7 +35,7 @@ def usu_registro():
     
     pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash)
     
-    commit = registrar_usuario(nombre, username, pass_encriptado, rol)
+    commit = registrar_usuario(nombre, username, pass_encriptado, rol) 
     if commit:
         return jsonify({"mensaje": "Usuario registrado exitosamente"}), 201
     
