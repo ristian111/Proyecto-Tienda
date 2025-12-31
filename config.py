@@ -9,3 +9,4 @@ class Config:
     MYSQL_DB       = os.getenv('MYSQL_DATABASE')
     MYSQL_PORT     = int(os.getenv('MYSQL_PORT'))
     API_KEY        = os.getenv('API_KEY')
+    FRONTEND_URL   = os.getenv('FRONTEND_URL')
