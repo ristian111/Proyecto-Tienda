@@ -5,21 +5,26 @@ import jwt
 def token_requerido(f):
     @wraps(f)
     def decorador(*args, **kwargs):
-        auth = request.headers.get('Authorization')
+        datos = request.headers.get('Authorization')
 
-        if not auth:
-            return jsonify({"mensaje": "Token requerido"}), 401
-
+        if not datos:
+            return jsonify({"mensaje":"Ingreso no válido"}), 401
+        
         try:
-            token = auth.split(" ")[1]
+            token = datos.split(" ")[1]
+
             payload = jwt.decode(
                 token,
                 current_app.config['SECRET_KEY'],
                 algorithms=["HS256"]
             )
+
             request.usuario = payload
-        except:
+
+        except jwt.InvalidTokenError:
             return jsonify({"mensaje": "Token inválido"}), 401
+        except jwt.ExpiredSignatureError:
+             return jsonify({"mensaje": "Token expirado"}), 401
 
         return f(*args, **kwargs)
     return decorador

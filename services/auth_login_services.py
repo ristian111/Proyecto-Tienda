@@ -1,6 +1,6 @@
 from flask import current_app
-import jwt
 from datetime import datetime, timedelta
+import jwt
 from services.usuarios_services import obtener_usuario_por_username
 
 def autenticar_usuario(username, password):
@@ -8,17 +8,17 @@ def autenticar_usuario(username, password):
 
     if not usuario:
         return None
-
+    
     if not current_app.bcrypt.check_password_hash(
         usuario['password_hash'],
         password
     ):
         return None
-
+    
     payload = {
-        "uuid": usuario['uuid'],
-        "rol": usuario['rol'],
-        "exp": datetime.utcnow() + timedelta(hours=2)
+        'uuid': usuario['uuid'],
+        'rol' : usuario['rol'],
+        'exp' : datetime.utcnow() + timedelta(hours=2)
     }
 
     token = jwt.encode(
