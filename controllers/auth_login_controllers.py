@@ -23,4 +23,5 @@ def auth_login():
     if not resultado:
         return jsonify({"mensaje": "Credenciales inválidas"}), 401
     
-    return jsonify(resultado), 200 
+    return jsonify({"mensaje": "Token generado correctamente",
+                    "token": resultado}), 200

@@ -18,7 +18,7 @@ CORS(app,
          }
      })
 bcrypt = Bcrypt(app)
-app.bcrypt = bcrypt
+app.bcrypt = bcrypt 
 
 cargarRutas(app)
 app.run(debug=True, port=5000)

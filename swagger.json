@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "API Tienda",
-    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos y Faturas de una tienda.",
+    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos y Facturas de una tienda utilizando API Key y JWT.",
     "version": "1.1.0"
   },
   "components": {
@@ -11,6 +11,11 @@
         "type": "apiKey",
         "in": "header",
         "name": "Authorization"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   },
@@ -47,11 +52,16 @@
     {
     "name": "Facturas",
     "description": "Todo sobre la gestión de Facturas"
+    },
+    {
+    "name": "Autenticacion",
+    "description": "Valida credenciales del usuario"
     }
   ],
   "security": [
     {
-      "ApiKeyAuth": []
+      "ApiKeyAuth": [],
+      "BearerAuth": []
     }
   ],
   
@@ -800,6 +810,9 @@
     },
     "/usuarios": {
       "get": {
+        "security": [
+          { "BearerAuth": [] }
+        ],
         "tags":["Usuarios"],
         "summary": "Listar todos los usuarios",
         "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
@@ -1376,6 +1389,69 @@
           }
         }
       }     
+    },
+    "/v1/auth/login": {
+      "post": {
+        "tags": ["Autenticacion"],
+        "summary": "Iniciar sesión",
+        "description": "Este endpoint permite iniciar sesión al usuario. Requiere enviar un objeto JSON con los datos del usuario como username y password",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": { "type": "string" },
+                  "password": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "username": "JuanADMINISTRADOR",
+                    "password": "1234567890"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve el token generado correctamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" },
+                    "rol": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Token generado",
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMDc5NTM3YTItYTBlMS00MWRiLWI2MmYtMGI4ZjljMTBlNjM5Iiwicm9sIjoiVGVuZGVybyIsImV4cCI6MTc2NzczNDExNH0.Cpo2YZNtyV8VS5mpZYZ1tFn2s2rm-86LwMo7Hk8hwqU"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
