@@ -3,27 +3,38 @@ from models.pedidos_model import Pedido
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 
+# Toma las filas de la base de datos utilizando inner join para 
+# ref_cliente, ref_usuario, ademas del nombre del cliente donde luego se convierte en un diccionario 
 def listar_pedidos():
-    pedidos = current_app.mysql.connection.cursor()
-    sql = """
-        SELECT
-            pe.id,
-            pe.uuid,
-            pe.estado, 
-            pe.total,
-            pe.direccion_entrega,
-            pe.fecha_hora,
-            cli.nombre as nombre_cliente,
-            cli.uuid as referencia_cliente,
-            u.uuid as referencia_usuario
-            FROM pedidos pe INNER JOIN clientes cli on pe.cliente_id = cli.id
-            INNER JOIN usuarios u on pe.usuario_id = u.id
-    """
-    pedidos.execute(sql)
-    datos = pedidos.fetchall()
-    resultado = [Pedido(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]).ped_diccionario() for x in datos]
-    return resultado
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor()
+        sql = """
+            SELECT
+                pe.id,
+                pe.uuid,
+                pe.estado, 
+                pe.total,
+                pe.direccion_entrega,
+                pe.fecha_hora,
+                cli.nombre as nombre_cliente,
+                cli.uuid as referencia_cliente,
+                u.uuid as referencia_usuario
+                FROM pedidos pe INNER JOIN clientes cli on pe.cliente_id = cli.id
+                INNER JOIN usuarios u on pe.usuario_id = u.id
+        """
+        cursor.execute(sql)
+        datos = cursor.fetchall()
+        resultado = [Pedido(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]).ped_diccionario() for x in datos]
+        return resultado
+    except Exception as e:
+        current_app.mysql.connection.rollback()
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
 
+# Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id):
     cursor = None
     try:
@@ -41,6 +52,7 @@ def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id):
         if cursor:
             cursor.close()
 
+# Utiliza uuid para acceder al pedido y retorna True o False si modifico el pedido
 def actualizar_pedido(uuid, estado, total, direccion_entrega, cliente_id, usuario_id):
     cursor = None
     try:
@@ -71,6 +83,7 @@ def eliminar_pedido(uuid):
         if cursor:
             cursor.close()
 
+# Devuelve en forma de diccionario la fila del pedido para su uso en la validación de las demas tablas
 def obtener_pedido_por_uuid(uuid):
     cursor = None
     try:

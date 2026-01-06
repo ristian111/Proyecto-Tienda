@@ -4,10 +4,12 @@ from services.clientes_services import obtener_cliente_por_uuid
 from services.usuarios_services import obtener_usuario_por_uuid
 
 def ped_listado():
+    # Devuelve en formato json el listado de pedidos junto al codigo http 
     datos = listar_pedidos()
     return jsonify(datos), 200
 
 def ped_registro():
+    # Valida que no existan campos vacios
     data = request.get_json()
 
     requeridos = ["estado", "total", "direccion_entrega", "ref_cliente", "ref_usuario"]
@@ -16,17 +18,20 @@ def ped_registro():
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
 
+    # Guarda los valores de la petición en variables
     estado            = data['estado']
     total             = data['total']
     direccion_entrega = data['direccion_entrega']
     ref_cliente       = data['ref_cliente']
     ref_usuario       = data['ref_usuario']
 
+    # Valida los campos numericos para verificar que cumplen esta regla
     try:
         total = float(total)
     except ValueError:
         return jsonify({"mensaje": "El campo total debe ser un número entero"}), 400
-    
+
+    # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     if not isinstance(estado, str) or len(estado.strip()) == 0:
         return jsonify({"mensaje": "'estado' debe ser una cadena de texto o no puede estar vacio"}), 400
     
@@ -38,15 +43,18 @@ def ped_registro():
     
     if not isinstance(ref_usuario, str) or len(ref_usuario.strip()) == 0:
         return jsonify({"mensaje": "'ref_usuario' debe ser una cadena de texto o no puede estar vacio"}), 400
-    
+
+    # Revisa si la referencia del cliente existe a través del uuid
     cliente = obtener_cliente_por_uuid(ref_cliente)
     if not cliente:
         return jsonify({"mensaje": "El cliente no existe"}), 404
-    
+
+    # Revisa si la referencia del usuario existe a través del uuid
     usuario = obtener_usuario_por_uuid(ref_usuario)
     if not usuario:
         return jsonify({"mensaje": "El usuario no existe"}), 404
-    
+
+    # Donde se guarda en las variables para acceder a la id del cliente y del usuario
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
@@ -57,7 +65,7 @@ def ped_registro():
     return jsonify({"mensaje": "Error al registrar pedido"}), 500
 
 def ped_eliminacion(uuid):
-    
+    # Valida la existencia del inventario a través del uuid 
     pedido = obtener_pedido_por_uuid(uuid)
 
     if pedido:
@@ -68,6 +76,7 @@ def ped_eliminacion(uuid):
         return jsonify({"mensaje": "Error al eliminar pedido"}), 500
     return jsonify({"mensaje": "El pedido no existe"}), 404
 
+# Se valida de la misma manera que al registrar
 def ped_actualizacion(uuid):
     data = request.get_json()
 

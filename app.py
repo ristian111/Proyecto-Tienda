@@ -2,7 +2,7 @@ from flask import Flask
 from routes import cargarRutas
 from flask_mysqldb import MySQL
 from config import Config
-from flask_cors import CORS # pyright: ignore[reportMissingModuleSource]
+from flask_cors import CORS 
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)

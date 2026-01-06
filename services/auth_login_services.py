@@ -1,30 +1,25 @@
 from flask import current_app
-from datetime import datetime, timedelta
-import jwt
+from models.auth_login_model import generar_token
 from services.usuarios_services import obtener_usuario_por_username
 
 def autenticar_usuario(username, password):
+    # Valida que el usuario exista y este autenticado
     usuario = obtener_usuario_por_username(username)
 
     if not usuario:
         return None
     
+    # Relaciona la contraseña hash con la que contraseña que intento el usuario
     if not current_app.bcrypt.check_password_hash(
         usuario['password_hash'],
         password
     ):
         return None
     
-    payload = {
-        'uuid': usuario['uuid'],
-        'rol' : usuario['rol'],
-        'exp' : datetime.utcnow() + timedelta(hours=2)
-    }
+    # Valida la creación del token mandando el usuario autenticado
+    codificar_token = generar_token(usuario)
 
-    token = jwt.encode(
-        payload,
-        current_app.config['SECRET_KEY'],
-        algorithm="HS256"
-    )
-
-    return token
+    if not codificar_token:
+        return None
+    
+    return codificar_token
