@@ -6,7 +6,7 @@ usuarios_bp = Blueprint('usuarios', __name__)
 
 @usuarios_bp.route('/', methods=['GET'])
 @token_requerido
-@rol_requerido("Tendero")
+@rol_requerido("Administrador")
 def listar():
     datos = usu_listado()
     return datos

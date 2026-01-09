@@ -7,10 +7,12 @@ from .inventarios import inventarios_bp
 from .pedidos import pedidos_bp
 from .auth_login import auth_login_bp
 from .swagger import swagger_bp
+from .reportes import reportes_bp
 
 def cargarRutas(app):
+    app.register_blueprint(reportes_bp, url_prefix='/reportes')
     app.register_blueprint(swagger_bp, url_prefix='/swagger')
-    app.register_blueprint(auth_login_bp, url_prefix='/v1/auth')
+    app.register_blueprint(auth_login_bp, url_prefix='/auth')
     app.register_blueprint(usuarios_bp, url_prefix='/usuarios')
     app.register_blueprint(facturas_bp, url_prefix='/facturas')
     app.register_blueprint(productos_bp, url_prefix='/productos')

@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, request
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 from models.inventarios_model import Inventario
@@ -34,8 +34,10 @@ def listar_inventarios():
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto_reorden):
     cursor = None
+    usuario_id = request.usuario["uuid"]
     try:
         cursor = current_app.mysql.connection.cursor()
+        cursor.execute("SET @usuario_app = %s", (usuario_id,))
         uuid = str(uuidGenerado.uuid4())
         sql = "INSERT INTO inventarios (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(sql, (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden))
@@ -52,8 +54,10 @@ def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto
 # Utiliza uuid para acceder al inventario y retorna True o False si modifico el inventario
 def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden):
     cursor = None
+    usuario_id = request.usuario["uuid"]
     try:
         cursor = current_app.mysql.connection.cursor()
+        cursor.execute("SET @usuario_app = %s", (usuario_id,))
         sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
         cursor.execute(sql, (producto_id, cantidad_actual, cantidad_reservada, punto_reorden, uuid))
         current_app.mysql.connection.commit()
@@ -67,8 +71,10 @@ def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada
 
 def eliminar_inventario(uuid):
     cursor = None
+    usuario_id = request.usuario["uuid"]
     try:
         cursor = current_app.mysql.connection.cursor()
+        cursor.execute("SET @usuario_app = %s", (usuario_id,))
         sql = "DELETE FROM inventarios WHERE uuid = %s"
         cursor.execute(sql, (uuid,))
         current_app.mysql.connection.commit()

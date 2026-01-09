@@ -657,6 +657,9 @@
       },
 
       "post": {
+        "security": [
+          { "BearerAuth": [] }
+        ],
         "tags":["Inventarios"],
         "summary": "Registrar un nuevo inventario",
         "description": "Este endpoint permite registrar un nuevo inventario en el sistema. Requiere enviar un objeto JSON con los datos del inventario como producto_id, cantidad_actual, cantidad_reservada y punto_reorden.",
@@ -1390,7 +1393,7 @@
         }
       }     
     },
-    "/v1/auth/login": {
+    "/auth/login": {
       "post": {
         "tags": ["Autenticacion"],
         "summary": "Iniciar sesión",
