@@ -99,7 +99,7 @@ def fac_actualizacion(uuid):
         return jsonify({"mensaje": "'ref_pedido' debe ser una cadena de texto o no puede estar vacio"}), 400
     
     if total <= 0:
-        return jsonify({"mensaje": "El total no puede ser negativo"}), 400
+        return jsonify({"mensaje": "El total no puede ser negativo o igual a cero"}), 400
     
     pedido = obtener_pedido_por_uuid(ref_pedido)
 

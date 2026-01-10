@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "API Tienda",
-    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos y Facturas de una tienda utilizando API Key y JWT.",
+    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos, Detalles y Facturas de una tienda utilizando API Key y JWT.",
     "version": "1.1.0"
   },
   "components": {
@@ -54,8 +54,12 @@
     "description": "Todo sobre la gestión de Facturas"
     },
     {
-    "name": "Autenticacion",
+    "name": "Autenticación",
     "description": "Valida credenciales del usuario"
+    },
+    {
+    "name": "Detalles",
+    "description": "Todo sobre los detalles de pedidos"
     }
   ],
   "security": [
@@ -1202,6 +1206,197 @@
         }
       }     
     },
+    "/detalles/pedidos": {
+      "get": {
+        "tags":["Detalles"],
+        "summary": "Listar todos los detalles de pedidos",
+        "description":"Este endpoint permite obtener un listado completo de los detalles de pedidos registrados en el sistema. La respuesta incluye información básica como cantidad, precio_unitario, subtotal, ref_pedido, ref_producto y referencia de cada detalle de los pedidos.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de los detalles de pedidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cantidad": { "type": "integer" },
+                      "precio_unitario": { "type": "float" },
+                      "subtotal": { "type": "float" },
+                      "ref_pedido": { "type": "string" },
+                      "ref_producto": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "cantidad": 4,
+                        "precio_unitario": 6500,
+                        "subtotal": 26000,
+                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                        "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Detalles"],
+        "summary": "Registrar unos nuevos detalles de pedido",
+        "description": "Este endpoint permite registrar unos nuevos detalles de pedido en el sistema. Requiere enviar un objeto JSON con los datos de los detalles del pedido como cantidad, precio_unitario, ref_pedido, ref_producto.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cantidad", "precio_unitario", "ref_pedido", "ref_producto"],
+                "properties": {
+                  "cantidad": { "type": "integer" },
+                  "precio_unitario": { "type": "float" },
+                  "ref_pedido": { "type": "string" },
+                  "ref_producto": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "cantidad": 4,
+                    "precio_unitario": 6500,
+                    "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
+                }  
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el detalle pedido fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Detalle pedido Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "faltan parametro en la peticion..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/detalles/pedidos/{ref}": {
+      "put": {
+        "tags":["Detalles"],
+        "summary": "Editar detalle pedido existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["cantidad", "precio_unitario", "ref_pedido", "ref_producto"],
+                "properties": {
+                  "cantidad": { "type": "integer" },
+                  "precio_unitario": { "type": "float" },
+                  "ref_pedido": { "type": "string" },
+                  "ref_producto": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "cantidad": 4,
+                    "precio_unitario": 6500,
+                    "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el detalle pedido fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Detalle pedido Editado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Detalles"],
+        "summary": "Eliminar un detalle pedido por referencia",
+        "description":"Este endpoint permite eliminar un detalle pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un detalle pedido existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el detalle pedido fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Detalle pedido Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
     "/facturas": {
       "get": {
         "tags":["Facturas"],
@@ -1395,7 +1590,7 @@
     },
     "/auth/login": {
       "post": {
-        "tags": ["Autenticacion"],
+        "tags": ["Autenticación"],
         "summary": "Iniciar sesión",
         "description": "Este endpoint permite iniciar sesión al usuario. Requiere enviar un objeto JSON con los datos del usuario como username y password",
         "requestBody": {

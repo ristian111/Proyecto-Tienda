@@ -5,6 +5,7 @@ from .categorias import categorias_bp
 from .clientes import clientes_bp
 from .inventarios import inventarios_bp
 from .pedidos import pedidos_bp
+from .detalle_pedido import detalle_pedido_bp
 from .auth_login import auth_login_bp
 from .swagger import swagger_bp
 from .reportes import reportes_bp
@@ -20,3 +21,4 @@ def cargarRutas(app):
     app.register_blueprint(clientes_bp, url_prefix='/clientes')
     app.register_blueprint(inventarios_bp, url_prefix='/inventarios')
     app.register_blueprint(pedidos_bp, url_prefix='/pedidos')
+    app.register_blueprint(detalle_pedido_bp, url_prefix="/detalles")
