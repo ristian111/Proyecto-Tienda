@@ -1,5 +1,5 @@
 from flask import jsonify, request, current_app
-from services.usuarios_services import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_uuid
+from services.usuarios_services import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_uuid, pedidos_de_un_usuario
 
 def usu_listado():
     # Devuelve en formato json el listado de pedidos junto al codigo http 
@@ -94,3 +94,12 @@ def usu_actualizacion(uuid):
     if commit:
         return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 200
     return jsonify({"mensaje": "Error al actualizar usuario"}), 500
+
+def usu_pedidos_usuario(user):
+
+    commit = pedidos_de_un_usuario(user)
+    if commit:
+        return jsonify({"mensaje": "Usuario encontrado exitosamente",
+                        "pedidos_por_usuario": commit}), 200
+    
+    return jsonify({"mensaje": "Error al buscar usuario"}), 500

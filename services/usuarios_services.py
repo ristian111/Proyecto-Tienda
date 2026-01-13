@@ -80,6 +80,29 @@ def obtener_usuario_por_uuid(uuid):
     finally: 
         if cursor: cursor.close()
 
+# Devuelve en forma de diccionario un registro del numero de pedidos por usuario a traves de su username
+def pedidos_de_un_usuario(user):
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor(DictCursor)
+        sql = """
+            SELECT
+                u.nombre as nombre_de_usuario,
+                count(p.id) as pedidos_por_usuario
+            FROM usuarios u 
+            LEFT JOIN pedidos p on u.id = p.usuario_id
+            WHERE username = %s
+            GROUP BY u.id, u.nombre
+        """
+        cursor.execute(sql, (user,))
+        return cursor.fetchone()
+    except Exception as e:
+        current_app.mysql.connection.rollback()
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
 # Devuelve en forma de diccionario la fila del usuario para poder autenticarlo validando su username, password_hash y rol
 def obtener_usuario_por_username(user):
     cursor = None
