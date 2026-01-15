@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from services.pedidos_services import listar_pedidos, registrar_pedido, actualizar_pedido, eliminar_pedido, obtener_pedido_por_uuid
+from services.pedidos_services import listar_pedidos, registrar_pedido, actualizar_pedido, eliminar_pedido, obtener_pedido_por_uuid, listar_pedidos_pendientes
 from services.clientes_services import obtener_cliente_por_uuid
 from services.usuarios_services import obtener_usuario_por_uuid
 
@@ -125,3 +125,7 @@ def ped_actualizacion(uuid):
         return jsonify({"mensaje": "Pedido actualizado exitosamente"}), 201
     
     return jsonify({"mensaje": "Error al actualizar pedido"}), 500
+
+def ped_listar_pedidos_pendientes():
+    datos = listar_pedidos_pendientes()
+    return jsonify(datos), 200

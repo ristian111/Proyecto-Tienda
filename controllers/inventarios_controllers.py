@@ -1,10 +1,14 @@
 from flask import jsonify, request
-from services.inventarios_services import listar_inventarios, registrar_inventario, actualizar_inventario, eliminar_inventario, obtener_inventario_por_uuid
+from services.inventarios_services import listar_inventarios, registrar_inventario, actualizar_inventario, eliminar_inventario, obtener_inventario_por_uuid, listar_productos_stock_bajo, listar_stock_producto, listar_movimiento_inventario
 from services.productos_services import obtener_producto_por_uuid
 
 def inv_listado():
     # Devuelve en formato json el listado de inventarios junto al codigo http 
     datos = listar_inventarios()
+    return jsonify(datos), 200
+
+def inv_listado_movimiento_inventario():
+    datos = listar_movimiento_inventario()
     return jsonify(datos), 200
 
 def inv_registro():
@@ -119,3 +123,25 @@ def inv_actualizacion(uuid):
     if commit:
         return jsonify({"mensaje": "Inventario actualizado exitosamente"}), 200
     return jsonify({"mensaje": "Error al actualizar inventario"}), 500
+
+def inv_productos_stock_bajo():
+
+    limite = request.args.get("limit", default=1, type=int)
+
+    commit = listar_productos_stock_bajo(limite)
+
+    if commit:
+        return jsonify({"mensaje": "Producto encontrado exitosamente",
+                        "Stock producto": commit}), 200
+    
+    return jsonify({"mensaje": "Error al buscar producto"}), 500
+
+def inv_stock_producto(producto):
+
+    commit = listar_stock_producto(producto)
+        
+    if commit:
+        return jsonify({"mensaje": "Producto encontrado exitosamente",
+                        "Stock producto": commit}), 200
+    
+    return jsonify({"mensaje": "Error al buscar producto"}), 500

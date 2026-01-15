@@ -1,7 +1,7 @@
 from flask import current_app, request
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
-from models.inventarios_model import Inventario
+from models.inventarios_model import Inventario, MovimientoInventario
 
 # Toma las filas de la base de datos utilizando inner join para ref_producto donde luego se convierte en un diccionario 
 def listar_inventarios():
@@ -25,7 +25,6 @@ def listar_inventarios():
         resultado = [Inventario(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).inv_diccionario() for x in datos]
         return resultado
     except Exception as e:
-        current_app.mysql.connection.rollback()
         raise e
     finally:
         if cursor:
@@ -81,6 +80,70 @@ def eliminar_inventario(uuid):
         return cursor.rowcount > 0
     except Exception as e:
         current_app.mysql.connection.rollback()
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
+# Devuelve en forma de diccionario el producto o productos con stock mas bajos
+def listar_productos_stock_bajo(limit):
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor(DictCursor)
+        sql = """
+            SELECT
+                prod.nombre as producto,
+                i.cantidad_actual as inventario_actual,
+                i.cantidad_reservada,
+                i.punto_reorden
+            FROM inventarios i 
+            INNER JOIN productos prod on prod.id = i.producto_id
+            WHERE i.cantidad_actual <= punto_reorden + 2
+            LIMIT %s
+        """
+        cursor.execute(sql, (limit,))
+        return cursor.fetchmany(limit)
+    except Exception as e:
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
+# Devuelve stock del producto buscado
+def listar_stock_producto(producto):
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor(DictCursor)
+        sql = """
+            SELECT
+                prod.nombre as producto,
+                i.cantidad_actual as inventario_actual,
+                i.cantidad_reservada,
+                i.punto_reorden,
+                i.ultima_actualizacion as ultima_modificacion
+            FROM inventarios i 
+            INNER JOIN productos prod on prod.id = i.producto_id
+            WHERE prod.nombre = %s
+        """
+        cursor.execute(sql, (producto,))
+        return cursor.fetchone()
+    except Exception as e:
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
+def listar_movimiento_inventario():
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor()
+        sql = "SELECT * FROM movimiento_inventario"
+        cursor.execute(sql)
+        datos = cursor.fetchall()
+        resultado = [MovimientoInventario(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], 
+                                          x[8], x[9], x[10], x[11]).mov_inv_diccionario() for x in datos]
+        return resultado
+    except Exception as e:
         raise e
     finally:
         if cursor:

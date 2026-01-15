@@ -1,14 +1,34 @@
 from flask import Blueprint
-from controllers.reportes_controllers import clientes_con_mas_pedidos, usuarios_con_mas_pedidos_registrados
+from controllers.reportes_controllers import *
 
 reportes_bp = Blueprint("reportes", __name__)
 
 @reportes_bp.route('/clientes/mas-pedidos', methods=['GET'])
 def listar_clientes_con_mas_pedidos():
-    datos = clientes_con_mas_pedidos()
+    datos = rep_clientes_con_mas_pedidos()
     return datos
 
 @reportes_bp.route('/usuarios/mas-pedidos-registrados', methods=['GET'])
 def listar_usuarios_con_mas_pedidos_registrados():
-    datos = usuarios_con_mas_pedidos_registrados()
+    datos = rep_usuarios_con_mas_pedidos_registrados()
+    return datos
+
+@reportes_bp.route('/productos/mas-vendidos', methods=['GET'])
+def listar_productos_mas_vendidos():
+    datos = rep_productos_mas_vendidos()
+    return datos
+
+@reportes_bp.route('/pedidos/por-fecha', methods=['GET'])
+def listar_pedidos_por_fecha():
+    datos = rep_pedidos_por_fecha()
+    return datos
+
+@reportes_bp.route('/productos/mas-ganancias', methods=['GET'])
+def listar_productos_con_mas_ganancias():
+    datos = rep_productos_mas_ganancias()
+    return datos
+
+@reportes_bp.route('/facturas/ingresos', methods=['GET'])
+def listar_ingresos_ventas():
+    datos = rep_ingresos_generados()
     return datos

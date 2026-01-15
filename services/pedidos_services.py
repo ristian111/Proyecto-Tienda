@@ -34,6 +34,33 @@ def listar_pedidos():
         if cursor:
             cursor.close()
 
+# Devuelve los pedidos pendientes organizados del pedido mas demorado al menos demorado
+def listar_pedidos_pendientes():
+    cursor = None
+    try:
+        cursor = current_app.mysql.connection.cursor(DictCursor)
+        sql = """
+            SELECT
+                p.uuid as id_pedido,
+                c.nombre as nombre_cliente,
+                p.estado as estado_pedido,
+                p.direccion_entrega,
+                p.fecha_hora as hora_pedido,
+                p.total
+            FROM pedidos p
+            INNER JOIN clientes c on p.cliente_id = c.id
+            WHERE p.estado = 'pendiente'
+            ORDER BY p.fecha_hora ASC
+        """
+        cursor.execute(sql)
+        return cursor.fetchall()
+    except Exception as e:
+        current_app.mysql.connection.rollback()
+        raise e
+    finally:
+        if cursor:
+            cursor.close()
+
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id):
     cursor = None

@@ -25,7 +25,6 @@ def listar_productos():
         resultado = [Producto(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).prod_diccionario() for x in datos]
         return resultado
     except Exception as e:
-        current_app.mysql.connection.rollback()
         raise e
     finally:
         if cursor:

@@ -1,14 +1,10 @@
-from abc import ABC, abstractmethod
-
-class Reportes(ABC):
+class ReporteBase:
     def __init__(self, nombre, reporte):
         self.nombre_reporte    = nombre
         self.resultado_reporte = reporte
 
-    @abstractmethod
-    def ejecutar(self):
-        pass
-
-    @abstractmethod
     def rep_diccionario(self):
-        pass
+        return {
+            "nombre_reporte": self.nombre_reporte,
+            "resultados"    : self.resultado_reporte
+        }

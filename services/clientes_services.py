@@ -14,7 +14,6 @@ def listar_clientes():
         resultado = [Cliente(x[0], x[1], x[2], x[3], x[4]).cli_diccionario() for x in datos]
         return resultado
     except Exception as e:
-        current_app.mysql.connection.rollback()
         raise e
     finally:
         if cursor:
