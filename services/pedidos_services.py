@@ -28,7 +28,6 @@ def listar_pedidos():
         resultado = [Pedido(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], x[8]).ped_diccionario() for x in datos]
         return resultado
     except Exception as e:
-        current_app.mysql.connection.rollback()
         raise e
     finally:
         if cursor:
@@ -55,7 +54,6 @@ def listar_pedidos_pendientes():
         cursor.execute(sql)
         return cursor.fetchall()
     except Exception as e:
-        current_app.mysql.connection.rollback()
         raise e
     finally:
         if cursor:

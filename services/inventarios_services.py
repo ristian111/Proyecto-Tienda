@@ -102,7 +102,7 @@ def listar_productos_stock_bajo(limit):
             LIMIT %s
         """
         cursor.execute(sql, (limit,))
-        return cursor.fetchmany(limit)
+        return cursor.fetchall(limit)
     except Exception as e:
         raise e
     finally:

@@ -17,7 +17,8 @@ def listar_facturas():
                 f.fecha_emision,
                 f.estado,
                 ped.uuid
-            FROM facturas f INNER JOIN pedidos p on f.pedido_id = p.id
+            FROM facturas f 
+            INNER JOIN pedidos ped on f.pedido_id = ped.id
         """
         cursor.execute(sql)
         datos = cursor.fetchall()
