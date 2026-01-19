@@ -17,11 +17,11 @@ def prod_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
 
     # Guarda los valores de la petición en variables
-    nombre          = data['nombre']
+    nombre          = data['nombre'].strip()
     precio_venta    = data['precio_venta']
     precio_compra   = data['precio_compra']
-    unidad_medida   = data['unidad_medida']
-    categoria_uuid  = data['ref_categoria']
+    unidad_medida   = data['unidad_medida'].strip()
+    categoria_uuid  = data['ref_categoria'].strip()
 
     # Valida los campos numericos para verificar que cumplen esta regla
     try:
@@ -31,13 +31,13 @@ def prod_registro():
         return jsonify({"mensaje": "Los campos precio_venta y precio_compra deben ser números"}), 400
     
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(nombre, str) or len(nombre.strip()) == 0:
+    if not isinstance(nombre, str) or len(nombre) == 0:
         return jsonify({"mensaje": "El nombre no puede estar vacío"}), 400
     
-    if not isinstance(unidad_medida, str) or len(unidad_medida.strip()) == 0:
+    if not isinstance(unidad_medida, str) or len(unidad_medida) == 0:
         return jsonify({"mensaje": "unidad_medida debe ser una cadena de texto o no puede estar vacia"}), 400
     
-    if not isinstance(categoria_uuid, str) or len(categoria_uuid.strip()) == 0:
+    if not isinstance(categoria_uuid, str) or len(categoria_uuid) == 0:
         return jsonify({"mensaje": "ref_categoria debe ser una cadena de texto o no puede estar vacia"}), 400
 
     # Valida a través de operadores de comparación para asegurar los datos
@@ -84,11 +84,11 @@ def prod_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
-    nombre          = data['nombre']
+    nombre          = data['nombre'].strip()
     precio_venta    = data['precio_venta']
     precio_compra   = data['precio_compra']
-    unidad_medida   = data['unidad_medida']
-    categoria_uuid  = data['ref_categoria']
+    unidad_medida   = data['unidad_medida'].strip()
+    categoria_uuid  = data['ref_categoria'].strip()
     
     try:
         precio_venta  = float(precio_venta)
@@ -96,7 +96,7 @@ def prod_actualizacion(uuid):
     except ValueError:
         return jsonify({"mensaje": "Los campos precio_venta y precio_compra deben ser números"}), 400
     
-    if not isinstance(nombre, str) or len(nombre.strip()) == 0:
+    if not isinstance(nombre, str) or len(nombre) == 0:
         return jsonify({"mensaje": "El nombre no puede estar vacío"}), 400
 
     if precio_venta <= 0:
@@ -108,10 +108,10 @@ def prod_actualizacion(uuid):
     if precio_compra > precio_venta:
         return jsonify({"mensaje": "precio_compra no puede ser mayor que precio_venta"}), 400
 
-    if not isinstance(unidad_medida, str) or len(unidad_medida.strip()) == 0:
+    if not isinstance(unidad_medida, str) or len(unidad_medida) == 0:
         return jsonify({"mensaje": "unidad_medida debe ser una cadena de texto o no puede estar vacia"}), 400
     
-    if not isinstance(categoria_uuid, str) or len(categoria_uuid.strip()) == 0:
+    if not isinstance(categoria_uuid, str) or len(categoria_uuid) == 0:
         return jsonify({"mensaje": "ref_categoria debe ser una cadena de texto o no puede estar vacia"}), 400
 
     categoria = obtener_categoria_por_uuid(categoria_uuid)
@@ -122,5 +122,5 @@ def prod_actualizacion(uuid):
 
     commit = actualizar_producto(uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id)
     if commit:
-        return jsonify({"mensaje": "Producto actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "Producto actualizado exitosamente"}), 201
     return jsonify({"mensaje": "Error al actualizar producto"}), 500

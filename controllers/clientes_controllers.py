@@ -17,28 +17,27 @@ def cli_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
     # Guarda los valores de la petición en variables
-    nombre    = data['nombre']
-    telefono  = data['telefono']
-    direccion = data['direccion']
+    nombre    = data['nombre'].strip()
+    telefono  = data['telefono'].strip()
+    direccion = data['direccion'].strip()
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(telefono, str) or telefono.strip() == "":
+    if not isinstance(telefono, str) or telefono == "":
         return jsonify({"mensaje": "El telefono debe ser una cadena de texto o no puede estar vacio"}), 400
-    
-    # Valida a través de operadores de comparación para asegurar los datos
-    if len(telefono.strip()) < 10:
-        return jsonify({"mensaje": "El telefono debe tener al menos 10 caracteres"}), 400
 
-    if not isinstance(direccion, str) or direccion.strip() == "":
+    if not isinstance(direccion, str) or direccion == "":
         return jsonify({"mensaje": "La direccion debe ser una cadena de texto o no puede estar vacia"}), 400
     
-    commit = registrar_clientes(nombre, telefono, direccion)
-    if commit:
-        return jsonify({"mensaje": "Cliente registrado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al registrar cliente"}), 500
+    try:
+        commit = registrar_clientes(nombre, telefono, direccion)
+        if commit:
+            return jsonify({"mensaje": "Cliente registrado exitosamente"}), 201
+        return jsonify({"mensaje": "Error al registrar cliente"}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
 
 def cli_eliminacion(uuid):
     # Valida la existencia del cliente a través del uuid 
@@ -61,23 +60,23 @@ def cli_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
-    nombre    = data['nombre']
-    telefono  = data['telefono']
-    direccion = data['direccion']
+    nombre    = data['nombre'].strip()
+    telefono  = data['telefono'].strip()
+    direccion = data['direccion'].strip()
 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(telefono, str) or telefono.strip() == "":
+    if not isinstance(telefono, str) or telefono == "":
         return jsonify({"mensaje": "El telefono debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if len(telefono.strip()) < 10:
+    if len(telefono) < 10:
         return jsonify({"mensaje": "El telefono debe tener al menos 10 caracteres"}), 400
 
-    if not isinstance(direccion, str) or direccion.strip() == "":
+    if not isinstance(direccion, str) or direccion == "":
         return jsonify({"mensaje": "La direccion debe ser una cadena de texto o no puede estar vacia"}), 400
     
     commit = actualizar_cliente(uuid, nombre, telefono, direccion)
     if commit:
-        return jsonify({"mensaje": "Cliente actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "Cliente actualizado exitosamente"}), 201
     return jsonify({"mensaje": "Error al actualizar cliente"}), 500

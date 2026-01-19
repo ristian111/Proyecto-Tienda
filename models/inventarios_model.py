@@ -3,8 +3,8 @@ class Inventario:
         self.id                   = id
         self.uuid                 = uuid
         self.producto_uuid        = producto_uuid
-        self.cantidad_actual      = cantidad_actual
-        self.cantidad_reservada   = cantidad_reservada
+        self.__cantidad_actual    = cantidad_actual
+        self.__cantidad_reservada = cantidad_reservada
         self.punto_reorden        = punto_reorden
         self.ultima_actualizacion = ultima_actualizacion
 
@@ -12,11 +12,14 @@ class Inventario:
         return {
             'ref'                 : self.uuid,
             'ref_producto'        : self.producto_uuid,
-            'cantidad_actual'     : self.cantidad_actual,
-            'cantidad_reservada'  : self.cantidad_reservada,
+            'cantidad_actual'     : self.__cantidad_actual,
+            'cantidad_reservada'  : self.__cantidad_reservada,
             'punto_reorden'       : self.punto_reorden,
             'ultima_actualizacion': self.ultima_actualizacion
         }
+    
+    def cantidad_disponible(self):
+        return self.__cantidad_actual - self.__cantidad_reservada
 
 class MovimientoInventario:
     def __init__(self, id, producto_id_ant, cantidad_actual_ant, cantidad_reservada_ant, 

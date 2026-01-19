@@ -25,8 +25,9 @@ def registrar_clientes(nombre, telefono, direccion):
     try:
         cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
+        cliente = Cliente(None, None, None, telefono, None)
         sql = "INSERT INTO clientes (uuid, nombre, telefono, direccion) VALUES (%s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, nombre, telefono, direccion))
+        cursor.execute(sql, (uuid, nombre, cliente.get_telefono(), direccion))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
         return Cliente(id, uuid, nombre, telefono, direccion).cli_diccionario()

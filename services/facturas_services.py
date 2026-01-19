@@ -1,5 +1,6 @@
-from flask import current_app
 import uuid as uuidGenerado
+from flask import current_app
+from datetime import datetime
 from MySQLdb.cursors import DictCursor
 from models.facturas_model import Factura
 
@@ -31,18 +32,84 @@ def listar_facturas():
             cursor.close()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_factura(numero_factura, total, estado, pedido_uuid):
+def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
     cursor = None
+    conn = current_app.mysql.connection
+
     try:
-        cursor = current_app.mysql.connection.cursor()
-        uuid = str(uuidGenerado.uuid4())
-        sql = "INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql,(uuid, numero_factura, total, estado, pedido_uuid))
-        current_app.mysql.connection.commit()
+        cursor = conn.cursor(DictCursor)
+        conn.begin()
+
+        #Calcular total de detalle_pedido
+        sql_pedido = "SELECT SUM(subtotal) as total FROM detalle_pedido WHERE pedido_id = %s"
+        cursor.execute(sql_pedido, (pedido_id,))
+        datos = cursor.fetchone()
+
+        if not datos or datos["total"] is None:
+            raise Exception("El pedido no tiene detalle")
+        
+        total = datos["total"]
+
+        #Actualizar total del pedido
+        sql_actualizar_pedido = "UPDATE pedidos SET total = %s WHERE id = %s"
+        cursor.execute(sql_actualizar_pedido, (total, pedido_id))
+
+        #Validar stock
+        sql_validar_stock = """
+            SELECT 
+                i.producto_id, 
+                p.nombre, 
+                i.cantidad_actual,
+                i.cantidad_reservada,
+                dp.cantidad 
+            FROM inventarios i 
+            INNER JOIN productos p on i.producto_id = p.id
+            INNER JOIN detalle_pedido dp on p.id = dp.producto_id
+            WHERE dp.pedido_id = %s 
+            AND i.cantidad_actual - i.cantidad_reservada < dp.cantidad
+        """
+        cursor.execute(sql_validar_stock, (pedido_id,))
+
+        if cursor.fetchall():
+            raise Exception("Stock insuficiente")
+        
+        #Insertar factura
+        factura_uuid = str(uuidGenerado.uuid4())
+        numero_factura = f"FAC-{datetime.now().strftime('%Y%m%d')}-{factura_uuid[:8]}"
+        estado = "pagada" if venta_presencial else "emitida"
+
+        sql_insertar_factura = """
+            INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+        cursor.execute(sql_insertar_factura, (factura_uuid, numero_factura, total, estado, pedido_id))
         id = cursor.lastrowid
-        return Factura(id, uuid, numero_factura, total, None, estado, pedido_uuid).fac_diccionario()
+        
+        #Actualizar inventario
+        sql_actualizar_inventario = """
+            UPDATE inventarios i INNER JOIN productos p on i.producto_id = p.id 
+            INNER JOIN detalle_pedido dp on p.id = dp.producto_id
+
+            SET i.cantidad_actual = i.cantidad_actual - dp.cantidad
+            WHERE dp.pedido_id = %s
+        """
+        cursor.execute(sql_actualizar_inventario, (pedido_id,))
+
+        #Actualizar estado del pedido
+        sql_actualizar_estado_pedido = "UPDATE pedidos SET estado = %s WHERE id = %s"
+        cursor.execute(sql_actualizar_estado_pedido, ("entregado" if not venta_presencial else "pendiente", pedido_id))
+
+        conn.commit()
+
+        sql_factura = "SELECT fecha_emision FROM facturas WHERE id = %s"
+        cursor.execute(sql_factura, (id,))
+        dato = cursor.fetchone()
+        fecha_emision = dato["fecha_emision"]
+        resultado = Factura(id, factura_uuid, numero_factura, total, fecha_emision, estado, pedido_uuid).fac_diccionario()
+        return resultado
+    
     except Exception as e:
-        current_app.mysql.connection.rollback()
+        conn.rollback()
         raise e
     finally:
         if cursor:

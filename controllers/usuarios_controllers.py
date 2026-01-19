@@ -16,19 +16,19 @@ def usu_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
 
     # Guarda los valores de la petición en variables
-    nombre        = data['nombre']
+    nombre        = data['nombre'].strip()
     username      = data['username']
     password_hash = data['password_hash']
-    rol           = data['rol']
+    rol           = data['rol'].strip().capitalize()
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
     if not isinstance(username, str) or username.strip() == "":
         return jsonify({"mensaje": "El username debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(rol, str) or rol.strip() == "":
+    if not isinstance(rol, str) or rol == "":
         return jsonify({"mensaje": "El rol debe ser una cadena de texto o no puede estar vacio"}), 400
 
     # Valida a través de operadores de comparación para asegurar los datos
@@ -68,12 +68,12 @@ def usu_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
-    nombre        = data['nombre']
+    nombre        = data['nombre'].strip()
     username      = data['username']
     password_hash = data['password_hash']
-    rol           = data['rol']
+    rol           = data['rol'].strip().capitalize()
 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
     if not isinstance(username, str) or username.strip() == "":
@@ -82,7 +82,7 @@ def usu_actualizacion(uuid):
     if len(username.strip()) < 10:
         return jsonify({"mensaje": "El nombre debe tener al menos 10 caracteres"}), 400
     
-    if not isinstance(rol, str) or rol.strip() == "":
+    if not isinstance(rol, str) or rol == "":
         return jsonify({"mensaje": "El rol debe ser una cadena de texto o no puede estar vacio"}), 400
     
     if len(password_hash.strip()) < 10:
@@ -92,7 +92,7 @@ def usu_actualizacion(uuid):
 
     commit = actualizar_usuario(uuid, nombre, username, pass_encriptado, rol)
     if commit:
-        return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 201
     return jsonify({"mensaje": "Error al actualizar usuario"}), 500
 
 def usu_pedidos_usuario(user):

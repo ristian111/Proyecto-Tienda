@@ -21,8 +21,8 @@ def det_pedido_registro():
     # Guarda los valores de la petición en variables
     cantidad        = datos['cantidad']
     precio_unitario = datos['precio_unitario']
-    ref_pedido      = datos['ref_pedido']
-    ref_producto    = datos['ref_producto']
+    ref_pedido      = datos['ref_pedido'].strip()
+    ref_producto    = datos['ref_producto'].strip()
 
     # Valida los campos numericos para verificar que cumplen esta regla 
     try:
@@ -32,10 +32,10 @@ def det_pedido_registro():
         return jsonify({"mensaje": "El campo cantidad y precio_unitario deben ser números enteros"}), 400
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(ref_pedido, str) or len(ref_pedido.strip()) == 0:
+    if not isinstance(ref_pedido, str) or len(ref_pedido) == 0:
         return jsonify({"mensaje": "'ref_pedido' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_producto, str) or len(ref_producto.strip()) == 0:
+    if not isinstance(ref_producto, str) or len(ref_producto) == 0:
         return jsonify({"mensaje": "'ref_producto' debe ser una cadena de texto o no puede estar vacio"}), 400
 
     # Valida a través de operadores de comparación para asegurar los datos
@@ -93,8 +93,8 @@ def det_pedido_actualizacion(uuid):
 
     cantidad        = datos['cantidad']
     precio_unitario = datos['precio_unitario']
-    ref_pedido      = datos['ref_pedido']
-    ref_producto    = datos['ref_producto']
+    ref_pedido      = datos['ref_pedido'].strip()
+    ref_producto    = datos['ref_producto'].strip()
 
     try:
         cantidad        = int(cantidad)
@@ -102,10 +102,10 @@ def det_pedido_actualizacion(uuid):
     except ValueError:
         return jsonify({"mensaje": "El campo cantidad y precio_unitario deben ser números enteros"}), 400
 
-    if not isinstance(ref_pedido, str) or len(ref_pedido.strip()) == 0:
+    if not isinstance(ref_pedido, str) or len(ref_pedido) == 0:
         return jsonify({"mensaje": "'ref_pedido' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_producto, str) or len(ref_producto.strip()) == 0:
+    if not isinstance(ref_producto, str) or len(ref_producto) == 0:
         return jsonify({"mensaje": "'ref_producto' debe ser una cadena de texto o no puede estar vacio"}), 400
 
     if cantidad <= 0:
@@ -130,6 +130,6 @@ def det_pedido_actualizacion(uuid):
     commit = actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id)
 
     if commit:
-        return jsonify({"mensaje": "detalle_pedido actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "detalle_pedido actualizado exitosamente"}), 201
     
     return jsonify({"mensaje": "Error al actualizar detalle_pedido"}), 500

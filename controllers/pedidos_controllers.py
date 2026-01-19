@@ -19,11 +19,11 @@ def ped_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
 
     # Guarda los valores de la petición en variables
-    estado            = data['estado']
+    estado            = data['estado'].strip()
     total             = data['total']
-    direccion_entrega = data['direccion_entrega']
-    ref_cliente       = data['ref_cliente']
-    ref_usuario       = data['ref_usuario']
+    direccion_entrega = data['direccion_entrega'].strip()
+    ref_cliente       = data['ref_cliente'].strip()
+    ref_usuario       = data['ref_usuario'].strip()
 
     # Valida los campos numericos para verificar que cumplen esta regla
     try:
@@ -32,16 +32,16 @@ def ped_registro():
         return jsonify({"mensaje": "El campo total debe ser un número entero"}), 400
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(estado, str) or len(estado.strip()) == 0:
+    if not isinstance(estado, str) or len(estado) == 0:
         return jsonify({"mensaje": "'estado' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(direccion_entrega, str) or len(direccion_entrega.strip()) == 0:
+    if not isinstance(direccion_entrega, str) or len(direccion_entrega) == 0:
         return jsonify({"mensaje": "'direccion_entrega' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_cliente, str) or len(ref_cliente.strip()) == 0:
+    if not isinstance(ref_cliente, str) or len(ref_cliente) == 0:
         return jsonify({"mensaje": "'ref_cliente' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_usuario, str) or len(ref_usuario.strip()) == 0:
+    if not isinstance(ref_usuario, str) or len(ref_usuario) == 0:
         return jsonify({"mensaje": "'ref_usuario' debe ser una cadena de texto o no puede estar vacio"}), 400
 
     # Revisa si la referencia del cliente existe a través del uuid
@@ -86,27 +86,27 @@ def ped_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
 
-    estado            = data['estado']
+    estado            = data['estado'].strip()
     total             = data['total']
-    direccion_entrega = data['direccion_entrega']
-    ref_cliente       = data['ref_cliente']
-    ref_usuario       = data['ref_usuario']
+    direccion_entrega = data['direccion_entrega'].strip()
+    ref_cliente       = data['ref_cliente'].strip()
+    ref_usuario       = data['ref_usuario'].strip()
 
     try:
         total = float(total)
     except ValueError:
         return jsonify({"mensaje": "El campo total debe ser un número entero"}), 400
     
-    if not isinstance(estado, str) or len(estado.strip()) == 0:
+    if not isinstance(estado, str) or len(estado) == 0:
         return jsonify({"mensaje": "'estado' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(direccion_entrega, str) or len(direccion_entrega.strip()) == 0:
+    if not isinstance(direccion_entrega, str) or len(direccion_entrega) == 0:
         return jsonify({"mensaje": "'direccion_entrega' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_cliente, str) or len(ref_cliente.strip()) == 0:
+    if not isinstance(ref_cliente, str) or len(ref_cliente) == 0:
         return jsonify({"mensaje": "'ref_cliente' debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(ref_usuario, str) or len(ref_usuario.strip()) == 0:
+    if not isinstance(ref_usuario, str) or len(ref_usuario) == 0:
         return jsonify({"mensaje": "'ref_usuario' debe ser una cadena de texto o no puede estar vacio"}), 400
     
     cliente = obtener_cliente_por_uuid(ref_cliente)

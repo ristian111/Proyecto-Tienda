@@ -21,7 +21,7 @@ def inv_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
     # Guarda los valores de la petición en variables
-    producto_uuid      = data['ref_producto']
+    producto_uuid      = data['ref_producto'].strip()
     cantidad_actual    = data['cantidad_actual']
     cantidad_reservada = data['cantidad_reservada']
     punto_reorden      = data['punto_reorden']
@@ -48,7 +48,7 @@ def inv_registro():
         return jsonify({"mensaje": "cantidad_reservada no puede ser mayor que cantidad_actual"}), 400
     
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(producto_uuid, str) or len(producto_uuid.strip()) == 0:
+    if not isinstance(producto_uuid, str) or len(producto_uuid) == 0:
         return jsonify({"mensaje": "ref_producto debe ser una cadena de texto o no puede estar vacio"}), 400
 
     # Revisa si la referencia del producto existe a través del uuid
@@ -86,7 +86,7 @@ def inv_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
-    producto_uuid      = data['ref_producto']
+    producto_uuid      = data['ref_producto'].strip()
     cantidad_actual    = data['cantidad_actual']
     cantidad_reservada = data['cantidad_reservada']
     punto_reorden      = data['punto_reorden']
@@ -110,7 +110,7 @@ def inv_actualizacion(uuid):
     if cantidad_reservada > cantidad_actual:
         return jsonify({"mensaje": "cantidad_reservada no puede ser mayor que cantidad_actual"}), 400
     
-    if not isinstance(producto_uuid, str) or len(producto_uuid.strip()) == 0:
+    if not isinstance(producto_uuid, str) or len(producto_uuid) == 0:
         return jsonify({"mensaje": "ref_producto debe ser una cadena de texto o no puede estar vacio"}), 400
     
     producto = obtener_producto_por_uuid(producto_uuid)
@@ -121,7 +121,7 @@ def inv_actualizacion(uuid):
 
     commit = actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden)
     if commit:
-        return jsonify({"mensaje": "Inventario actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "Inventario actualizado exitosamente"}), 201
     return jsonify({"mensaje": "Error al actualizar inventario"}), 500
 
 def inv_productos_stock_bajo():

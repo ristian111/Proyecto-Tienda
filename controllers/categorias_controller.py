@@ -16,14 +16,14 @@ def cat_registro():
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
     # Guarda los valores de la petición en variables
-    nombre      = data['nombre']
-    descripcion = data['descripcion']
+    nombre      = data['nombre'].strip()
+    descripcion = data['descripcion'].strip()
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(descripcion, str) or descripcion.strip() == "":
+    if not isinstance(descripcion, str) or descripcion == "":
         return jsonify({"mensaje": "La descripcion debe ser una cadena de texto o no puede estar vacia"}), 400
 
     commit = registrar_categoria(nombre, descripcion)
@@ -52,16 +52,16 @@ def cat_actualizacion(uuid):
     if faltantes:
         return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
     
-    nombre      = data['nombre']
-    descripcion = data['descripcion']
+    nombre      = data['nombre'].strip()
+    descripcion = data['descripcion'].strip()
 
-    if not isinstance(nombre, str) or nombre.strip() == "":
+    if not isinstance(nombre, str) or nombre == "":
         return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
     
-    if not isinstance(descripcion, str) or descripcion.strip() == "":
+    if not isinstance(descripcion, str) or descripcion == "":
         return jsonify({"mensaje": "El descripcion debe ser una cadena de texto o no puede estar vacio"}), 400
     
     commit = actualizar_categoria(uuid, nombre, descripcion)
     if commit:
-        return jsonify({"mensaje": "Categoria actualizada exitosamente"}), 200
+        return jsonify({"mensaje": "Categoria actualizada exitosamente"}), 201
     return jsonify({"mensaje": "Error al actualizar categoria"}), 500
