@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.pedidos_controllers import ped_listado, ped_registro, ped_actualizacion, ped_eliminacion, ped_listar_pedidos_pendientes
+from controllers import ped_listado, ped_registro, ped_actualizacion, ped_eliminacion, ped_listar_pedidos_pendientes
 pedidos_bp = Blueprint('pedidos', __name__)
 
 @pedidos_bp.route('/', methods=['GET'])

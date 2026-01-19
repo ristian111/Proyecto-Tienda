@@ -1,5 +1,7 @@
 from flask import Blueprint
-from controllers.reportes_controllers import *
+from controllers import (rep_clientes_con_mas_pedidos, rep_usuarios_con_mas_pedidos_registrados, 
+                         rep_productos_mas_vendidos, rep_pedidos_por_fecha, rep_productos_mas_ganancias, 
+                         rep_ingresos_generados)
 
 reportes_bp = Blueprint("reportes", __name__)
 

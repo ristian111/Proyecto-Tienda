@@ -1,5 +1,6 @@
 from flask import Blueprint
-from controllers.clientes_controllers import cli_listado, cli_actualizacion, cli_registro, cli_eliminacion
+from controllers import cli_listado, cli_actualizacion, cli_registro, cli_eliminacion
+
 clientes_bp = Blueprint('clientes', __name__)
 
 @clientes_bp.route('/', methods=['GET'])

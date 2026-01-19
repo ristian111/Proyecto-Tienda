@@ -1,6 +1,6 @@
 from flask import Blueprint
-from middlewares.api_key import require_api_key
-from controllers.categorias_controller import cat_listado, cat_registro, cat_actualizacion, cat_eliminacion
+from middlewares import require_api_key
+from controllers import cat_listado, cat_registro, cat_actualizacion, cat_eliminacion
 categorias_bp = Blueprint('categorias', __name__)
 
 @categorias_bp.route('/', methods=['GET'])

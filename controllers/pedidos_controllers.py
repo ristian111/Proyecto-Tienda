@@ -1,7 +1,7 @@
 from flask import jsonify, request
-from services.pedidos_services import listar_pedidos, registrar_pedido, actualizar_pedido, eliminar_pedido, obtener_pedido_por_uuid, listar_pedidos_pendientes
-from services.clientes_services import obtener_cliente_por_uuid
-from services.usuarios_services import obtener_usuario_por_uuid
+from services import (listar_pedidos, registrar_pedido, actualizar_pedido, eliminar_pedido, 
+                      obtener_pedido_por_uuid, listar_pedidos_pendientes, obtener_cliente_por_uuid, 
+                      obtener_usuario_por_uuid)
 
 def ped_listado():
     # Devuelve en formato json el listado de pedidos junto al codigo http 

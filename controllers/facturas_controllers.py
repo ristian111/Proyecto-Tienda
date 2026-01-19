@@ -1,6 +1,6 @@
 from flask import jsonify, request
-from services.facturas_services import listar_facturas, registrar_factura, actualizar_factura, eliminar_factura, obtener_factura_por_uuid
-from services.pedidos_services import obtener_pedido_por_uuid
+from services import (listar_facturas, registrar_factura, actualizar_factura, eliminar_factura, 
+                      obtener_factura_por_uuid, obtener_pedido_por_uuid)
 
 def fac_listado():
     # Devuelve en formato json el listado de facturas junto al codigo http 

@@ -1,6 +1,8 @@
 from flask import jsonify, request
 from datetime import datetime, timedelta
-from services.reportes_services import *
+from services import (listar_clientes_con_mas_pedidos, listar_usuarios_con_mas_registro_pedidos, 
+                      listar_productos_mas_vendidos, listar_productos_mas_ganancias, listar_pedidos_por_fecha, 
+                      listar_ingresos_por_ventas)
 
 def rep_clientes_con_mas_pedidos():
     limit = request.args.get("limit", default=5, type=int)

@@ -1,7 +1,6 @@
 from flask import Blueprint
-from controllers.usuarios_controllers import usu_listado, usu_actualizacion, usu_eliminacion, usu_registro, usu_pedidos_usuario
-from middlewares.auth import token_requerido
-from middlewares.validacion_roles import rol_requerido
+from controllers import usu_listado, usu_actualizacion, usu_eliminacion, usu_registro, usu_pedidos_usuario
+from middlewares import token_requerido, rol_requerido
 usuarios_bp = Blueprint('usuarios', __name__)
 
 @usuarios_bp.route('/', methods=['GET'])

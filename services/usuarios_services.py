@@ -1,7 +1,7 @@
 from flask import current_app
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
-from models.usuarios_model import Usuario
+from models import Usuario
 
 # Toma las filas de la base de datos para convertirlas en un diccionario 
 def listar_usuarios():

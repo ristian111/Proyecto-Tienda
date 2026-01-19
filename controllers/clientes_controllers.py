@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from services.clientes_services import listar_clientes, registrar_clientes, actualizar_cliente, eliminar_cliente, obtener_cliente_por_uuid
+from services import listar_clientes, registrar_clientes, actualizar_cliente, eliminar_cliente, obtener_cliente_por_uuid
 
 def cli_listado():
     # Devuelve en formato json el listado de clientes junto al codigo http 

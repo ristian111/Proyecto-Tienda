@@ -1,7 +1,7 @@
 from flask import current_app
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
-from models.productos_models import Producto
+from models import Producto
 
 # Toma las filas de la base de datos utilizando inner join para ref_categoria donde luego se convierte en un diccionario 
 def listar_productos():

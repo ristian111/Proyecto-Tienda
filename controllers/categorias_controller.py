@@ -1,5 +1,7 @@
 from flask import jsonify, request
-from services.categorias_services import listar_categorias, registrar_categoria, actualizar_categoria, eliminar_categoria, obtener_categoria_por_uuid
+from . import validar_campos
+from services import (listar_categorias, registrar_categoria, actualizar_categoria, eliminar_categoria, 
+                      obtener_categoria_por_uuid)
 
 def cat_listado():
     # Devuelve en formato json el listado de categorias junto al codigo http 
@@ -10,10 +12,10 @@ def cat_registro():
     # Valida que no existan campos vacios 
     data = request.get_json()
 
-    requeridos = ["nombre", "descripcion"]
-    faltantes = [x for x in requeridos if x not in data]
-    if faltantes:
-        return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
+    validar_requeridos = validar_campos(data, ["nombre", descripcion])
+
+    if validar_requeridos:
+        return validar_requeridos
     
     # Guarda los valores de la petición en variables
     nombre      = data['nombre'].strip()

@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from services.auth_login_services import autenticar_usuario
+from services import autenticar_usuario
 
 def auth_login():
 

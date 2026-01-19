@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.productos_controllers import prod_listado, prod_actualizacion, prod_eliminacion, prod_registro
+from controllers import prod_listado, prod_registro, prod_eliminacion, prod_actualizacion
 productos_bp = Blueprint('productos', __name__)
 
 @productos_bp.route('/', methods=['GET'])

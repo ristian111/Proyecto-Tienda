@@ -1,5 +1,5 @@
 from flask import current_app
-from models.pedidos_model import Pedido
+from models import Pedido
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 

@@ -1,6 +1,6 @@
 from flask import jsonify, request
-from services.productos_services import listar_productos, registrar_producto, actualizar_producto, eliminar_producto, obtener_producto_por_uuid
-from services.categorias_services import obtener_categoria_por_uuid
+from services import (listar_productos, registrar_producto, actualizar_producto, eliminar_producto, 
+                      obtener_producto_por_uuid, obtener_categoria_por_uuid)
 
 def prod_listado():
     # Devuelve en formato json el listado de pedidos junto al codigo http 

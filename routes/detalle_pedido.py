@@ -1,5 +1,5 @@
 from flask import Blueprint
-from controllers.detalle_pedido_controllers import det_pedido_listado, det_pedido_actualizacion, det_pedido_registro, det_pedido_eliminacion
+from controllers import det_pedido_listado, det_pedido_actualizacion, det_pedido_registro, det_pedido_eliminacion
 
 detalle_pedido_bp = Blueprint("detalles", __name__)
 

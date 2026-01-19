@@ -1,6 +1,6 @@
 from flask import current_app
-from models.auth_login_model import generar_token
-from services.usuarios_services import obtener_usuario_por_username
+from models import generar_token
+from . import obtener_usuario_por_username
 
 def autenticar_usuario(username, password):
     # Valida que el usuario exista y este autenticado

@@ -1,7 +1,7 @@
 from flask import current_app
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
-from models.categorias_model import Categoria
+from models import Categoria
 
 # Toma las filas de la base de datos para convertirlas en un diccionario 
 def listar_categorias():

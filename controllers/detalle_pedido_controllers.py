@@ -1,7 +1,7 @@
 from flask import jsonify, request
-from services.detalle_pedido_services import listar_detalles_pedidos, registrar_detalle_pedido, actualizar_detalle_pedido, eliminar_detalle_pedido, obtener_detalle_pedido_por_uuid
-from services.pedidos_services import obtener_pedido_por_uuid
-from services.productos_services import obtener_producto_por_uuid
+from services import (listar_detalles_pedidos, registrar_detalle_pedido, actualizar_detalle_pedido, 
+                      eliminar_detalle_pedido, obtener_detalle_pedido_por_uuid, obtener_pedido_por_uuid, 
+                      obtener_producto_por_uuid)
 
 def det_pedido_listado():
     # Devuelve en formato json el listado del detalle_pedido junto al codigo http 

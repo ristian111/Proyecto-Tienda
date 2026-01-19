@@ -1,5 +1,5 @@
-from flask import blueprints, jsonify
-from controllers.facturas_controllers import fac_listado, fac_registro, fac_actualizacion, fac_eliminacion
+from flask import blueprints
+from controllers import fac_listado, fac_registro, fac_actualizacion, fac_eliminacion
 facturas_bp = blueprints.Blueprint('facturas', __name__)
 
 @facturas_bp.route('/', methods=['GET'])

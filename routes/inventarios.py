@@ -1,6 +1,7 @@
 from flask import Blueprint
-from controllers.inventarios_controllers import inv_listado, inv_actualizacion, inv_eliminacion, inv_registro, inv_productos_stock_bajo, inv_stock_producto, inv_listado_movimiento_inventario
-from middlewares.auth import token_requerido
+from middlewares import token_requerido
+from controllers import (inv_listado, inv_actualizacion, inv_eliminacion, inv_registro, 
+                         inv_productos_stock_bajo, inv_stock_producto, inv_listado_movimiento_inventario)
 
 inventarios_bp = Blueprint('inventarios', __name__)
 

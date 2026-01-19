@@ -1,10 +1,10 @@
 from flask import current_app
-from models.reportes.clientes.clientes_top_pedidos_model import ClientesMasPedidos
-from models.reportes.usuarios.usuarios_registros_pedidos_model import UsuariosMasRegistrosPedidos
-from models.reportes.productos.productos_mas_vendidos_model import ProductosMasVendidos
-from models.reportes.productos.producto_mas_ganancia_model import ProductosMasGanancia
-from models.reportes.pedidos.pedidos_por_fecha_model import PedidosPorFecha
-from models.reportes.facturas.ingresos_model import Ingresos
+from models.reportes.clientes import ClientesMasPedidos
+from models.reportes.usuarios import UsuariosMasRegistrosPedidos
+from models.reportes.productos import ProductosMasVendidos
+from models.reportes.productos import ProductosMasGanancia, ProductosMasVendidos
+from models.reportes.pedidos import PedidosPorFecha
+from models.reportes.facturas import Ingresos
 
 def listar_clientes_con_mas_pedidos(limit):
     cursor = None

@@ -1,0 +1,2 @@
+from .producto_mas_ganancia_model import ProductosMasGanancia
+from .productos_mas_vendidos_model import ProductosMasVendidos

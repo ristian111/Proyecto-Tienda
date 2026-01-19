@@ -2,7 +2,7 @@ import uuid as uuidGenerado
 from flask import current_app
 from datetime import datetime
 from MySQLdb.cursors import DictCursor
-from models.facturas_model import Factura
+from models import Factura
 
 # Toma las filas de la base de datos utilizando inner join para ref_pedido donde luego se convierte en un diccionario 
 def listar_facturas():

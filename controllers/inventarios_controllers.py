@@ -1,6 +1,7 @@
 from flask import jsonify, request
-from services.inventarios_services import listar_inventarios, registrar_inventario, actualizar_inventario, eliminar_inventario, obtener_inventario_por_uuid, listar_productos_stock_bajo, listar_stock_producto, listar_movimiento_inventario
-from services.productos_services import obtener_producto_por_uuid
+from services import (listar_inventarios, registrar_inventario, actualizar_inventario, eliminar_inventario, 
+                      obtener_inventario_por_uuid, listar_productos_stock_bajo, listar_stock_producto, 
+                      listar_movimiento_inventario, obtener_producto_por_uuid)
 
 def inv_listado():
     # Devuelve en formato json el listado de inventarios junto al codigo http 

@@ -1,0 +1,1 @@
+from .ingresos_model import Ingresos

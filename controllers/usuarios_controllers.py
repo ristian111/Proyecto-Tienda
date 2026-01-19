@@ -1,5 +1,6 @@
 from flask import jsonify, request, current_app
-from services.usuarios_services import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_uuid, pedidos_de_un_usuario
+from services import (listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, 
+                      obtener_usuario_por_uuid, pedidos_de_un_usuario)
 
 def usu_listado():
     # Devuelve en formato json el listado de pedidos junto al codigo http 
