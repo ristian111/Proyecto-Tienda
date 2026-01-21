@@ -1,23 +1,23 @@
 from flask import current_app
-from models import generar_token
-from . import obtener_usuario_por_username
+from models import auth_login_model
+from services import usuarios_services
 
-def autenticar_usuario(username, password):
+def autenticar_usuario(usuario, contraseña):
     # Valida que el usuario exista y este autenticado
-    usuario = obtener_usuario_por_username(username)
+    usuario_existente = usuarios_services.obtener_usuario_por_username(usuario)
 
-    if not usuario:
+    if not usuario_existente:
         return None
     
     # Relaciona la contraseña hash con la que contraseña que intento el usuario
     if not current_app.bcrypt.check_password_hash(
-        usuario['password_hash'],
-        password
+        usuario_existente['password_hash'],
+        contraseña
     ):
         return None
     
     # Valida la creación del token mandando el usuario autenticado
-    codificar_token = generar_token(usuario)
+    codificar_token = auth_login_model.generar_token(usuario_existente)
 
     if not codificar_token:
         return None

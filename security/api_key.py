@@ -3,7 +3,7 @@ from functools import wraps
 from flask import request, jsonify, current_app
 
 # Recibe la función base
-def require_api_key(f):
+def api_key_requerido(f):
     # Retoma los datos de la funcion base
     @wraps(f)
     # Se implementa una restricción antes de que la funcion base se accione

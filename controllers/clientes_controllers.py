@@ -1,82 +1,78 @@
 from flask import jsonify, request
-from services import listar_clientes, registrar_clientes, actualizar_cliente, eliminar_cliente, obtener_cliente_por_uuid
+from services import clientes_services
+import controllers
+from decoradores import manejo_errores
 
+@manejo_errores
 def cli_listado():
     # Devuelve en formato json el listado de clientes junto al codigo http 
-    datos = listar_clientes()
+    datos = clientes_services.listar_clientes()
     return jsonify(datos), 200
 
+@manejo_errores
 def cli_registro():
     # Valida que no existan campos vacios 
     data = request.get_json()
 
-    requeridos = ["nombre", "telefono", "direccion"]
-    faltantes = [x for x in requeridos if x not in data]
+    validar_requeridos = controllers.validar_campos(data, ["nombre", "telefono", "direccion"])
 
-    if faltantes:
-        return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
+    if validar_requeridos:
+        return validar_requeridos
     
     # Guarda los valores de la petición en variables
-    nombre    = data['nombre'].strip()
-    telefono  = data['telefono'].strip()
-    direccion = data['direccion'].strip()
+    nombre    = data['nombre']
+    telefono  = data['telefono']
+    direccion = data['direccion']
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
-    if not isinstance(nombre, str) or nombre == "":
-        return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
-    
-    if not isinstance(telefono, str) or telefono == "":
-        return jsonify({"mensaje": "El telefono debe ser una cadena de texto o no puede estar vacio"}), 400
+    validar_datos = controllers.limpieza_datos({"nombre": nombre, "telefono": telefono, "direccion": direccion})
 
-    if not isinstance(direccion, str) or direccion == "":
-        return jsonify({"mensaje": "La direccion debe ser una cadena de texto o no puede estar vacia"}), 400
+    if validar_datos:
+        return validar_datos
     
     try:
-        commit = registrar_clientes(nombre, telefono, direccion)
+        commit = clientes_services.registrar_clientes(nombre.strip(), telefono.strip(), direccion.strip())
         if commit:
             return jsonify({"mensaje": "Cliente registrado exitosamente"}), 201
         return jsonify({"mensaje": "Error al registrar cliente"}), 500
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
 
+@manejo_errores
 def cli_eliminacion(uuid):
     # Valida la existencia del cliente a través del uuid 
-    cliente = obtener_cliente_por_uuid(uuid)
+    cliente = clientes_services.obtener_cliente_por_uuid(uuid)
     if cliente:
-        commit = eliminar_cliente(uuid)
+        commit = clientes_services.eliminar_cliente(uuid)
         if commit:
             return jsonify({"mensaje": "Cliente eliminado exitosamente"}), 200
         
         return jsonify({"mensaje": "Error al eliminar cliente"}), 500
     return jsonify({"mensaje": "El cliente no existe"}), 404
 
+@manejo_errores
 # Se valida de la misma manera que al registrar
 def cli_actualizacion(uuid):
     data = request.get_json()
 
-    requeridos = ["nombre", "telefono", "direccion"]
-    faltantes = [x for x in requeridos if x not in data]
+    validar_requeridos = controllers.validar_campos(data, ["nombre", "telefono", "direccion"])
 
-    if faltantes:
-        return jsonify({"mensaje":f"faltan los campos {faltantes}"}), 400
+    if validar_requeridos:
+        return validar_requeridos
     
-    nombre    = data['nombre'].strip()
-    telefono  = data['telefono'].strip()
-    direccion = data['direccion'].strip()
+    nombre    = data['nombre']
+    telefono  = data['telefono']
+    direccion = data['direccion']
 
-    if not isinstance(nombre, str) or nombre == "":
-        return jsonify({"mensaje": "El nombre debe ser una cadena de texto o no puede estar vacio"}), 400
-    
-    if not isinstance(telefono, str) or telefono == "":
-        return jsonify({"mensaje": "El telefono debe ser una cadena de texto o no puede estar vacio"}), 400
-    
-    if len(telefono) < 10:
-        return jsonify({"mensaje": "El telefono debe tener al menos 10 caracteres"}), 400
+    validar_datos = controllers.limpieza_datos({"nombre": nombre, "telefono": telefono, "direccion": direccion})
 
-    if not isinstance(direccion, str) or direccion == "":
-        return jsonify({"mensaje": "La direccion debe ser una cadena de texto o no puede estar vacia"}), 400
+    if validar_datos:
+        return validar_datos
     
-    commit = actualizar_cliente(uuid, nombre, telefono, direccion)
-    if commit:
-        return jsonify({"mensaje": "Cliente actualizado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al actualizar cliente"}), 500
+    try:
+        commit = clientes_services.actualizar_cliente(uuid.strip(), nombre.strip(), telefono.strip(), direccion.strip())
+        if commit:
+            return jsonify({"mensaje": "Cliente actualizado exitosamente"}), 200
+        return jsonify({"mensaje": "Error al actualizar cliente"}), 500
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400

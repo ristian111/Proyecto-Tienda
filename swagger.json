@@ -1422,7 +1422,7 @@
                     "example": 
                       {
                         "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                        "numero_factura": "FAC 001",
+                        "numero_factura": "FAC-20260117-b93e7637",
                         "estado": "emitida",
                         "total": 8700,
                         "fecha_emision": "2025-12-18 17:30:28",
@@ -1432,57 +1432,9 @@
                 }
               }
             }
-          }
-        }
-      },
-
-      "post": {
-        "tags":["Facturas"],
-        "summary": "Registrar una nueva factura",
-        "description": "Este endpoint permite registrar una nueva factura en el sistema. Requiere enviar un objeto JSON con los datos de la factura como ref_pedido, numero_factura, total, estado.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["ref_pedido", "numero_factura", "estado", "total"],
-                "properties": {
-                  "ref_pedido": { "type": "string" },
-                  "numero_factura": { "type": "string" },
-                  "estado": { "type": "string" },
-                  "total": { "type": "float" }
-                },
-                "example": 
-                  {
-                    "ref_pedido": "",
-                    "numero_factura": "FAC 001",
-                    "estado": "pagada",
-                    "total": 50000
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que la factura fue registrada correctamente.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "mensaje": { "type": "string" }
-                  },
-                  "example": {
-                    "mensaje": "Factura Registrada"
-                  }
-                }
-              }
-            }
           },
-          "400": {
-            "description": "error",
+          "500": {
+            "description": "Error del servidor",
             "content": {
               "application/json": {
                 "schema": {
@@ -1491,7 +1443,7 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Error interno del servidor"
                   }
                 }
               }
@@ -1501,6 +1453,92 @@
       }
     },
     "/facturas/{ref}": {
+      "post": {
+        "tags":["Facturas"],
+        "summary": "Registrar una nueva factura",
+        "description": "Este endpoint permite registrar una nueva factura en el sistema. Requiere enviar un objeto JSON con los datos de la factura como ref_pedido, numero_factura, total, estado.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "description": "referencia del pedido sobre el cual se generará la factura",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "tipo",
+            "in": "query",
+            "required": false,
+            "description": "Indica el tipo de venta (true = presencial, false = domicilio)",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Devuelve un mensaje de confirmación indicando que la factura fue registrada correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Factura registrada",
+                    "Factura": {
+                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                        "numero_factura": "FAC-20260117-b93e7637",
+                        "estado": "emitida",
+                        "total": 8700,
+                        "fecha_emision": "2025-12-18 17:30:28",
+                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    } 
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error no existe el pedido"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
       "put": {
         "tags":["Facturas"],
         "summary": "Editar factura existente",
@@ -1528,7 +1566,7 @@
                 "example": 
                   {
                     "ref_pedido": "",
-                    "numero_factura": "FAC 001",
+                    "numero_factura": "FAC-20260117-b93e7637",
                     "estado": "pagada",
                     "total": 50000
                 }
@@ -1547,7 +1585,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Factura Editada"
+                    "mensaje": "Factura actualizada exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error no existe el pedido"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar factura" }
+                    }
                   }
                 }
               }
@@ -1579,7 +1656,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Factura Eliminada"
+                    "mensaje": "Factura eliminada exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "La factura no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar la factura" }
+                    }
                   }
                 }
               }
@@ -1592,22 +1708,22 @@
       "post": {
         "tags": ["Autenticación"],
         "summary": "Iniciar sesión",
-        "description": "Este endpoint permite iniciar sesión al usuario. Requiere enviar un objeto JSON con los datos del usuario como username y password",
+        "description": "Este endpoint permite iniciar sesión al usuario. Requiere enviar un objeto JSON con los datos del usuario como usuario y contraseña",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["username", "password"],
+                "required": ["usuario", "contraseña"],
                 "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" }
+                  "usuario": { "type": "string" },
+                  "contraseña": { "type": "string" }
                 },
                 "example": 
                   {
-                    "username": "JuanADMINISTRADOR",
-                    "password": "1234567890"
+                    "usuario": "JuanADMINISTRADOR",
+                    "contraseña": "1234567890"
                 }
               }
             }
@@ -1632,8 +1748,8 @@
               }
             }
           },
-          "400": {
-            "description": "error",
+          "401": {
+            "description": "El usuario no esta autenticado",
             "content": {
               "application/json": {
                 "schema": {
@@ -1642,7 +1758,23 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Credenciales inválidas"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
                   }
                 }
               }

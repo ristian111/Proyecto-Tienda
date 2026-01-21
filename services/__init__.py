@@ -1,10 +1,10 @@
-from .categorias_services import listar_categorias, registrar_categoria, eliminar_categoria, actualizar_categoria, obtener_categoria_por_uuid
-from .auth_login_services import autenticar_usuario
-from .clientes_services import listar_clientes, registrar_clientes, actualizar_cliente, eliminar_cliente, obtener_cliente_por_uuid
-from .detalle_pedido_services import listar_detalles_pedidos, registrar_detalle_pedido, actualizar_detalle_pedido, eliminar_detalle_pedido, obtener_detalle_pedido_por_uuid
-from .facturas_services import listar_facturas, registrar_factura, eliminar_factura, actualizar_factura, obtener_factura_por_uuid
-from .inventarios_services import listar_inventarios, listar_movimiento_inventario, listar_productos_stock_bajo, listar_stock_producto, registrar_inventario, eliminar_inventario, actualizar_inventario, obtener_inventario_por_uuid
-from .pedidos_services import listar_pedidos, listar_pedidos_pendientes, registrar_pedido, actualizar_pedido, eliminar_pedido, obtener_pedido_por_uuid
-from .productos_services import listar_productos, registrar_producto, actualizar_producto, eliminar_producto, obtener_producto_por_uuid
-from .reportes_services import listar_clientes_con_mas_pedidos, listar_ingresos_por_ventas, listar_pedidos_por_fecha, listar_productos_mas_ganancias, listar_productos_mas_vendidos, listar_usuarios_con_mas_registro_pedidos
-from .usuarios_services import listar_usuarios, registrar_usuario, actualizar_usuario, eliminar_usuario, obtener_usuario_por_username, obtener_usuario_por_uuid, pedidos_de_un_usuario
+from . import auth_login_services
+from . import categorias_services
+from . import clientes_services
+from . import detalle_pedido_services 
+from . import facturas_services 
+from . import inventarios_services
+from . import pedidos_services
+from . import productos_services 
+from . import reportes_services
+from . import usuarios_services

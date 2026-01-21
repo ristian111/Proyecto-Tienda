@@ -1,27 +1,28 @@
 from flask import request, jsonify
-from services import autenticar_usuario
+from services import auth_login_services
+from decoradores import manejo_errores
+import controllers
 
+@manejo_errores
 def auth_login():
-
     # Toma los datos del json dentro del cuerpo de la petición
     datos = request.get_json()
 
     # Valida que no existan campos vacios 
-    requeridos = ["username", "password"]
-    faltantes  = [x for x in requeridos if x not in datos]
+    validar_requeridos = controllers.validar_campos(datos, ["usuario", "contraseña"])
 
-    if faltantes:
-        return jsonify({"mensaje": "Los campos no pueden estar vacíos"}), 400
-    
+    if validar_requeridos:
+        return validar_requeridos
+
     # Guarda los valores de la petición en variables
-    username = datos['username']
-    password = datos['password']
+    usuario = datos['usuario']
+    contraseña = datos['contraseña']
 
     # Valida que el usuario esta autenticado
-    resultado = autenticar_usuario(username, password)
+    resultado = auth_login_services.autenticar_usuario(usuario, contraseña)
 
     if not resultado:
         return jsonify({"mensaje": "Credenciales inválidas"}), 401
-    
+
     return jsonify({"mensaje": "Token generado correctamente",
                     "token": resultado}), 200

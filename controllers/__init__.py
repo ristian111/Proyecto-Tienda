@@ -1,28 +1,52 @@
+from . import categorias_controller
+from . import auth_login_controllers 
+from . import clientes_controllers
+from . import detalle_pedido_controllers
+from . import facturas_controllers
+from . import inventarios_controllers
+from . import pedidos_controllers
+from . import productos_controllers 
+from . import reportes_controllers 
+from . import usuarios_controllers
 from flask import jsonify
-from .categorias_controller import cat_listado, cat_registro, cat_actualizacion, cat_eliminacion
-from .auth_login_controllers import auth_login
-from .clientes_controllers import cli_listado, cli_registro, cli_eliminacion, cli_actualizacion
-from .detalle_pedido_controllers import det_pedido_actualizacion, det_pedido_eliminacion, det_pedido_listado, det_pedido_registro
-from .facturas_controllers import fac_actualizacion, fac_listado, fac_eliminacion, fac_registro
-from .inventarios_controllers import inv_actualizacion, inv_eliminacion, inv_listado, inv_listado_movimiento_inventario, inv_productos_stock_bajo, inv_registro, inv_stock_producto
-from .pedidos_controllers import ped_actualizacion, ped_eliminacion, ped_listado, ped_listar_pedidos_pendientes, ped_registro
-from .productos_controllers import prod_actualizacion, prod_eliminacion, prod_listado, prod_registro
-from .reportes_controllers import rep_clientes_con_mas_pedidos, rep_ingresos_generados, rep_pedidos_por_fecha, rep_productos_mas_ganancias, rep_productos_mas_vendidos, rep_usuarios_con_mas_pedidos_registrados
-from .usuarios_controllers import usu_actualizacion, usu_eliminacion, usu_listado, usu_pedidos_usuario, usu_registro
 
-def validar_campos(datos: any, campos: list[str]):
+def validar_campos(datos: any, requeridos: list[str]):
    """
    Documentación para validar_campos
    
-   Parametros: datos(type=any), campos(type=lista)
+   :param datos: Debe ingresar como argumento los datos json del request
+   :type datos: any
+   :param requeridos: Debe ingresar como argumento los campos requeridos
+   :type requeridos: list[str]
 
-   Retorna un json con el codigo http 400
+   ¿Qué hace?: Valida que los campos requeridos si esten 
+
+   Retorna un json con el codigo http 400 o None
    """
 
-   requeridos = campos
    faltantes  = [x for x in requeridos if x not in datos]
 
    if faltantes:
       return jsonify({"mensaje": f"Faltan los campos {", ".join(faltantes)}"}), 400
+   
+   return None
+
+def limpieza_datos(campos: dict):
+   """
+   Documentación para limpieza_datos
+   
+   :param campo: Debe ingresar como argumento un campo para su limpieza
+   :type campo: dict
+
+   ¿Qué hace?: Valida si es string o el campo esta vacío
+
+   Retorna un json con el codigo http 400 o None
+   """
+
+   validar_limpieza = [campo for campo, valor in campos.items() if not isinstance(valor, str) or not valor.strip()]
+   
+   if validar_limpieza:
+      return jsonify({"mensaje": 
+                      f"Los campos {(", ".join(validar_limpieza))} deben ser una cadena de texto o no pueden estar vacíos"}), 400
    
    return None
