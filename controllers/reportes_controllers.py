@@ -1,7 +1,6 @@
 from flask import jsonify, request
 from datetime import datetime, timedelta
 from services import reportes_services
-import controllers
 from decoradores import manejo_errores
 
 @manejo_errores

@@ -115,7 +115,7 @@ def listar_productos_mas_ganancias(desde, hasta, limit):
             SELECT
                 prod.uuid,
                 prod.nombre as producto,
-                SUM(dp.subtotal * dp.cantidad) as total_ganado
+                SUM(dp.subtotal) as total_ganado
             FROM productos prod
             INNER JOIN detalle_pedido dp on prod.id = dp.producto_id
             INNER JOIN pedidos ped on dp.pedido_id = ped.id

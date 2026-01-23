@@ -13,6 +13,7 @@ class Pedido:
     def ped_diccionario(self):
         return {
             'ref'              : self.uuid,
+            'cliente'          : self.nombre_ciente,
             'estado'           : self.estado,
             'total'            : self.total,
             'direccion_entrega': self.direccion_entrega,

@@ -34,7 +34,7 @@ def ped_registro():
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     validar_datos = controllers.limpieza_datos(
-        {"estado": estado, "total": total, "direccion_entrega": direccion_entrega, 
+        {"estado": estado, "direccion_entrega": direccion_entrega, 
          "ref_cliente": ref_cliente, "ref_usuario": ref_usuario})
 
     if validar_datos:

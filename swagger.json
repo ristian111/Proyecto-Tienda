@@ -42,24 +42,28 @@
     "description": "Todo sobre la gestión de Inventarios"
     },
     {
-    "name": "Usuarios",
-    "description": "Todo sobre la gestión de Usuarios"
-    },
-    {
     "name": "Pedidos",
     "description": "Todo sobre la gestión de Pedidos"
+    },
+    {
+    "name": "Detalles",
+    "description": "Todo sobre los detalles de pedidos"
     },
     {
     "name": "Facturas",
     "description": "Todo sobre la gestión de Facturas"
     },
     {
+    "name": "Usuarios",
+    "description": "Todo sobre la gestión de Usuarios"
+    },
+    {
     "name": "Autenticación",
     "description": "Valida credenciales del usuario"
     },
     {
-    "name": "Detalles",
-    "description": "Todo sobre los detalles de pedidos"
+    "name": "Reportes",
+    "description": "Todo sobre los reportes generados de la tienda"
     }
   ],
   "security": [
@@ -99,6 +103,22 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -127,7 +147,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que la categoría fue registrada correctamente.",
             "content": {
               "application/json": {
@@ -137,14 +157,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Categoria registrada exitosamente"
+                    "mensaje": "Categoría registrada exitosamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -153,7 +173,30 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar categoría" }
+                    }
                   }
                 }
               }
@@ -195,7 +238,7 @@
         },
         "responses": {
           "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que la categoria fue editada correctamente del sistema.",
+            "description": "Devuelve un mensaje de confirmación indicando que la categoría fue editada correctamente del sistema.",
             "content": {
               "application/json": {
                 "schema": {
@@ -204,7 +247,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Categoria Editada"
+                    "mensaje": "Categoría actualizada exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar categoría" }
+                    }
                   }
                 }
               }
@@ -215,8 +297,8 @@
 
       "delete": {
         "tags":["Categorías"],
-        "summary": "Eliminar una categoria por referencia",
-        "description":"Este endpoint permite eliminar una categoria del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una categoria existente, se eliminará de forma permanente.",
+        "summary": "Eliminar una categoría por referencia",
+        "description":"Este endpoint permite eliminar una categoría del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una categoría existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
@@ -227,7 +309,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que la categoria fue eliminada correctamente del sistema.",
+            "description": "Devuelve un mensaje de confirmación indicando que la categoría fue eliminada correctamente del sistema.",
             "content": {
               "application/json": {
                 "schema": {
@@ -236,7 +318,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Categoria Eliminada"
+                    "mensaje": "Categoría eliminada exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "La categoría no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar categoría" }
+                    }
                   }
                 }
               }
@@ -276,6 +397,22 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -306,7 +443,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que el cliente fue registrado correctamente.",
             "content": {
               "application/json": {
@@ -316,14 +453,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Cliente Registrado"
+                    "mensaje": "Cliente registrado exitosamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -332,7 +469,30 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar cliente" }
+                    }
                   }
                 }
               }
@@ -385,7 +545,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Cliente Editado"
+                    "mensaje": "Cliente actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar cliente" }
+                    }
                   }
                 }
               }
@@ -417,7 +616,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Cliente Eliminado"
+                    "mensaje": "Cliente eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El cliente no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar cliente" }
+                    }
                   }
                 }
               }
@@ -461,6 +699,22 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -496,7 +750,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que el producto fue registrado correctamente.",
             "content": {
               "application/json": {
@@ -506,14 +760,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Producto Registrado"
+                    "mensaje": "Producto registrado exitosamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -522,7 +776,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "La categoria no existe" 
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar producto" }
+                    }
                   }
                 }
               }
@@ -580,7 +873,62 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Producto Editado"
+                    "mensaje": "Producto actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "La categoria no existe" 
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar producto" }
+                    }
                   }
                 }
               }
@@ -612,7 +960,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Producto Eliminado"
+                    "mensaje": "Producto eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El producto no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar producto" }
+                    }
                   }
                 }
               }
@@ -656,6 +1043,22 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -692,7 +1095,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que el inventario fue registrado correctamente.",
             "content": {
               "application/json": {
@@ -702,14 +1105,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Inventario Registrado"
+                    "mensaje": "Inventario registrado exitoxamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -718,7 +1121,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El producto no existe" 
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar inventario" }
+                    }
                   }
                 }
               }
@@ -774,7 +1216,62 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Inventario Editado"
+                    "mensaje": "Inventario actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El producto no existe" 
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar inventario" }
+                    }
                   }
                 }
               }
@@ -806,7 +1303,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Inventario Eliminado"
+                    "mensaje": "Inventario eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El inventario no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar inventario" }
+                    }
                   }
                 }
               }
@@ -815,17 +1351,26 @@
         }
       }     
     },
-    "/usuarios": {
+    "/inventarios/stock-bajo": {
       "get": {
-        "security": [
-          { "BearerAuth": [] }
+        "tags":["Inventarios"],
+        "summary": "Lista los productos con stock bajo",
+        "description":"Este endpoint permite obtener un listado completo de los productos con stock bajo en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada y punto_reorden.",
+        "parameters":[
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indica el número de productos que listar con stock bajo",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
         ],
-        "tags":["Usuarios"],
-        "summary": "Listar todos los usuarios",
-        "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
         "responses": {
           "200": {
-            "description": "Respuesta exitosa que contiene la lista de usuarios.",
+            "description": "Respuesta exitosa que contiene la lista de los productos con stock bajo.",
             "content": {
               "application/json": {
                 "schema": {
@@ -833,77 +1378,26 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre": { "type": "string" },
-                      "username": { "type": "string" },
-                      "password_hash": { "type": "string" },
-                      "rol": { "type": "string" },
-                      "ultimo_acceso": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "mensaje": { "type": "string" },
+                      "Stock producto": { "type": "string" }
                     },
                     "example": 
                       {
-                        "producto_id": "Juan",
-                        "username": "JuanADMINISTRADOR",
-                        "password_hash": "A123-AU2U3$ja",
-                        "rol": "Administrador",
-                        "ultimo_acceso": "2025-12-18 17:30:28",
-                        "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                        "mensaje": "Producto encontrado exitosamente",
+                        "Stock producto": {
+                          "producto": "Arroz",
+                          "inventario_actual": 20,
+                          "cantidad_reservada": 4,
+                          "punto_reorden": 7
+                      } 
                     }                      
                   }
                 }
               }
             }
-          }
-        }
-      },
-
-      "post": {
-        "tags":["Usuarios"],
-        "summary": "Registrar un nuevo usuario",
-        "description": "Este endpoint permite registrar un nuevo usuario en el sistema. Requiere enviar un objeto JSON con los datos del usuario como nombre, username, password_hash y rol.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["nombre", "username", "password_hash", "rol"],
-                "properties": {
-                  "nombre": { "type": "string" },
-                  "username": { "type": "string" },
-                  "password_hash": { "type": "string" },
-                  "rol": { "type": "string" }
-                },
-                "example": 
-                  {
-                    "nombre": "Juan",
-                    "username": "JuanADMINISTRADOR",
-                    "password_hash": "A123-AU2U3$ja",
-                    "rol": "Administrador"
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue registrado correctamente.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "mensaje": { "type": "string" }
-                  },
-                  "example": {
-                    "mensaje": "Usuario Registrado"
-                  }
-                }
-              }
-            }
           },
-          "400": {
-            "description": "error",
+          "500": {
+            "description": "Error del servidor",
             "content": {
               "application/json": {
                 "schema": {
@@ -912,7 +1406,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al buscar producto" }
+                    }
                   }
                 }
               }
@@ -921,45 +1422,50 @@
         }
       }
     },
-    "/usuarios/{ref}": {
-      "put": {
-        "tags":["Usuarios"],
-        "summary": "Editar usuario existente",
+    "/inventarios/{prod}/productos": {
+      "get": {
+        "tags":["Inventarios"],
+        "summary": "Lista el stock del producto",
+        "description":"Este endpoint permite obtener un listado completo del stock del producto en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada, punto_reorden y ultima_modificación.",
         "parameters": [
           {
-            "name": "ref",
+            "name": "prod",
             "in": "path",
             "required": true,
             "schema": { "type": "string" }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["nombre", "username", "password_hash", "rol"],
-                "properties": {
-                  "nombre": { "type": "string" },
-                  "username": { "type": "string" },
-                  "password_hash": { "type": "string" },
-                  "rol": { "type": "string" }
-                },
-                "example": 
-                  {
-                    "nombre": "Juan",
-                    "username": "JuanADMINISTRADOR",
-                    "password_hash": "A123-AU2U3$ja",
-                    "rol": "Administrador"
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista del stock del producto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "mensaje": { "type": "string" },
+                      "Stock producto": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "mensaje": "Producto encontrado exitosamente",
+                        "Stock producto": {
+                          "producto": "Arroz",
+                          "inventario_actual": 20,
+                          "cantidad_reservada": 4,
+                          "punto_reorden": 7,
+                          "ultima_modificación": "2025-12-18 17:30:28"
+                      } 
+                    }                      
+                  }
                 }
               }
             }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue editado correctamente del sistema.",
+          },
+          "500": {
+            "description": "Error del servidor",
             "content": {
               "application/json": {
                 "schema": {
@@ -968,30 +1474,65 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Usuario Editado"
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al buscar producto" }
+                    }
                   }
                 }
               }
             }
           }
         }
-      },
-
-      "delete": {
-        "tags":["Usuarios"],
-        "summary": "Eliminar un usuario por referencia",
-        "description":"Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un usuario existente, se eliminará de forma permanente.",
-        "parameters": [
-          {
-            "name": "ref",
-            "in": "path",
-            "required": true,
-            "schema": { "type": "string" }
-          }
-        ],
+      }
+    },
+    "/inventarios/movimiento-inventario": {
+      "get": {
+        "tags":["Inventarios"],
+        "summary": "Lista los movimiento del inventario",
+        "description":"Este endpoint permite obtener un listado completo de los movimiento del inventario, como los cambios registrados hechos por acciones INSERT, UPDATE Y DELETE en la tabla inventarios, además de registrar la referenica del usuario que hizo los cambios y la hora del cambio. La respuesta incluye información básica como cantidad_actual_ant, cantidad_reservada_ant, punto_reorden_ant, cantidad_actual_nue, cantidad_reservada_nue, punto_reorden_nue, accion, fecha_hora y referencia del usuario.",
         "responses": {
           "200": {
-            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "description": "Respuesta exitosa que contiene la lista de los movimiento del inventario registrados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "cantidad_actual_ant": { "type": "integer" },
+                      "cantidad_reservada_ant": { "type": "integer" },
+                      "punto_reorden_ant": { "type": "integer" },
+                      "cantidad_actual_nue": { "type": "integer" },
+                      "cantidad_reservada_nue": { "type": "integer" },
+                      "punto_reorden_nue": { "type": "integer" },
+                      "accion": { "type": "string" },
+                      "fecha_hora": { "type": "string", "format": "date-time" },
+                      "ref_usuario": { "type": "integer" }
+                    },
+                    "example": {
+                      "cantidad_actual_ant": 20,
+                      "cantidad_reservada_ant": 4,
+                      "punto_reorden_ant": 7,
+                      "cantidad_actual_nue": 15,
+                      "cantidad_reservada_nue": 9,
+                      "punto_reorden_nue": 7,
+                      "accion": "UPDATE",
+                      "fecha_hora": "2025-12-18 17:30:28",
+                      "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461"
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
             "content": {
               "application/json": {
                 "schema": {
@@ -1000,14 +1541,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Usuario Eliminado"
+                    "mensaje": "Error interno del servidor"
                   }
                 }
               }
             }
           }
         }
-      }     
+      }
     },
     "/pedidos": {
       "get": {
@@ -1042,6 +1583,22 @@
                         "fecha_hora": "2025-12-18 17:30:28",
                         "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
                     }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
                   }
                 }
               }
@@ -1081,7 +1638,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que el pedido fue registrado correctamente.",
             "content": {
               "application/json": {
@@ -1091,14 +1648,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Pedido Registrado"
+                    "mensaje": "Pedido registrado exitosamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -1107,7 +1664,51 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "clienteNoExiste": {
+                      "summary": "No existe el recurso cliente",
+                      "value": { "mensaje": "El cliente no existe" }
+                  },
+                  "usuarioNoExiste": {
+                    "summary": "No existe el recurso usuario",
+                    "value": { "mensaje": "El usuario no existe" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar pedido" }
+                    }
                   }
                 }
               }
@@ -1165,7 +1766,67 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Pedido Editado"
+                    "mensaje": "Pedido actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "clienteNoExiste": {
+                      "summary": "No existe el recurso cliente",
+                      "value": { "mensaje": "El cliente no existe" }
+                  },
+                  "usuarioNoExiste": {
+                    "summary": "No existe el recurso usuario",
+                    "value": { "mensaje": "El usuario no existe" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar pedido" }
+                    }
                   }
                 }
               }
@@ -1197,7 +1858,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Pedido Eliminado"
+                    "mensaje": "Pedido eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El pedido no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar pedido" }
+                    }
                   }
                 }
               }
@@ -1205,6 +1905,61 @@
           }
         }
       }     
+    },
+    "/pedidos/pendientes": {
+      "get": {
+        "tags":["Pedidos"],
+        "summary": "Listar todos los pedidos pendientes",
+        "description":"Este endpoint permite obtener un listado completo de los pedidos registrados como pendientes en el sistema. La respuesta incluye información básica como nombre_cliente, estado_pedido, total, direccion_entrega, hora_pedido y referencia de cada pedido pendiente.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de pedidos pendientes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "referencia": { "type": "string" },
+                      "nombre_cliente": { "type": "string" },
+                      "estado_pedido": { "type": "string" },
+                      "direccion_entrega": { "type": "string" },
+                      "hora_pedido": { "type": "string" },
+                      "total": { "type": "float" }
+                    },
+                    "example": 
+                      {
+                        "referencia": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                        "nombre_cliente": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                        "estado_pedido": "pendiente",
+                        "direccion_entrega": "Cra 10b #54 - 103",
+                        "hora_pedido": "2025-12-18 17:30:28",
+                        "total": 35500
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/detalles/pedidos": {
       "get": {
@@ -1237,6 +1992,22 @@
                         "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
                         "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
                     }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
                   }
                 }
               }
@@ -1274,7 +2045,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Devuelve un mensaje de confirmación indicando que el detalle pedido fue registrado correctamente.",
             "content": {
               "application/json": {
@@ -1284,14 +2055,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Detalle pedido Registrado"
+                    "mensaje": "detalle_pedido registrado exitosamente"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "error",
+            "description": "Error de validación de datos",
             "content": {
               "application/json": {
                 "schema": {
@@ -1300,7 +2071,51 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "faltan parametro en la peticion..."
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "pedidoNoExiste": {
+                      "summary": "No existe el recurso pedido",
+                      "value": { "mensaje": "El pedido no existe" }
+                  },
+                  "productoNoExiste": {
+                    "summary": "No existe el recurso producto",
+                    "value": { "mensaje": "El producto no existe" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar detalle_pedido" }
+                    }
                   }
                 }
               }
@@ -1356,7 +2171,67 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Detalle pedido Editado"
+                    "mensaje": "detalle_pedido actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "pedidoNoExiste": {
+                      "summary": "No existe el recurso pedido",
+                      "value": { "mensaje": "El pedido no existe" }
+                  },
+                  "productoNoExiste": {
+                    "summary": "No existe el recurso producto",
+                    "value": { "mensaje": "El producto no existe" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar detalle_pedido" }
+                    }
                   }
                 }
               }
@@ -1388,7 +2263,46 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Detalle pedido Eliminado"
+                    "mensaje": "detalle_pedido eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El detalle_pedido no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar detalle_pedido" }
+                    }
                   }
                 }
               }
@@ -1591,6 +2505,22 @@
               }
             }
           },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "No existe el recurso",
             "content": {
@@ -1704,6 +2634,414 @@
         }
       }     
     },
+    "/usuarios": {
+      "get": {
+        "security": [
+          { "BearerAuth": [] }
+        ],
+        "tags":["Usuarios"],
+        "summary": "Listar todos los usuarios",
+        "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de usuarios.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "username": { "type": "string" },
+                      "password_hash": { "type": "string" },
+                      "rol": { "type": "string" },
+                      "ultimo_acceso": { "type": "string" },
+                      "referencia": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "producto_id": "Juan",
+                        "username": "JuanADMINISTRADOR",
+                        "password_hash": "A123-AU2U3$ja",
+                        "rol": "Administrador",
+                        "ultimo_acceso": "2025-12-18 17:30:28",
+                        "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error no autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "tokenNoValido": {
+                      "summary": "Error token no válido",
+                      "value": { "mensaje": "Token inválido" }
+                    },
+                    "tokenExpirado": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Token expirado" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No autorizado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Acceso denegado"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "post": {
+        "tags":["Usuarios"],
+        "summary": "Registrar un nuevo usuario",
+        "description": "Este endpoint permite registrar un nuevo usuario en el sistema. Requiere enviar un objeto JSON con los datos del usuario como nombre, username, password_hash y rol.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "username", "password_hash", "rol"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "username": { "type": "string" },
+                  "password_hash": { "type": "string" },
+                  "rol": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Juan",
+                    "username": "JuanADMINISTRADOR",
+                    "password_hash": "A123-AU2U3$ja",
+                    "rol": "Administrador"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario registrado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al registrar usuario" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{ref}": {
+      "put": {
+        "tags":["Usuarios"],
+        "summary": "Editar usuario existente",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "username", "password_hash", "rol"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "username": { "type": "string" },
+                  "password_hash": { "type": "string" },
+                  "rol": { "type": "string" }
+                },
+                "example": 
+                  {
+                    "nombre": "Juan",
+                    "username": "JuanADMINISTRADOR",
+                    "password_hash": "A123-AU2U3$ja",
+                    "rol": "Administrador"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue editado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario actualizado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al actualizar usuario" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+
+      "delete": {
+        "tags":["Usuarios"],
+        "summary": "Eliminar un usuario por referencia",
+        "description":"Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un usuario existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "ref",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario eliminado exitosamente"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El pedido no existe"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "errorGenerico": {
+                      "summary": "Error inesperado",
+                      "value": { "mensaje": "Error interno del servidor" }
+                    },
+                    "errorBaseDatos": {
+                      "summary": "Error de conexión",
+                      "value": { "mensaje": "Error al eliminar usuario" }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }     
+    },
+    "/usuarios/{user}/pedidos": {
+      "get": {
+        "tags":["Usuarios"],
+        "summary": "Lista el usuario con el número de pedidos registrados",
+        "parameters": [
+          {
+            "name": "usuario",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "description":"Este endpoint permite obtener un listado del número de pedidos registrados por el usuario buscado en el sistema. La respuesta incluye información básica como nombre del usuario y el número de pedidos registrados por el usuario.",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene el usuario buscado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "mensaje": { "type": "string" },
+                      "pedidos_por_usuario": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                      "mensaje": "Usuario encontrado exitosamente",
+                      "pedidos_por_usuario": {
+                          "nombre_de_usuario": "Cristian",
+                          "pedidos_por_usuario": 7
+                      }
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/auth/login": {
       "post": {
         "tags": ["Autenticación"],
@@ -1759,6 +3097,505 @@
                   },
                   "example": {
                     "mensaje": "Credenciales inválidas"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/clientes/mas-pedidos": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista por defecto los 5 clientes con más pedidos",
+        "description":"Este endpoint permite obtener un listado por defecto de los 5 clientes con más pedidos en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indica el número de resultados",
+            "schema": {
+              "type": "integer",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de los clientes con más pedidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                    },
+                    "example": 
+                      {
+                        "nombre_reporte": "clientes_con_mas_pedidos",
+                        "resultado": [
+                          {
+                          "cliente": "Hugo",
+                          "numero_pedidos": 10
+                          },
+                          {
+                          "cliente": "José",
+                          "numero_pedidos": 8
+                          },
+                          {
+                          "cliente": "Juan",
+                          "numero_pedidos": 7
+                          },
+                          {
+                          "cliente": "Carlos",
+                          "numero_pedidos": 3
+                          },
+                          {
+                          "cliente": "Mario",
+                          "numero_pedidos": 1
+                          }
+                      ]
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/usuarios/mas-pedidos-registrados": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista por defecto los 5 usuarios con más pedidos registrados",
+        "description":"Este endpoint permite obtener un listado por defecto de los 5 usuarios con más pedidos registrados en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Indica el número de resultados",
+            "schema": {
+              "type": "integer",
+              "default": 5
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de los usuarios con más pedidos registrados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                    },
+                    "example": 
+                      {
+                        "nombre_reporte": "usuarios_con_mas_pedidos_registrados",
+                        "resultado": [
+                          {
+                          "registro_pedidos": 12,
+                          "usuario": "Juan"
+                          },
+                          {
+                          "registro_pedidos": 9,
+                          "usuario": "Victor"
+                          },
+                          {
+                          "registro_pedidos": 7,
+                          "usuario": "Manolo"
+                          },
+                          {
+                          "registro_pedidos": 4,
+                          "usuario": "Duvan"
+                          },
+                          {
+                          "registro_pedidos": 2,
+                          "usuario": "Pedro"
+                          }
+                      ]
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/productos/mas-vendidos": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista por defecto el producto más vendido registrado",
+        "description":"Este endpoint permite obtener un listado por defecto el producto más vendido registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "description": "Indica desde que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "description": "Indica hasta que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "description": "Indica el número de resultados",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista del producto más vendido registrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Productos_mas_vendidos": {
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                      },
+                      "mensaje": { "type": "string" }
+                    },
+                    "example": 
+                      { 
+                        "Productos_mas_vendidos": {
+                          "nombre_reporte": "productos_mas_vendidos",
+                          "resultado": [
+                            {
+                            "id": "d341e97c-de10-4baa-9fcd-d632b303f0ad",
+                            "producto": "Arroz",
+                            "total_vendido": 14
+                            }
+                      ] },
+                        "mensaje": "Producto encontrado exitosamente"
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/pedidos/por-fecha": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista de pedidos según el tipo por fecha especificada",
+        "description":"Este endpoint permite obtener un listado de pedidos según el tipo por fecha especificada en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "description": "Indica desde que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "description": "Indica hasta que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "estado",
+            "in": "query",
+            "required": false,
+            "description": "Indica el estado de los pedidos",
+            "schema": {
+              "type": "string",
+              "enum": ["pendiente", "entregado", "cancelado"],
+              "default": "entregado"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de pedidos según el tipo por fecha especificada.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Productos_mas_vendidos": { 
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                      },
+                      "mensaje": { "type": "string" }
+                    },
+                    "example": 
+                      { 
+                        "Pedidos": {
+                          "nombre_reporte": "pedidos_por_fecha",
+                          "resultado": [
+                            {
+                            "cantidad_pedidos": 4
+                            }
+                      ] },
+                      "mensaje": "Pedidos encontrado exitosamente"
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/productos/mas-ganancias": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista por defecto el producto con más ganancia registrado",
+        "description":"Este endpoint permite obtener un listado por defecto el producto con más ganancia registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "description": "Indica desde que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "description": "Indica hasta que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "description": "Indica el número de resultados",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista del producto con más ganancia registrado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Producto con más ganancias": {
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                      },
+                      "mensaje": { "type": "string" }
+                    },
+                    "example": 
+                      { 
+                        "Productos_mas_vendidos": {
+                          "nombre_reporte": "producto_con_mas_ganancia",
+                          "resultado": [
+                            {
+                            "id": "d341e97c-de10-4baa-9fcd-d632b303f0ad",
+                            "producto": "Arroz",
+                            "total_ganado": 150000.00
+                            }
+                      ] },
+                        "mensaje": "Producto encontrado exitosamente"
+                    }                      
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Error interno del servidor"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reportes/facturas/ingresos": {
+      "get": {
+        "tags":["Reportes"],
+        "summary": "Lista por defecto los ingresos de ventas por mes mediante las facturas emitidas",
+        "description":"Este endpoint permite obtener un listado por defecto los ingresos de ventas por mes mediante las facturas emitidas registradas en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters":[
+          {
+            "name": "desde",
+            "in": "query",
+            "required": false,
+            "description": "Indica desde que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          },
+          {
+            "name": "hasta",
+            "in": "query",
+            "required": false,
+            "description": "Indica hasta que fecha trae los datos",
+            "schema": {
+              "type": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de los ingresos de ventas registrados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Producto con más ganancias": {
+                      "nombre_reporte": { "type": "string" },
+                      "resultado": { "type": "array" }
+                      },
+                      "mensaje": { "type": "string" }
+                    },
+                    "example": 
+                      { 
+                        "Ingresos de ventas": {
+                          "nombre_reporte": "ingresos_de_ventas",
+                          "resultado": [
+                            {
+                            "ingresos_generados": 130600.00
+                            }
+                      ] },
+                        "mensaje": "Ingresos listados exitosamente"
+                    }                      
                   }
                 }
               }

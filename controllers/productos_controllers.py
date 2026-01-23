@@ -35,8 +35,7 @@ def prod_registro():
     
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     validar_datos = controllers.limpieza_datos(
-        {"nombre": nombre, "precio_venta": precio_venta, "precio_compra": precio_compra, 
-         "unidad_medida": unidad_medida, "ref_categoria": categoria_uuid})
+        {"nombre": nombre, "unidad_medida": unidad_medida, "ref_categoria": categoria_uuid})
 
     if validar_datos:
         return validar_datos

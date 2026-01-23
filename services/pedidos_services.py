@@ -22,6 +22,7 @@ def listar_pedidos():
                 u.uuid as referencia_usuario
             FROM pedidos pe INNER JOIN clientes cli on pe.cliente_id = cli.id
             INNER JOIN usuarios u on pe.usuario_id = u.id
+            ORDER BY pe.id desc
         """
         cursor.execute(sql)
         datos = cursor.fetchall()

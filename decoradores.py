@@ -8,5 +8,5 @@ def manejo_errores(f):
          return f(*args, **kwargs)
       except Exception as e:
          print(str(e))
-         return jsonify({"Error interno del servidor"}), 500
+         return jsonify({"mensaje": "Error interno del servidor"}), 500
    return decorador
