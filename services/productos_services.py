@@ -31,41 +31,50 @@ def listar_productos():
             cursor.close()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categoria_id):
+def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categoria_id, categoria_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
+        producto = Producto(None, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_uuid)
         sql = """INSERT INTO productos (
         uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id
         ) 
         VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(sql, (uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id))
+        cursor.execute(sql, (uuid, nombre, producto.get_precio_venta(), producto.get_precio_compra(), unidad_medida, categoria_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        return Producto(id, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id).prod_diccionario()
+        if not id:
+            raise RuntimeError
+        producto.id = id
+        return producto.prod_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise e
+        if isinstance(e, ValueError):
+            raise e 
+        raise RuntimeError("Error al registrar detalle_pedido")
     finally:
         if cursor:
             cursor.close()
 
 # Utiliza uuid para acceder al producto y retorna True o False si modifico el producto
-def actualizar_producto(uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id):
+def actualizar_producto(uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id, categoria_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
+        producto = Producto(None, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_uuid)
         sql = """UPDATE productos SET 
         nombre=%s, precio_venta=%s, precio_compra=%s, unidad_medida=%s, categoria_id=%s
         WHERE uuid=%s
         """
-        cursor.execute(sql, (nombre, precio_venta, precio_compra, unidad_medida, categoria_id, uuid))
+        cursor.execute(sql, (nombre, producto.get_precio_venta(), producto.get_precio_compra(), unidad_medida, categoria_id, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return producto.prod_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:

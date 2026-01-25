@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import jsonify
+from flask import jsonify, current_app
 
 def manejo_errores(f):
    @wraps(f)

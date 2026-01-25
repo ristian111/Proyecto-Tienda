@@ -1,5 +1,6 @@
 from flask import current_app
 from models import Pedido
+from datetime import datetime
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 
@@ -61,7 +62,7 @@ def listar_pedidos_pendientes():
             cursor.close()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id):
+def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id, cliente_uuid, usuario_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
@@ -70,23 +71,33 @@ def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id):
         cursor.execute(sql,(uuid, estado, total, direccion_entrega, cliente_id, usuario_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        return Pedido(id, uuid, estado, total, direccion_entrega, None, None, cliente_id, usuario_id).ped_diccionario()
+        if not id:
+            raise RuntimeError
+        sql_cliente = "SELECT nombre FROM cliente WHERE uuid = %s"
+        cursor.execute(sql_cliente, (cliente_uuid,))
+        dato = cursor.fetchone()
+        nombre_cliente = dato["nombre"]
+        return Pedido(id, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise e
+        raise RuntimeError("Error al registrar pedido")
     finally:
         if cursor:
             cursor.close()
 
 # Utiliza uuid para acceder al pedido y retorna True o False si modifico el pedido
-def actualizar_pedido(uuid, estado, total, direccion_entrega, cliente_id, usuario_id):
+def actualizar_pedido(uuid, estado, total, direccion_entrega, cliente_id, usuario_id, cliente_uuid, usuario_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
         sql = "UPDATE pedidos SET estado=%s, total=%s, direccion_entrega=%s, cliente_id=%s, usuario_id=%s WHERE uuid = %s"
         cursor.execute(sql,(estado, total, direccion_entrega, cliente_id, usuario_id, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        sql_cliente = "SELECT nombre FROM cliente WHERE uuid = %s"
+        cursor.execute(sql_cliente, (cliente_uuid,))
+        dato = cursor.fetchone()
+        nombre_cliente = dato["nombre"]
+        return Pedido(id, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

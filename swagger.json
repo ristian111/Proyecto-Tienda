@@ -2,7 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "API Tienda",
-    "description": "API RESTful para gestionar Categorías, Clientes, Inventario, Productos, Usuarios, Pedidos, Detalles y Facturas de una tienda utilizando API Key y JWT.",
+    "description": "API RESTful para gestionar Categorías, Clientes, Inventarios, Productos, Usuarios, Pedidos, Detalles, Facturas y Reportes de una tienda utilizando API Key y JWT.",
     "version": "1.1.0"
   },
   "components": {
@@ -285,7 +285,7 @@
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar categoría" }
+                      "value": { "mensaje": "Error al actualizar categoría" }
                     }
                   }
                 }

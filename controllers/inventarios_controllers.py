@@ -37,19 +37,6 @@ def inv_registro():
         punto_reorden      = int(punto_reorden)
     except ValueError:
         return jsonify({"mensaje": "Los campos cantidad_actual, cantidad_reservada y punto_reorden deben ser números enteros"}), 400
-
-    # Valida a través de operadores de comparación para asegurar los datos
-    if cantidad_actual < 0:
-        return jsonify({"mensaje": "cantidad_actual no puede ser negativa"}), 400
-    
-    if cantidad_reservada < 0:
-        return jsonify({"mensaje": "cantidad_reservada no puede ser negativa"}), 400
-
-    if punto_reorden < 0:
-        return jsonify({"mensaje": "punto_reorden no puede ser negativo"}), 400
-    
-    if cantidad_reservada > cantidad_actual:
-        return jsonify({"mensaje": "cantidad_reservada no puede ser mayor que cantidad_actual"}), 400
     
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     validar_datos = controllers.limpieza_datos({"ref_producto": producto_uuid})
@@ -65,11 +52,14 @@ def inv_registro():
     # Donde se guarda en una variable para acceder a la id del producto
     producto_id = producto['id']
 
-    commit = inventarios_services.registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto_reorden)
-    if commit:
-        return jsonify({"mensaje": "Inventario registrado exitosamente"}), 201
-    
-    return jsonify({"mensaje": "Error al registrar inventario"}), 500
+    try:
+        commit = inventarios_services.registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto_reorden)
+        return jsonify({"mensaje": "Inventario registrado exitosamente",
+                        "Inventario": commit}), 201
+    except ValueError as e:
+        return jsonify({"mensaje": str(e)}), 400
+    except RuntimeError as e:
+        return jsonify({"mensaje": str(e)}), 500
 
 @manejo_errores
 def inv_eliminacion(uuid):
@@ -105,18 +95,6 @@ def inv_actualizacion(uuid):
         punto_reorden      = int(punto_reorden)
     except ValueError:
         return jsonify({"mensaje": "Los campos cantidad_actual, cantidad_reservada y punto_reorden deben ser números enteros"}), 400
-
-    if cantidad_actual < 0:
-        return jsonify({"mensaje": "cantidad_actual no puede ser negativa"}), 400
-    
-    if cantidad_reservada < 0:
-        return jsonify({"mensaje": "cantidad_reservada no puede ser negativa"}), 400
-
-    if punto_reorden < 0:
-        return jsonify({"mensaje": "punto_reorden no puede ser negativo"}), 400
-    
-    if cantidad_reservada > cantidad_actual:
-        return jsonify({"mensaje": "cantidad_reservada no puede ser mayor que cantidad_actual"}), 400
     
     validar_datos = controllers.limpieza_datos({"ref_producto": producto_uuid})
 
@@ -128,11 +106,17 @@ def inv_actualizacion(uuid):
         return jsonify({"mensaje": "El producto no existe"}), 404
 
     producto_id = producto['id']
-
-    commit = inventarios_services.actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden)
-    if commit:
-        return jsonify({"mensaje": "Inventario actualizado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al actualizar inventario"}), 500
+    inventario = inventarios_services.obtener_inventario_por_uuid(uuid)
+    if inventario:
+        try:
+            commit = inventarios_services.actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, producto_uuid.strip())
+            return jsonify({"mensaje": "Inventario actualizado exitosamente",
+                            "Inventario": commit}), 200
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar inventario"}), 500
+    return jsonify({"mensaje": "El inventario no existe"}), 404
 
 @manejo_errores
 def inv_productos_stock_bajo():

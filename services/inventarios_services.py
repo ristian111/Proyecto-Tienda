@@ -1,4 +1,5 @@
 from flask import current_app, request
+from datetime import datetime
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 from models import Inventario, MovimientoInventario
@@ -38,31 +39,40 @@ def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto
         cursor = current_app.mysql.connection.cursor()
         cursor.execute("SET @usuario_app = %s", (usuario_id,))
         uuid = str(uuidGenerado.uuid4())
+        inventario = Inventario(None, uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
         sql = "INSERT INTO inventarios (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden))
+        cursor.execute(sql, (uuid, producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada(), inventario.get_punto_reorden()))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        return Inventario(id, uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, None).inv_diccionario()
+        if not id:
+            raise RuntimeError
+        inventario.id = id
+        return inventario.inv_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise e
+        if isinstance(e, ValueError):
+            raise e
+        raise RuntimeError("Error al registrar inventario")
     finally:
         if cursor:
             cursor.close()
 
 # Utiliza uuid para acceder al inventario y retorna True o False si modifico el inventario
-def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden):
+def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, producto_uuid):
     cursor = None
     usuario_id = request.usuario["uuid"]
     try:
         cursor = current_app.mysql.connection.cursor()
         cursor.execute("SET @usuario_app = %s", (usuario_id,))
+        inventario = Inventario(None, None, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
         sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
-        cursor.execute(sql, (producto_id, cantidad_actual, cantidad_reservada, punto_reorden, uuid))
+        cursor.execute(sql, (producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada, inventario.get_punto_reorden(), uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return inventario.inv_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:

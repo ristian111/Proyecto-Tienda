@@ -39,16 +39,6 @@ def prod_registro():
 
     if validar_datos:
         return validar_datos
-    
-    # Valida a través de operadores de comparación para asegurar los datos
-    if precio_venta <= 0:
-        return jsonify({"mensaje": "precio_venta debe ser mayor a 0"}), 400
-
-    if precio_compra < 0:
-        return jsonify({"mensaje": "precio_compra no puede ser negativo"}), 400
-
-    if precio_compra > precio_venta:
-        return jsonify({"mensaje": "precio_compra no puede ser mayor que precio_venta"}), 400
 
     # Revisa si la referencia de la categoria existe a través del uuid
     categoria = categorias_services.obtener_categoria_por_uuid(categoria_uuid.strip())
@@ -58,10 +48,14 @@ def prod_registro():
     # Donde se guarda en una variable para acceder a la id del producto
     categoria_id = categoria['id']
 
-    commit = productos_services.registrar_producto(nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id)
-    if commit:
-        return jsonify({"mensaje": "Producto registrado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al registrar producto"}), 500
+    try:
+        commit = productos_services.registrar_producto(nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
+        return jsonify({"mensaje": "Producto registrado exitosamente",
+                        "Producto": commit}), 201
+    except ValueError as e:
+        return jsonify({"mensaje": str(e)}), 400
+    except RuntimeError as e:
+        return jsonify({"mensaje": str(e)}), 500
 
 @manejo_errores
 def prod_eliminacion(uuid):
@@ -98,18 +92,8 @@ def prod_actualizacion(uuid):
     except ValueError:
         return jsonify({"mensaje": "Los campos precio_venta y precio_compra deben ser números"}), 400
 
-    if precio_venta <= 0:
-        return jsonify({"mensaje": "precio_venta debe ser mayor a 0"}), 400
-
-    if precio_compra < 0:
-        return jsonify({"mensaje": "precio_compra no puede ser negativo"}), 400
-
-    if precio_compra > precio_venta:
-        return jsonify({"mensaje": "precio_compra no puede ser mayor que precio_venta"}), 400
-
     validar_datos = controllers.limpieza_datos(
-        {"nombre": nombre, "precio_venta": precio_venta, "precio_compra": precio_compra, 
-         "unidad_medida": unidad_medida, "ref_categoria": categoria_uuid})
+        {"nombre": nombre, "unidad_medida": unidad_medida, "ref_categoria": categoria_uuid})
 
     if validar_datos:
         return validar_datos
@@ -119,8 +103,15 @@ def prod_actualizacion(uuid):
         return jsonify({"mensaje": "La categoría no existe"}), 404
     
     categoria_id = categoria['id']
-
-    commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id)
-    if commit:
-        return jsonify({"mensaje": "Producto actualizado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al actualizar producto"}), 500
+    
+    producto = productos_services.obtener_producto_por_uuid(uuid)
+    if producto:
+        try:
+            commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
+            return jsonify({"mensaje": "Producto actualizado exitosamente",
+                            "Producto": commit}), 200
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar producto"}), 500
+    return jsonify({"mensaje": "El producto no existe"}), 404

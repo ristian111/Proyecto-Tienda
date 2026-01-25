@@ -31,23 +31,19 @@ def usu_registro():
 
     if validar_datos:
         return validar_datos
-
-    # Valida a través de operadores de comparación para asegurar los datos
-    if len(username.strip()) < 10:
-        return jsonify({"mensaje": "El username debe tener al menos 10 caracteres"}), 400
-    
-    if len(password_hash.strip()) < 10:
-        return jsonify({"mensaje": "La contraseña debe tener al menos 10 caracteres"}), 400
     
     # Genera un hash de la contraseña donde se envia a la base de datos
     pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash)
     
-    commit = usuarios_services.registrar_usuario(nombre.strip(), username, pass_encriptado, rol.strip().capitalize()) 
-    if commit:
-        return jsonify({"mensaje": "Usuario registrado exitosamente"}), 201
+    try:
+        commit = usuarios_services.registrar_usuario(nombre.strip(), username, pass_encriptado, rol.strip().capitalize())  
+        return jsonify({"mensaje": "Usuario registrado exitosamente",
+                        "Usuario": commit}), 201
+    except ValueError as e:
+        return jsonify({"mensaje": str(e)}), 400
+    except Exception:
+        return jsonify({"mensaje": "Error al registrar usuario"}), 500
     
-    return jsonify({"mensaje": "Error al registrar usuario"}), 500
-
 @manejo_errores
 def usu_eliminacion(uuid):
     # Valida la existencia del usuario a través del uuid 
@@ -81,19 +77,19 @@ def usu_actualizacion(uuid):
 
     if validar_datos:
         return validar_datos
-
-    if len(username.strip()) < 10:
-        return jsonify({"mensaje": "El nombre debe tener al menos 10 caracteres"}), 400
-    
-    if len(password_hash.strip()) < 10:
-        return jsonify({"mensaje": "La contraseña debe tener al menos 10 caracteres"}), 400
     
     pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash)
 
-    commit = usuarios_services.actualizar_usuario(uuid.strip(), nombre.strip(), username, pass_encriptado, rol.strip().capitalize())
-    if commit:
-        return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 201
-    return jsonify({"mensaje": "Error al actualizar usuario"}), 500
+    usuario = usuarios_services.obtener_usuario_por_uuid(uuid)
+    if usuario:
+        try:
+            commit = usuarios_services.actualizar_usuario(uuid.strip(), nombre.strip(), username, pass_encriptado, rol.strip().capitalize())
+            return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 200
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar usuario"}), 500
+    return jsonify({"mensaje": "El usuario no existe"}), 404
 
 @manejo_errores
 def usu_pedidos_usuario(user):

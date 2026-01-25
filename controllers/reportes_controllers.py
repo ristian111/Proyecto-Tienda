@@ -12,8 +12,12 @@ def rep_clientes_con_mas_pedidos():
 @manejo_errores
 def rep_usuarios_con_mas_pedidos_registrados():
     limit = request.args.get("limit", default=5, type=int)
-    commit = reportes_services.listar_usuarios_con_mas_registro_pedidos(limit=limit)
-    return jsonify(commit), 200
+    commit = reportes_services.listar_usuarios_con_mas_registro_pedidos(limit)
+    if commit:
+        return jsonify({"mensaje": "Usuario encontrado exitosamente",
+                        "Usuario con mas pedidos registrados": commit}), 200
+    
+    return jsonify({"mensaje": "Error al buscar usuario"}), 500
 
 @manejo_errores
 def rep_productos_mas_vendidos():

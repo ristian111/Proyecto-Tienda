@@ -25,6 +25,8 @@ def fac_registro(pedido_uuid):
             commit = facturas_services.registrar_factura(pedido, tipo_venta, pedido_uuid)
             return jsonify({"mensaje": "Factura registrada",
                             "Factura": commit}), 201
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
         except Exception as e:
             return jsonify({"mensaje": str(e)}), 500
     
@@ -78,7 +80,12 @@ def fac_actualizacion(uuid):
     
     pedido_id = pedido['id']
 
-    commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id)
-    if commit:
-        return jsonify({"mensaje": "Factura actualizada exitosamente"}), 200
-    return jsonify({"mensaje": "Error al actualizar factura"}), 500
+    factura = facturas_services.obtener_factura_por_uuid(uuid)
+    if factura:
+        try:
+            commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id, ref_pedido.strip())
+            return jsonify({"mensaje": "Factura actualizada exitosamente",
+                            "Factura": commit}), 200
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar factura"}), 500
+    return jsonify({"mensaje": "La factura no existe"}), 404

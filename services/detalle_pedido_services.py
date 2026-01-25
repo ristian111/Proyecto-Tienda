@@ -32,34 +32,45 @@ def listar_detalles_pedidos():
             cursor.close()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id):
+def registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, pedido_uuid, producto_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
+        detalle_pedido = DetallePedido(None, uuid, cantidad, precio_unitario, None, pedido_id, producto_id)
         sql = "INSERT INTO detalle_pedido (uuid, cantidad, precio_unitario, pedido_id, producto_id) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, cantidad, precio_unitario, pedido_id, producto_id))
+        cursor.execute(sql, (uuid, detalle_pedido.get_cantidad(), detalle_pedido.get_precio_unitario(), pedido_id, producto_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        return DetallePedido(id, uuid, cantidad, precio_unitario, None, pedido_id, producto_id).det_ped_diccionario()
+        if not id:
+            raise RuntimeError
+        detalle_pedido.id          = id
+        detalle_pedido.pedido_id   = pedido_uuid
+        detalle_pedido.producto_id = producto_uuid
+        return detalle_pedido.det_ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise e
+        if isinstance(e, ValueError):
+            raise e 
+        raise RuntimeError("Error al registrar detalle_pedido")
     finally:
         if cursor:
             cursor.close()
 
 # Utiliza uuid para acceder al detalle_pedido y retorna True o False si modifico el detalle_pedido
-def actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id):
+def actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id, pedido_uuid, producto_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
+        detalle_pedido = DetallePedido(None, None, cantidad, precio_unitario, None, pedido_uuid, producto_uuid)
         sql = "UPDATE detalle_pedido SET cantidad=%s, precio_unitario=%s, pedido_id=%s, producto_id=%s WHERE uuid=%s"
-        cursor.execute(sql, (cantidad, precio_unitario, pedido_id, producto_id, uuid))
+        cursor.execute(sql, (detalle_pedido.get_cantidad(), detalle_pedido.get_precio_unitario(), pedido_id, producto_id, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return detalle_pedido.det_ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:

@@ -37,13 +37,6 @@ def det_pedido_registro():
     if validar_datos:
         return validar_datos
 
-    # Valida a través de operadores de comparación para asegurar los datos
-    if cantidad <= 0:
-        return jsonify({"mensaje": "La cantidad no puede ser negativa o igual a cero"}), 400
-    
-    if precio_unitario <= 0:
-        return jsonify({"mensaje": "El precio_unitario no puede ser negativo o igual a cero"}), 400
-
     # Revisa si la referencia del pedido existe a través del uuid
     pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip())
 
@@ -60,12 +53,14 @@ def det_pedido_registro():
     pedido_id   = pedido['id']
     producto_id = producto['id']
 
-    commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id)
-
-    if commit:
-        return jsonify({"mensaje": "detalle_pedido registrado exitosamente"}), 201
-    
-    return jsonify({"mensaje": "Error al registrar detalle_pedido"}), 500
+    try:
+        commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
+        return jsonify({"mensaje": "detalle_pedido registrado exitosamente",
+                        "Detalle_pedido": commit}), 201
+    except ValueError as e:
+        return jsonify({"mensaje": str(e)}), 400
+    except RuntimeError as e:
+        return jsonify({"mensaje": str(e)}), 500
 
 @manejo_errores
 def det_pedido_eliminacion(uuid):
@@ -107,12 +102,6 @@ def det_pedido_actualizacion(uuid):
     if validar_datos:
         return validar_datos
 
-    if cantidad <= 0:
-        return jsonify({"mensaje": "La cantidad no puede ser negativa o igual a cero"}), 400
-    
-    if precio_unitario <= 0:
-        return jsonify({"mensaje": "El precio_unitario no puede ser negativo o igual a cero"}), 400
-
     pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip())
 
     if not pedido:
@@ -126,9 +115,14 @@ def det_pedido_actualizacion(uuid):
     pedido_id   = pedido['id']
     producto_id = producto['id']
 
-    commit = detalle_pedido_services.actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id)
-
-    if commit:
-        return jsonify({"mensaje": "detalle_pedido actualizado exitosamente"}), 200
-    
-    return jsonify({"mensaje": "Error al actualizar detalle_pedido"}), 500
+    detalle_pedido = detalle_pedido_services.obtener_detalle_pedido_por_uuid(uuid)
+    if detalle_pedido:
+        try:
+            commit = detalle_pedido_services.actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
+            return jsonify({"mensaje": "detalle_pedido actualizado exitosamente",
+                            "Detalle_pedido": commit}), 200
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar detalle_pedido"}), 500
+    return jsonify({"mensaje": "El detalle_pedido no existe"}), 404

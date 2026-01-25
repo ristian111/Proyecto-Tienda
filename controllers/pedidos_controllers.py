@@ -54,11 +54,12 @@ def ped_registro():
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
-    commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id)
-    if commit:
-        return jsonify({"mensaje": "Pedido registrado exitosamente"}), 201
-    
-    return jsonify({"mensaje": "Error al registrar pedido"}), 500
+    try:
+        commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+        return jsonify({"mensaje": "Pedido registrado exitosamente",
+                        "Pedido": commit}), 201
+    except RuntimeError as e:
+        return jsonify({"mensaje": str(e)}), 500
 
 @manejo_errores
 def ped_eliminacion(uuid):
@@ -112,11 +113,15 @@ def ped_actualizacion(uuid):
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
-    commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id)
-    if commit:
-        return jsonify({"mensaje": "Pedido actualizado exitosamente"}), 201
-    
-    return jsonify({"mensaje": "Error al actualizar pedido"}), 500
+    pedido = pedidos_services.obtener_pedido_por_uuid(uuid)
+    if pedido:
+        try:
+            commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+            return jsonify({"mensaje": "Pedido actualizado exitosamente",
+                            "Pedido": commit}), 200
+        except Exception:
+            return jsonify({"mensaje": "Error al actualizar pedido"}), 500
+    return jsonify({"mensaje": "El pedido no existe"}), 404
 
 @manejo_errores
 def ped_listar_pedidos_pendientes():

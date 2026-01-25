@@ -29,10 +29,12 @@ def registrar_categoria(nombre, descripcion):
         cursor.execute(sql, (uuid, nombre, descripcion))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
+        if not id:
+            raise RuntimeError
         return Categoria(id, uuid, nombre, descripcion).cat_diccionario()
-    except Exception as e:
+    except Exception:
         current_app.mysql.connection.rollback()
-        raise e
+        raise RuntimeError("Error al registrar categoría")
     finally:
         if cursor:
             cursor.close()
@@ -45,7 +47,7 @@ def actualizar_categoria(uuid, nombre, descripcion):
         sql = """UPDATE categorias SET nombre=%s, descripcion=%s WHERE uuid=%s"""
         cursor.execute(sql, (nombre, descripcion, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return Categoria(None, None, nombre, descripcion).cat_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

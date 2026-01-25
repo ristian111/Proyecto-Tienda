@@ -46,7 +46,7 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
         datos = cursor.fetchone()
 
         if not datos or datos["total"] is None:
-            raise Exception("El pedido no tiene detalle")
+            raise ValueError("El pedido no tiene detalle")
         
         total = datos["total"]
 
@@ -71,7 +71,7 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
         cursor.execute(sql_validar_stock, (pedido_id,))
 
         if cursor.fetchall():
-            raise Exception("Stock insuficiente")
+            raise ValueError("Stock insuficiente")
         
         #Insertar factura
         factura_uuid = str(uuidGenerado.uuid4())
@@ -110,20 +110,23 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
     
     except Exception as e:
         conn.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:
             cursor.close()
 
 # Utiliza uuid para acceder a la factura y retorna True o False si modifico la factura
-def actualizar_factura(uuid, numero_factura, total, estado, pedido_id):
+def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uuid):
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
+        factura = Factura(None, None, numero_factura, total, datetime.now(), estado, pedido_uuid)
         sql = "UPDATE facturas SET numero_factura=%s, total=%s, estado=%s, pedido_id=%s WHERE uuid = %s"
         cursor.execute(sql,(numero_factura, total, estado, pedido_id, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return factura.fac_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

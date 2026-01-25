@@ -1,5 +1,6 @@
 from flask import current_app
 from MySQLdb.cursors import DictCursor
+from datetime import datetime
 import uuid as uuidGenerado
 from models import Usuario
 
@@ -29,10 +30,12 @@ def registrar_usuario(nombre, username, password_hash, rol):
         cursor.execute(sql, (uuid, nombre, username, password_hash, rol))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        return Usuario(id, uuid, nombre, username, password_hash, rol, None).usu_diccionario()
+        if not id:
+            raise RuntimeError
+        return Usuario(id, uuid, nombre, username, password_hash, rol, datetime.now()).usu_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise e
+        raise RuntimeError("Error al registrar usuario")
     finally:
         if cursor:
             cursor.close()
@@ -42,12 +45,15 @@ def actualizar_usuario(uuid, nombre, username, password_hash, rol):
     cursor = None
     try:  
         cursor = current_app.mysql.connection.cursor()
+        usuario  = Usuario(None, uuid, nombre, username, password_hash, rol, datetime.now())
         sql = "UPDATE usuarios SET nombre=%s, username=%s, password_hash=%s, rol=%s WHERE uuid=%s"
-        cursor.execute(sql, (nombre, username, password_hash, rol, uuid))
+        cursor.execute(sql, (nombre, usuario.get_usuario(), usuario.get_contraseña(), rol, uuid))
         current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
+        return usuario.usu_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:

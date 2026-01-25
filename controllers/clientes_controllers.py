@@ -32,11 +32,13 @@ def cli_registro():
     
     try:
         commit = clientes_services.registrar_clientes(nombre.strip(), telefono.strip(), direccion.strip())
-        if commit:
-            return jsonify({"mensaje": "Cliente registrado exitosamente"}), 201
-        return jsonify({"mensaje": "Error al registrar cliente"}), 500
+        
+        return jsonify({"mensaje": "Cliente registrado exitosamente",
+                        "Cliente": commit}), 201
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"mensaje": str(e)}), 400
+    except RuntimeError as e:
+        return jsonify({"mensaje": str(e)}), 500
 
 @manejo_errores
 def cli_eliminacion(uuid):
@@ -69,10 +71,16 @@ def cli_actualizacion(uuid):
     if validar_datos:
         return validar_datos
     
-    try:
-        commit = clientes_services.actualizar_cliente(uuid.strip(), nombre.strip(), telefono.strip(), direccion.strip())
-        if commit:
-            return jsonify({"mensaje": "Cliente actualizado exitosamente"}), 200
-        return jsonify({"mensaje": "Error al actualizar cliente"}), 500
-    except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+    cliente = clientes_services.obtener_cliente_por_uuid(uuid)
+    if cliente:
+    
+        try:
+            commit = clientes_services.actualizar_cliente(uuid.strip(), nombre.strip(), telefono.strip(), direccion.strip())
+            return jsonify({"mensaje": "Cliente actualizado exitosamente",
+                            "Cliente": commit}), 200
+        except ValueError as e:
+            return jsonify({"mensaje": str(e)}), 400
+        except Exception as e:
+            return jsonify({"mensaje": "Error al actualizar cliente"}), 500
+    
+    return jsonify({"mensaje": "El cliente no existe"}), 404
