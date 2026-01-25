@@ -51,7 +51,7 @@ def actualizar_cliente(uuid, nombre, telefono, direccion):
         sql = "UPDATE clientes SET nombre=%s, telefono=%s, direccion=%s WHERE uuid=%s"
         cursor.execute(sql, (nombre, telefono, direccion, uuid))
         current_app.mysql.connection.commit()
-        return Cliente(None, None, nombre, telefono)
+        return Cliente(None, uuid, nombre, telefono)
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

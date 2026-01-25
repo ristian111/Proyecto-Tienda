@@ -1,6 +1,6 @@
 from flask import Blueprint
 from controllers import reportes_controllers
-reportes_bp = Blueprint("reportes", __name__)
+reportes_bp = Blueprint("reportes_v1", __name__)
 
 @reportes_bp.route('/clientes/mas-pedidos', methods=['GET'])
 def listar_clientes_con_mas_pedidos():

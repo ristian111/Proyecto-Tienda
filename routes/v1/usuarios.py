@@ -1,7 +1,7 @@
 from flask import Blueprint
 from controllers import usuarios_controllers
 from security import token_requerido, rol_requerido
-usuarios_bp = Blueprint('usuarios', __name__)
+usuarios_bp = Blueprint('usuarios_v1', __name__)
 
 @usuarios_bp.route('/', methods=['GET'])
 @token_requerido

@@ -1,5 +1,5 @@
 from flask import Flask
-from routes import cargarRutas
+from routes.v1 import cargarRutas_v1
 from flask_mysqldb import MySQL
 from config import Config
 from flask_cors import CORS 
@@ -20,5 +20,5 @@ CORS(app,
 bcrypt = Bcrypt(app)
 app.bcrypt = bcrypt 
 
-cargarRutas(app)
+cargarRutas_v1(app)
 app.run(debug=True, port=5000)

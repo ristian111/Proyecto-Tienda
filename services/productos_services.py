@@ -53,7 +53,7 @@ def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categ
         current_app.mysql.connection.rollback()
         if isinstance(e, ValueError):
             raise e 
-        raise RuntimeError("Error al registrar detalle_pedido")
+        raise RuntimeError("Error al registrar producto")
     finally:
         if cursor:
             cursor.close()

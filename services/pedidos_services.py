@@ -97,7 +97,7 @@ def actualizar_pedido(uuid, estado, total, direccion_entrega, cliente_id, usuari
         cursor.execute(sql_cliente, (cliente_uuid,))
         dato = cursor.fetchone()
         nombre_cliente = dato["nombre"]
-        return Pedido(id, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
+        return Pedido(None, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

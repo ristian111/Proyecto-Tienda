@@ -1,7 +1,7 @@
 from flask import Blueprint
 from controllers import clientes_controllers
 
-clientes_bp = Blueprint('clientes', __name__)
+clientes_bp = Blueprint('clientes_v1', __name__)
 
 @clientes_bp.route('/', methods=['GET'])
 def listar():

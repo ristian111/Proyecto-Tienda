@@ -62,7 +62,7 @@ def actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, produc
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
-        detalle_pedido = DetallePedido(None, None, cantidad, precio_unitario, None, pedido_uuid, producto_uuid)
+        detalle_pedido = DetallePedido(None, uuid, cantidad, precio_unitario, None, pedido_uuid, producto_uuid)
         sql = "UPDATE detalle_pedido SET cantidad=%s, precio_unitario=%s, pedido_id=%s, producto_id=%s WHERE uuid=%s"
         cursor.execute(sql, (detalle_pedido.get_cantidad(), detalle_pedido.get_precio_unitario(), pedido_id, producto_id, uuid))
         current_app.mysql.connection.commit()

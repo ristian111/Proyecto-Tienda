@@ -2,7 +2,7 @@ from flask import Blueprint
 from security import token_requerido
 from controllers import inventarios_controllers
 
-inventarios_bp = Blueprint('inventarios', __name__)
+inventarios_bp = Blueprint('inventarios_v1', __name__)
 
 @inventarios_bp.route('/', methods=['GET'])
 def listar():

@@ -1,7 +1,7 @@
 from flask import Blueprint
 from security import api_key_requerido
 from controllers import categorias_controller
-categorias_bp = Blueprint('categorias', __name__)
+categorias_bp = Blueprint('categorias_v1', __name__)
 
 @categorias_bp.route('/', methods=['GET'])
 @api_key_requerido

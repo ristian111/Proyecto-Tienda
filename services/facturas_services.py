@@ -122,7 +122,7 @@ def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uu
     cursor = None
     try:
         cursor = current_app.mysql.connection.cursor()
-        factura = Factura(None, None, numero_factura, total, datetime.now(), estado, pedido_uuid)
+        factura = Factura(None, uuid, numero_factura, total, datetime.now(), estado, pedido_uuid)
         sql = "UPDATE facturas SET numero_factura=%s, total=%s, estado=%s, pedido_id=%s WHERE uuid = %s"
         cursor.execute(sql,(numero_factura, total, estado, pedido_id, uuid))
         current_app.mysql.connection.commit()

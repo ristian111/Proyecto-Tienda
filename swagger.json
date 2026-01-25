@@ -74,7 +74,7 @@
   ],
   
   "paths": {
-    "/categorias": {
+    "/v1/categorias": {
       "get": {
         "tags":["Categorías"],
         "summary": "Listar todos las categorías",
@@ -154,10 +154,16 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Categoría": { "type": "object" }
                   },
                   "example": {
-                    "mensaje": "Categoría registrada exitosamente"
+                    "mensaje": "Categoría registrada exitosamente",
+                    "Categoría": {
+                      "nombre": "Alimentos por lb",
+                      "descripcion": "Destinado a productos que se venden por libras",
+                      "referencia": "5a0a22fa-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -205,7 +211,7 @@
         }
       }
     },
-    "/categorias/{ref}": {
+    "/v1/categorias/{ref}": {
       "put": {
         "tags":["Categorías"],
         "summary": "Editar categoría existente",
@@ -244,10 +250,16 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Categoría": { "type": "object" }
                   },
                   "example": {
-                    "mensaje": "Categoría actualizada exitosamente"
+                    "mensaje": "Categoría actualizada exitosamente",
+                    "Categoría": {
+                      "nombre": "Alimentos por lb",
+                      "descripcion": "Destinado a productos que se venden por libras",
+                      "referencia": "5a0a22fa-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -264,6 +276,22 @@
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "La categoría no existe"
                   }
                 }
               }
@@ -366,7 +394,7 @@
         }
       }     
     },
-    "/clientes": {
+    "/v1/clientes": {
       "get": {
         "tags":["Clientes"],
         "summary": "Listar todos los clientes",
@@ -450,10 +478,17 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Cliente": { "type": "object" }
                   },
                   "example": {
-                    "mensaje": "Cliente registrado exitosamente"
+                    "mensaje": "Cliente registrado exitosamente",
+                    "Cliente": {
+                      "nombre": "Pedro",
+                      "telefono": "3048831247",
+                      "direccion": "Cra 45 #12-65",
+                      "referencia": "9a0a22ba-83b9-45b8-b37d-bbe5b45b7562"
+                    }
                   }
                 }
               }
@@ -501,7 +536,7 @@
         }
       }
     },
-    "/clientes/{ref}": {
+    "/v1/clientes/{ref}": {
       "put": {
         "tags":["Clientes"],
         "summary": "Editar cliente existente",
@@ -542,10 +577,15 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Cliente": { "type": "object" }
                   },
-                  "example": {
-                    "mensaje": "Cliente actualizado exitosamente"
+                  "mensaje": "Cliente actualizado exitosamente",
+                  "Cliente": {
+                    "nombre": "Pedro",
+                    "telefono": "3048831247",
+                    "direccion": "Cra 45 #12-65",
+                    "referencia": "9a0a22ba-83b9-45b8-b37d-bbe5b45b7562"
                   }
                 }
               }
@@ -562,6 +602,22 @@
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El cliente no existe"
                   }
                 }
               }
@@ -664,7 +720,7 @@
         }
       }     
     },
-    "/productos": {
+    "/v1/productos": {
       "get": {
         "tags":["Productos"],
         "summary": "Listar todos los productos",
@@ -757,10 +813,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Producto": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Producto registrado exitosamente"
+                    "mensaje": "Producto registrado exitosamente",
+                    "Producto": {
+                      "nombre": "Arroz",
+                      "precio_venta": 7500,
+                      "precio_compra": 5000,
+                      "unidad_medida": "1 lb",
+                      "ref_categoria": "3a0a22fa-83b9-45b8-b37d-bbe5b45b7838",
+                      "referencia": "5a0f22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -792,7 +857,7 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "La categoria no existe" 
+                    "mensaje": "La categoría no existe" 
                   }
                 }
               }
@@ -824,7 +889,7 @@
         }
       }
     },
-    "/productos/{ref}": {
+    "/v1/productos/{ref}": {
       "put": {
         "tags":["Productos"],
         "summary": "Editar producto existente",
@@ -870,10 +935,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Producto": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Producto actualizado exitosamente"
+                    "mensaje": "Producto actualizado exitosamente",
+                    "Producto": {
+                      "nombre": "Arroz",
+                      "precio_venta": 7500,
+                      "precio_compra": 5000,
+                      "unidad_medida": "1 lb",
+                      "ref_categoria": "3a0a22fa-83b9-45b8-b37d-bbe5b45b7838",
+                      "referencia": "5a0f22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -905,7 +979,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "La categoria no existe" 
+                    "categoriaNoExiste": {
+                      "summary": "Recurso categoría inexistente",
+                      "value": { "mensaje": "La categoría no existe" }
+                    },
+                    "productoNoExiste": {
+                      "summary": "Recurso producto inexistente",
+                      "value": { "mensaje": "El producto no existe" }
+                    }
                   }
                 }
               }
@@ -1008,7 +1089,7 @@
         }
       }     
     },
-    "/inventarios": {
+    "/v1/inventarios": {
       "get": {
         "tags":["Inventarios"],
         "summary": "Listar todos los inventarios",
@@ -1102,10 +1183,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Inventario": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Inventario registrado exitoxamente"
+                    "mensaje": "Inventario registrado exitoxamente",
+                    "Inventario": {
+                      "ref_producto": "3a0f22ba-83b9-45b8-b37d-bbe5b45b7838",
+                      "cantidad_actual": 20,
+                      "cantidad_reservada": 4,
+                      "punto_reorden": 7,
+                      "ultima_actualización": "2025-12-18 17:30:28",
+                      "referencia": "7a0g22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -1169,7 +1259,7 @@
         }
       }
     },
-    "/inventarios/{ref}": {
+    "/v1/inventarios/{ref}": {
       "put": {
         "tags":["Inventarios"],
         "summary": "Editar inventario existente",
@@ -1213,10 +1303,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Inventario": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Inventario actualizado exitosamente"
+                    "mensaje": "Inventario actualizado exitoxamente",
+                    "Inventario": {
+                      "ref_producto": "3a0f22ba-83b9-45b8-b37d-bbe5b45b7838",
+                      "cantidad_actual": 20,
+                      "cantidad_reservada": 4,
+                      "punto_reorden": 7,
+                      "ultima_actualización": "2025-12-18 17:30:28",
+                      "referencia": "7a0g22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -1248,7 +1347,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "El producto no existe" 
+                    "productoNoExiste": {
+                      "summary": "Recurso producto inexistente",
+                      "value": { "mensaje": "El producto no existe" }
+                    },
+                    "inventarioNoExiste": {
+                      "summary": "Recurso inventario inexistente",
+                      "value": { "mensaje": "El inventario no existe" }
+                    }
                   }
                 }
               }
@@ -1351,7 +1457,7 @@
         }
       }     
     },
-    "/inventarios/stock-bajo": {
+    "/v1/inventarios/stock-bajo": {
       "get": {
         "tags":["Inventarios"],
         "summary": "Lista los productos con stock bajo",
@@ -1379,7 +1485,7 @@
                     "type": "object",
                     "properties": {
                       "mensaje": { "type": "string" },
-                      "Stock producto": { "type": "string" }
+                      "Stock producto": { "type": "object" }
                     },
                     "example": 
                       {
@@ -1422,7 +1528,7 @@
         }
       }
     },
-    "/inventarios/{prod}/productos": {
+    "/v1/inventarios/{prod}/productos": {
       "get": {
         "tags":["Inventarios"],
         "summary": "Lista el stock del producto",
@@ -1446,7 +1552,7 @@
                     "type": "object",
                     "properties": {
                       "mensaje": { "type": "string" },
-                      "Stock producto": { "type": "string" }
+                      "Stock producto": { "type": "object" }
                     },
                     "example": 
                       {
@@ -1490,7 +1596,7 @@
         }
       }
     },
-    "/inventarios/movimiento-inventario": {
+    "/v1/inventarios/movimiento-inventario": {
       "get": {
         "tags":["Inventarios"],
         "summary": "Lista los movimiento del inventario",
@@ -1550,7 +1656,7 @@
         }
       }
     },
-    "/pedidos": {
+    "/v1/pedidos": {
       "get": {
         "tags":["Pedidos"],
         "summary": "Listar todos los pedidos",
@@ -1645,10 +1751,20 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Pedido": {"type": "object" }
                   },
                   "example": {
-                    "mensaje": "Pedido registrado exitosamente"
+                    "mensaje": "Pedido registrado exitosamente",
+                    "Pedido": {
+                      "ref_cliente": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                      "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                      "estado": "pendiente",
+                      "total": 35500,
+                      "direccion_entrega": "Cra 10b #54 - 103",
+                      "fecha_hora": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -1717,7 +1833,7 @@
         }
       }
     },
-    "/pedidos/{ref}": {
+    "/v1/pedidos/{ref}": {
       "put": {
         "tags":["Pedidos"],
         "summary": "Editar pedido existente",
@@ -1763,10 +1879,20 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Pedido": {"type": "object" }
                   },
                   "example": {
-                    "mensaje": "Pedido actualizado exitosamente"
+                    "mensaje": "Pedido actualizado exitosamente",
+                    "Pedido": {
+                      "ref_cliente": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                      "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                      "estado": "pendiente",
+                      "total": 35500,
+                      "direccion_entrega": "Cra 10b #54 - 103",
+                      "fecha_hora": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -1797,13 +1923,19 @@
                   "properties": {
                     "mensaje": { "type": "string" }
                   },
-                  "clienteNoExiste": {
-                      "summary": "No existe el recurso cliente",
-                      "value": { "mensaje": "El cliente no existe" }
-                  },
-                  "usuarioNoExiste": {
-                    "summary": "No existe el recurso usuario",
-                    "value": { "mensaje": "El usuario no existe" }
+                  "example": {
+                    "clienteNoExiste": {
+                        "summary": "No existe el recurso cliente",
+                        "value": { "mensaje": "El cliente no existe" }
+                    },
+                    "usuarioNoExiste": {
+                      "summary": "No existe el recurso usuario",
+                      "value": { "mensaje": "El usuario no existe" }
+                    },
+                    "pedidoNoExiste": {
+                        "summary": "No existe el recurso pedido",
+                        "value": { "mensaje": "El pedido no existe" }
+                    }
                   }
                 }
               }
@@ -1906,7 +2038,7 @@
         }
       }     
     },
-    "/pedidos/pendientes": {
+    "/v1/pedidos/pendientes": {
       "get": {
         "tags":["Pedidos"],
         "summary": "Listar todos los pedidos pendientes",
@@ -1961,7 +2093,7 @@
         }
       }
     },
-    "/detalles/pedidos": {
+    "/v1/detalles/pedidos": {
       "get": {
         "tags":["Detalles"],
         "summary": "Listar todos los detalles de pedidos",
@@ -2052,10 +2184,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Detalle pedido": { "type": "object" }
                   },
                   "example": {
-                    "mensaje": "detalle_pedido registrado exitosamente"
+                    "mensaje": "detalle_pedido registrado exitosamente",
+                    "Detalle pedido": {
+                      "cantidad": 4,
+                      "precio_unitario": 6500,
+                      "subtotal": 26000,
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2124,7 +2265,7 @@
         }
       }
     },
-    "/detalles/pedidos/{ref}": {
+    "/v1/detalles/pedidos/{ref}": {
       "put": {
         "tags":["Detalles"],
         "summary": "Editar detalle pedido existente",
@@ -2168,10 +2309,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Detalle pedido": { "type": "object" }
                   },
                   "example": {
-                    "mensaje": "detalle_pedido actualizado exitosamente"
+                    "mensaje": "detalle_pedido actualizado exitosamente",
+                    "Detalle pedido": {
+                      "cantidad": 4,
+                      "precio_unitario": 6500,
+                      "subtotal": 26000,
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2202,13 +2352,19 @@
                   "properties": {
                     "mensaje": { "type": "string" }
                   },
-                  "pedidoNoExiste": {
-                      "summary": "No existe el recurso pedido",
-                      "value": { "mensaje": "El pedido no existe" }
-                  },
-                  "productoNoExiste": {
-                    "summary": "No existe el recurso producto",
-                    "value": { "mensaje": "El producto no existe" }
+                  "example": {
+                    "pedidoNoExiste": {
+                        "summary": "No existe el recurso pedido",
+                        "value": { "mensaje": "El pedido no existe" }
+                    },
+                    "productoNoExiste": {
+                      "summary": "No existe el recurso producto",
+                      "value": { "mensaje": "El producto no existe" }
+                    },
+                    "detalle_pedidoNoExiste": {
+                      "summary": "No existe el recurso detalle_pedido",
+                      "value": { "mensaje": "El detalle_pedido no existe" }
+                    }         
                   }
                 }
               }
@@ -2311,7 +2467,7 @@
         }
       }     
     },
-    "/facturas": {
+    "/v1/facturas": {
       "get": {
         "tags":["Facturas"],
         "summary": "Listar todas las facturas",
@@ -2366,7 +2522,7 @@
         }
       }
     },
-    "/facturas/{ref}": {
+    "/v1/facturas/{ref}": {
       "post": {
         "tags":["Facturas"],
         "summary": "Registrar una nueva factura",
@@ -2401,7 +2557,8 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Factura": { "type": "object"}
                   },
                   "example": {
                     "mensaje": "Factura registrada",
@@ -2496,10 +2653,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Factura": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Factura actualizada exitosamente"
+                    "mensaje": "Factura actualizada exitosamente",
+                    "Factura": {
+                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                        "numero_factura": "FAC-20260117-b93e7637",
+                        "estado": "emitida",
+                        "total": 8700,
+                        "fecha_emision": "2025-12-18 17:30:28",
+                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    } 
                   }
                 }
               }
@@ -2531,7 +2697,14 @@
                     "mensaje": { "type": "string" }
                   },
                   "example": {
-                    "mensaje": "Error no existe el pedido"
+                    "pedidoNoExiste": {
+                        "summary": "No existe el recurso pedido",
+                        "value": { "mensaje": "El pedido no existe" }
+                    },
+                    "facturaNoExiste": {
+                      "summary": "No existe el recurso factura",
+                      "value": { "mensaje": "La factura no existe" }
+                    }
                   }
                 }
               }
@@ -2634,7 +2807,7 @@
         }
       }     
     },
-    "/usuarios": {
+    "/v1/usuarios": {
       "get": {
         "security": [
           { "BearerAuth": [] }
@@ -2661,7 +2834,7 @@
                     },
                     "example": 
                       {
-                        "producto_id": "Juan",
+                        "nombre": "Juan",
                         "username": "JuanADMINISTRADOR",
                         "password_hash": "A123-AU2U3$ja",
                         "rol": "Administrador",
@@ -2767,10 +2940,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Usuario": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Usuario registrado exitosamente"
+                    "mensaje": "Usuario registrado exitosamente",
+                    "Usuario": {
+                      "nombre": "Juan",
+                      "username": "JuanADMINISTRADOR",
+                      "password_hash": "A123-AU2U3$ja",
+                      "rol": "Administrador",
+                      "ultimo_acceso": "2025-12-18 17:30:28",
+                      "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                    }
                   }
                 }
               }
@@ -2818,7 +3000,7 @@
         }
       }
     },
-    "/usuarios/{ref}": {
+    "/v1/usuarios/{ref}": {
       "put": {
         "tags":["Usuarios"],
         "summary": "Editar usuario existente",
@@ -2862,10 +3044,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": { "type": "string" },
+                    "Usuario": { "type": "object"}
                   },
                   "example": {
-                    "mensaje": "Usuario actualizado exitosamente"
+                    "mensaje": "Usuario actualizado exitosamente",
+                    "Usuario": {
+                      "nombre": "Juan",
+                      "username": "JuanADMINISTRADOR",
+                      "password_hash": "A123-AU2U3$ja",
+                      "rol": "Administrador",
+                      "ultimo_acceso": "2025-12-18 17:30:28",
+                      "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                    }
                   }
                 }
               }
@@ -2882,6 +3073,22 @@
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No existe el recurso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "El usuario no existe"
                   }
                 }
               }
@@ -2984,7 +3191,7 @@
         }
       }     
     },
-    "/usuarios/{user}/pedidos": {
+    "/v1/usuarios/{user}/pedidos": {
       "get": {
         "tags":["Usuarios"],
         "summary": "Lista el usuario con el número de pedidos registrados",
@@ -3008,7 +3215,7 @@
                     "type": "object",
                     "properties": {
                       "mensaje": { "type": "string" },
-                      "pedidos_por_usuario": { "type": "string" }
+                      "pedidos_por_usuario": { "type": "object" }
                     },
                     "example": 
                       {
@@ -3042,7 +3249,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/v1/auth/login": {
       "post": {
         "tags": ["Autenticación"],
         "summary": "Iniciar sesión",
@@ -3121,7 +3328,7 @@
         }
       }
     },
-    "/reportes/clientes/mas-pedidos": {
+    "/v1/reportes/clientes/mas-pedidos": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista por defecto los 5 clientes con más pedidos",
@@ -3201,7 +3408,7 @@
         }
       }
     },
-    "/reportes/usuarios/mas-pedidos-registrados": {
+    "/v1/reportes/usuarios/mas-pedidos-registrados": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista por defecto los 5 usuarios con más pedidos registrados",
@@ -3281,7 +3488,7 @@
         }
       }
     },
-    "/reportes/productos/mas-vendidos": {
+    "/v1/reportes/productos/mas-vendidos": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista por defecto el producto más vendido registrado",
@@ -3369,7 +3576,7 @@
         }
       }
     },
-    "/reportes/pedidos/por-fecha": {
+    "/v1/reportes/pedidos/por-fecha": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista de pedidos según el tipo por fecha especificada",
@@ -3456,7 +3663,7 @@
         }
       }
     },
-    "/reportes/productos/mas-ganancias": {
+    "/v1/reportes/productos/mas-ganancias": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista por defecto el producto con más ganancia registrado",
@@ -3544,7 +3751,7 @@
         }
       }
     },
-    "/reportes/facturas/ingresos": {
+    "/v1/reportes/facturas/ingresos": {
       "get": {
         "tags":["Reportes"],
         "summary": "Lista por defecto los ingresos de ventas por mes mediante las facturas emitidas",

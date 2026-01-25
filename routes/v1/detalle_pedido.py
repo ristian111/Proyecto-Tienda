@@ -1,6 +1,6 @@
 from flask import Blueprint
 from controllers import detalle_pedido_controllers
-detalle_pedido_bp = Blueprint("detalles", __name__)
+detalle_pedido_bp = Blueprint("detalles_v1", __name__)
 
 @detalle_pedido_bp.route("/pedidos", methods=['GET'])
 def listado():

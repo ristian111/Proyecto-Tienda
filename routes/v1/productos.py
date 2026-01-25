@@ -1,6 +1,6 @@
 from flask import Blueprint
 from controllers import productos_controllers
-productos_bp = Blueprint('productos', __name__)
+productos_bp = Blueprint('productos_v1', __name__)
 
 @productos_bp.route('/', methods=['GET'])
 def listar():

@@ -47,7 +47,7 @@ def actualizar_categoria(uuid, nombre, descripcion):
         sql = """UPDATE categorias SET nombre=%s, descripcion=%s WHERE uuid=%s"""
         cursor.execute(sql, (nombre, descripcion, uuid))
         current_app.mysql.connection.commit()
-        return Categoria(None, None, nombre, descripcion).cat_diccionario()
+        return Categoria(None, uuid, nombre, descripcion).cat_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e

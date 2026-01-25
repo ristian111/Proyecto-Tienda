@@ -1,6 +1,6 @@
 from flask import blueprints
 from controllers import facturas_controllers
-facturas_bp = blueprints.Blueprint('facturas', __name__)
+facturas_bp = blueprints.Blueprint('facturas_v1', __name__)
 
 @facturas_bp.route('/', methods=['GET'])
 def listar():

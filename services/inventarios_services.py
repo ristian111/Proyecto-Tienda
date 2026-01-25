@@ -64,7 +64,7 @@ def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada
     try:
         cursor = current_app.mysql.connection.cursor()
         cursor.execute("SET @usuario_app = %s", (usuario_id,))
-        inventario = Inventario(None, None, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
+        inventario = Inventario(None, uuid, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
         sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
         cursor.execute(sql, (producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada, inventario.get_punto_reorden(), uuid))
         current_app.mysql.connection.commit()
