@@ -29,12 +29,13 @@ def registrar_categoria(nombre, descripcion):
         cursor.execute(sql, (uuid, nombre, descripcion))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
         return Categoria(id, uuid, nombre, descripcion).cat_diccionario()
-    except Exception:
+    except Exception as e:
         current_app.mysql.connection.rollback()
-        raise RuntimeError("Error al registrar categoría")
+        print(e)
+        if "1062" in str(e):
+            raise ValueError("Ya existe una categoría con este nombre")
+        raise RuntimeError("Error al registrar categoría") from e
     finally:
         if cursor:
             cursor.close()

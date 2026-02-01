@@ -7,6 +7,8 @@ class Usuario:
         self.ultimo_acceso = ultimo_acceso
         self.__user        = None
         self.__password    = None
+        self.set_usuario(user)
+        self.set_contraseña(password)
 
     def usu_diccionario(self):
         return {

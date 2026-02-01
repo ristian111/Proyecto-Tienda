@@ -56,7 +56,9 @@ def prod_registro():
         return jsonify({"mensaje": str(e)}), 400
     except RuntimeError as e:
         return jsonify({"mensaje": str(e)}), 500
-
+    except Exception as e:
+        return jsonify({"mensaje": "Ya existe un producto con este nombre"}), 409
+    
 @manejo_errores
 def prod_eliminacion(uuid):
     # Valida la existencia del producto a través del uuid 

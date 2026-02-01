@@ -26,16 +26,18 @@ def registrar_usuario(nombre, username, password_hash, rol):
     try:
         cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
+        usuario  = Usuario(None, uuid, nombre, username, password_hash, rol, datetime.now().isoformat())
         sql = "INSERT INTO usuarios (uuid, nombre, username, password_hash, rol) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, nombre, username, password_hash, rol))
+        cursor.execute(sql, (uuid, nombre, usuario.get_usuario(), usuario.get_contraseña(), rol))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
-        return Usuario(id, uuid, nombre, username, password_hash, rol, datetime.now()).usu_diccionario()
+        usuario.id = id
+        return usuario.usu_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise RuntimeError("Error al registrar usuario")
+        if isinstance(e, ValueError):
+            raise e
+        raise e
     finally:
         if cursor:
             cursor.close()

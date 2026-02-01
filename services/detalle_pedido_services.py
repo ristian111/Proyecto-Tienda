@@ -37,22 +37,18 @@ def registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, 
     try:
         cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
-        detalle_pedido = DetallePedido(None, uuid, cantidad, precio_unitario, None, pedido_id, producto_id)
+        detalle_pedido = DetallePedido(None, uuid, cantidad, precio_unitario, None, pedido_uuid, producto_uuid)
         sql = "INSERT INTO detalle_pedido (uuid, cantidad, precio_unitario, pedido_id, producto_id) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(sql, (uuid, detalle_pedido.get_cantidad(), detalle_pedido.get_precio_unitario(), pedido_id, producto_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
-        detalle_pedido.id          = id
-        detalle_pedido.pedido_id   = pedido_uuid
-        detalle_pedido.producto_id = producto_uuid
+        detalle_pedido.id = id
         return detalle_pedido.det_ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         if isinstance(e, ValueError):
             raise e 
-        raise RuntimeError("Error al registrar detalle_pedido")
+        raise RuntimeError("Error al registrar detalle_pedido") from e
     finally:
         if cursor:
             cursor.close()

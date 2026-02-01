@@ -39,6 +39,8 @@ def cli_registro():
         return jsonify({"mensaje": str(e)}), 400
     except RuntimeError as e:
         return jsonify({"mensaje": str(e)}), 500
+    except Exception as e:
+        return jsonify({"mensaje": "Ya existe un cliente con este teléfono"}), 409
 
 @manejo_errores
 def cli_eliminacion(uuid):

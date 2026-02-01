@@ -185,6 +185,22 @@
               }
             }
           },
+          "409": {
+            "description": "Error de conflicto de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Ya existe una categoría con este nombre"
+                  }
+                }
+              }
+            }
+          },
           "500": {
             "description": "Error del servidor",
             "content": {
@@ -505,6 +521,22 @@
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error de conflicto de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Ya existe un cliente con este teléfono"
                   }
                 }
               }
@@ -858,6 +890,22 @@
                   },
                   "example": {
                     "mensaje": "La categoría no existe" 
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error de conflicto de datos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Ya existe un producto con este nombre"
                   }
                 }
               }

@@ -30,15 +30,16 @@ def registrar_clientes(nombre, telefono, direccion):
         cursor.execute(sql, (uuid, nombre, cliente.get_telefono(), direccion))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
         cliente.id = id
         return cliente.cli_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        print(e)
+        if "1062" in str(e):
+            raise e
         if isinstance(e, ValueError):
             raise e 
-        raise RuntimeError("Error al registrar cliente") # from e (para debugging)
+        raise RuntimeError("Error al registrar cliente") from e #(para debugging)
     finally:
         if cursor:
             cursor.close()
@@ -49,11 +50,14 @@ def actualizar_cliente(uuid, nombre, telefono, direccion):
     try:
         cursor = current_app.mysql.connection.cursor()
         sql = "UPDATE clientes SET nombre=%s, telefono=%s, direccion=%s WHERE uuid=%s"
-        cursor.execute(sql, (nombre, telefono, direccion, uuid))
+        cliente = Cliente(None, uuid, nombre, telefono, direccion)
+        cursor.execute(sql, (nombre, cliente.get_telefono(), direccion, uuid))
         current_app.mysql.connection.commit()
-        return Cliente(None, uuid, nombre, telefono)
+        return cliente.cli_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        if isinstance(e, ValueError):
+            raise e 
         raise e
     finally:
         if cursor:

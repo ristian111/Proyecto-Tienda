@@ -45,15 +45,16 @@ def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categ
         cursor.execute(sql, (uuid, nombre, producto.get_precio_venta(), producto.get_precio_compra(), unidad_medida, categoria_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
         producto.id = id
         return producto.prod_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
+        print(e)
+        if "1062" in str(e):
+            raise e
         if isinstance(e, ValueError):
             raise e 
-        raise RuntimeError("Error al registrar producto")
+        raise RuntimeError("Error al registrar producto") from e
     finally:
         if cursor:
             cursor.close()

@@ -34,6 +34,8 @@ def cat_registro():
         commit = categorias_services.registrar_categoria(nombre.strip(), descripcion.strip())
         return jsonify({"mensaje": "Categoria registrada exitosamente",
                         "Categoría": commit}), 201
+    except ValueError as e:
+        return jsonify({"mensaje": str(e)}), 409
     except RuntimeError as e:
         return jsonify({"mensaje": str(e)}), 500
 

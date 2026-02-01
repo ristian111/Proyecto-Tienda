@@ -39,20 +39,18 @@ def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto
         cursor = current_app.mysql.connection.cursor()
         cursor.execute("SET @usuario_app = %s", (usuario_id,))
         uuid = str(uuidGenerado.uuid4())
-        inventario = Inventario(None, uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
+        inventario = Inventario(None, uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now().isoformat())
         sql = "INSERT INTO inventarios (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden) VALUES (%s, %s, %s, %s, %s)"
         cursor.execute(sql, (uuid, producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada(), inventario.get_punto_reorden()))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
         inventario.id = id
         return inventario.inv_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         if isinstance(e, ValueError):
             raise e
-        raise RuntimeError("Error al registrar inventario")
+        raise RuntimeError("Error al registrar inventario") from e
     finally:
         if cursor:
             cursor.close()
@@ -64,7 +62,7 @@ def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada
     try:
         cursor = current_app.mysql.connection.cursor()
         cursor.execute("SET @usuario_app = %s", (usuario_id,))
-        inventario = Inventario(None, uuid, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now())
+        inventario = Inventario(None, uuid, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now().isoformat())
         sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
         cursor.execute(sql, (producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada, inventario.get_punto_reorden(), uuid))
         current_app.mysql.connection.commit()

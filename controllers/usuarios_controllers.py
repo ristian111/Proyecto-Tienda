@@ -33,7 +33,7 @@ def usu_registro():
         return validar_datos
     
     # Genera un hash de la contraseña donde se envia a la base de datos
-    pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash)
+    pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash, 10).decode('utf-8')
     
     try:
         commit = usuarios_services.registrar_usuario(nombre.strip(), username, pass_encriptado, rol.strip().capitalize())  
@@ -84,7 +84,8 @@ def usu_actualizacion(uuid):
     if usuario:
         try:
             commit = usuarios_services.actualizar_usuario(uuid.strip(), nombre.strip(), username, pass_encriptado, rol.strip().capitalize())
-            return jsonify({"mensaje": "Usuario actualizado exitosamente"}), 200
+            return jsonify({"mensaje": "Usuario actualizado exitosamente",
+                            "Usuario": commit}), 200
         except ValueError as e:
             return jsonify({"mensaje": str(e)}), 400
         except Exception:

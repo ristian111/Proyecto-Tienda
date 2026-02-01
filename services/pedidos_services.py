@@ -71,16 +71,14 @@ def registrar_pedido(estado, total, direccion_entrega, cliente_id, usuario_id, c
         cursor.execute(sql,(uuid, estado, total, direccion_entrega, cliente_id, usuario_id))
         current_app.mysql.connection.commit()
         id = cursor.lastrowid
-        if not id:
-            raise RuntimeError
         sql_cliente = "SELECT nombre FROM cliente WHERE uuid = %s"
         cursor.execute(sql_cliente, (cliente_uuid,))
         dato = cursor.fetchone()
         nombre_cliente = dato["nombre"]
-        return Pedido(id, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
+        return Pedido(id, uuid, estado, total, direccion_entrega, datetime.now().isoformat(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
-        raise RuntimeError("Error al registrar pedido")
+        raise RuntimeError("Error al registrar pedido") from e
     finally:
         if cursor:
             cursor.close()
@@ -97,7 +95,7 @@ def actualizar_pedido(uuid, estado, total, direccion_entrega, cliente_id, usuari
         cursor.execute(sql_cliente, (cliente_uuid,))
         dato = cursor.fetchone()
         nombre_cliente = dato["nombre"]
-        return Pedido(None, uuid, estado, total, direccion_entrega, datetime.now(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
+        return Pedido(None, uuid, estado, total, direccion_entrega, datetime.now().isoformat(), nombre_cliente, cliente_uuid, usuario_uuid).ped_diccionario()
     except Exception as e:
         current_app.mysql.connection.rollback()
         raise e
