@@ -25,7 +25,7 @@ def actualizar(uuid):
     datos = usuarios_controllers.usu_actualizacion(uuid)
     return datos
 
-@usuarios_bp.route('<string:user>/pedidos', methods=['GET'])
+@usuarios_bp.route('/<string:user>/pedidos', methods=['GET'])
 def buscar_pedidos_por_usuario(user):
     datos = usuarios_controllers.usu_pedidos_usuario(user)
     return datos

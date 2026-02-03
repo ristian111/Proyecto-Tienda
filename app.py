@@ -11,7 +11,7 @@ mysql = MySQL(app)
 app.mysql = mysql
 CORS(app,
      resources={
-         r"*": {
+         r"/*": {
              "origins": "*",
              "methods": ["GET", "POST", "PUT", "DELETE"],
              "allow_headers": {"Content-Type", "Authorization"}

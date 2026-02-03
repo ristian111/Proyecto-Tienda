@@ -9,14 +9,14 @@ def auth_login():
     datos = request.get_json()
 
     # Valida que no existan campos vacios 
-    validar_requeridos = controllers.validar_campos(datos, ["usuario", "contraseña"])
+    validar_requeridos = controllers.validar_campos(datos, ["username", "password"])
 
     if validar_requeridos:
         return validar_requeridos
 
     # Guarda los valores de la petición en variables
-    usuario = datos['usuario']
-    contraseña = datos['contraseña']
+    usuario = datos['username']
+    contraseña = datos['password']
 
     # Valida que el usuario esta autenticado
     resultado = auth_login_services.autenticar_usuario(usuario, contraseña)

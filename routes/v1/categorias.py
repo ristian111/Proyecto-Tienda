@@ -4,7 +4,6 @@ from controllers import categorias_controller
 categorias_bp = Blueprint('categorias_v1', __name__)
 
 @categorias_bp.route('/', methods=['GET'])
-@api_key_requerido
 def listar():
     datos = categorias_controller.cat_listado()
     return datos

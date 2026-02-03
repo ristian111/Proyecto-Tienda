@@ -78,7 +78,7 @@ def usu_actualizacion(uuid):
     if validar_datos:
         return validar_datos
     
-    pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash)
+    pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash, 10).decode('utf-8')
 
     usuario = usuarios_services.obtener_usuario_por_uuid(uuid)
     if usuario:

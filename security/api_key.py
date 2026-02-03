@@ -10,10 +10,10 @@ def api_key_requerido(f):
     # *args, **kwargs Toma los argumentos de la funcion base llamada, ya sean posicionales o por nombre para que sirva con cualquier funcion
     def decorated(*args, **kwargs):
 
-        # Accede al headers de la petición con el nombre 'Authorization'
-        api_key = request.headers.get('Authorization')
+        # Accede al header de la petición con el nombre 'X-API-KEY'
+        api_key = request.headers.get('X-API-KEY')
 
-        # Valida si no hay header de 'Authorization' o si no coincide con la 'API_KEY' configurada
+        # Valida si no hay header de 'X-API-KEY' o si no coincide con la 'API_KEY' configurada
         if not api_key or api_key != current_app.config['API_KEY']:
             return jsonify({"mensaje": "API Key inválida o ausente"}), 401
         
