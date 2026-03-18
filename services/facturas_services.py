@@ -156,7 +156,6 @@ def obtener_factura_por_uuid(uuid):
         cursor = current_app.mysql.connection.cursor(DictCursor)
         sql = "SELECT * FROM facturas WHERE uuid = %s"
         cursor.execute(sql,(uuid,))
-        current_app.mysql.connection.commit()
         return cursor.fetchone()
     except Exception as e:
         raise e
