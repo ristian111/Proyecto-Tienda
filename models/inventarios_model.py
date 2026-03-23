@@ -1,3 +1,5 @@
+from utils import errores
+
 class Inventario:
     def __init__(self, id, uuid, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, ultima_actualizacion):
         self.id                   = id
@@ -32,17 +34,17 @@ class Inventario:
     
     def set_cantidad_actual(self, cantidad_actual):
         if cantidad_actual < 0:
-            raise ValueError("cantidad_actual no puede ser negativa")
+            raise errores.ErrorNegocio("La cantidad actual no puede ser negativa")
         self.__cantidad_actual = cantidad_actual
     
     def set_cantidad_reservada(self, cantidad_reservada):
         if cantidad_reservada < 0 or cantidad_reservada > self.__cantidad_actual:
-            raise ValueError("cantidad_reservada no puede ser negativa ni puede ser mayor que cantidad_actual")
+            raise errores.ErrorNegocio("cantidad_reservada no puede ser negativa ni puede ser mayor que la cantidad actual")
         self.__cantidad_reservada = cantidad_reservada
     
     def set_punto_reorden(self, punto_reorden):
         if punto_reorden < 0:
-            raise ValueError("punto_reorden no puede ser negativo")
+            raise errores.ErrorNegocio("El punto de reorden no puede ser negativo")
         self.__punto_reorden = punto_reorden
 
 class MovimientoInventario:

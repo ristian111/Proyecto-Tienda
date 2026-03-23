@@ -3,12 +3,12 @@ from datetime import datetime
 from MySQLdb.cursors import DictCursor
 import uuid as uuidGenerado
 from models import Inventario, MovimientoInventario
+from .utils_db import manejar_error_base_de_datos
 
 # Toma las filas de la base de datos utilizando inner join para ref_producto donde luego se convierte en un diccionario 
 def listar_inventarios():
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT 
                 i.id,
@@ -25,79 +25,65 @@ def listar_inventarios():
         datos = cursor.fetchall()
         resultado = [Inventario(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).inv_diccionario() for x in datos]
         return resultado
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto_reorden):
-    cursor = None
+    
     usuario_id = request.usuario["uuid"]
+    cursor.execute("SET @usuario_app = %s", (usuario_id,))
+    
     try:
-        cursor = current_app.mysql.connection.cursor()
-        cursor.execute("SET @usuario_app = %s", (usuario_id,))
         uuid = str(uuidGenerado.uuid4())
         inventario = Inventario(None, uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now().isoformat())
-        sql = "INSERT INTO inventarios (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada(), inventario.get_punto_reorden()))
-        current_app.mysql.connection.commit()
-        id = cursor.lastrowid
-        inventario.id = id
-        return inventario.inv_diccionario()
+        
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "INSERT INTO inventarios (uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(sql, (uuid, producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada(), inventario.get_punto_reorden()))
+            current_app.mysql.connection.commit()
+            id = cursor.lastrowid
+            inventario.id = id
+            return inventario.inv_diccionario()
+        
     except Exception as e:
-        current_app.mysql.connection.rollback()
-        if isinstance(e, ValueError):
-            raise e
-        raise RuntimeError("Error al registrar inventario") from e
-    finally:
-        if cursor:
-            cursor.close()
+        manejar_error_base_de_datos(e, "inventario", "registrar", "Ya existe un inventario para este producto")
 
 # Utiliza uuid para acceder al inventario y retorna True o False si modifico el inventario
 def actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, producto_uuid):
-    cursor = None
+    
     usuario_id = request.usuario["uuid"]
+    cursor.execute("SET @usuario_app = %s", (usuario_id,))
+    
     try:
-        cursor = current_app.mysql.connection.cursor()
-        cursor.execute("SET @usuario_app = %s", (usuario_id,))
         inventario = Inventario(None, uuid, producto_uuid, cantidad_actual, cantidad_reservada, punto_reorden, datetime.now().isoformat())
-        sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
-        cursor.execute(sql, (producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada, inventario.get_punto_reorden(), uuid))
-        current_app.mysql.connection.commit()
-        return inventario.inv_diccionario()
+        
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "UPDATE inventarios SET producto_id=%s, cantidad_actual=%s, cantidad_reservada=%s, punto_reorden=%s WHERE uuid=%s"
+            cursor.execute(sql, (producto_id, inventario.get_cantidad_actual(), inventario.get_cantidad_reservada, inventario.get_punto_reorden(), uuid))
+            current_app.mysql.connection.commit()
+            return inventario.inv_diccionario()
+        
     except Exception as e:
-        current_app.mysql.connection.rollback()
-        if isinstance(e, ValueError):
-            raise e 
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+        manejar_error_base_de_datos(e, "inventario", "actualizar", "Ya existe un inventario para este producto")
 
 def eliminar_inventario(uuid):
-    cursor = None
+    
     usuario_id = request.usuario["uuid"]
+    cursor.execute("SET @usuario_app = %s", (usuario_id,))
+    
     try:
-        cursor = current_app.mysql.connection.cursor()
-        cursor.execute("SET @usuario_app = %s", (usuario_id,))
-        sql = "DELETE FROM inventarios WHERE uuid = %s"
-        cursor.execute(sql, (uuid,))
-        current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
-    except Exception as e:
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "DELETE FROM inventarios WHERE uuid = %s"
+            cursor.execute(sql, (uuid,))
+            current_app.mysql.connection.commit()
+            return cursor.rowcount > 0
+    except Exception:
         current_app.mysql.connection.rollback()
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+        raise 
 
 # Devuelve en forma de diccionario el producto o productos con stock mas bajos
 def listar_productos_stock_bajo(limit):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+    
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT
                 prod.nombre as producto,
@@ -111,17 +97,12 @@ def listar_productos_stock_bajo(limit):
         """
         cursor.execute(sql, (limit,))
         return cursor.fetchall(limit)
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+
 
 # Devuelve stock del producto buscado
 def listar_stock_producto(producto):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+    
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT
                 prod.nombre as producto,
@@ -135,38 +116,21 @@ def listar_stock_producto(producto):
         """
         cursor.execute(sql, (producto,))
         return cursor.fetchone()
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
 
 def listar_movimiento_inventario():
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+    
+    with current_app.mysql.connection.cursor() as cursor:
         sql = "SELECT * FROM movimiento_inventario"
         cursor.execute(sql)
         datos = cursor.fetchall()
         resultado = [MovimientoInventario(x[0], x[1], x[2], x[3], x[4], x[5], x[6], x[7], 
                                           x[8], x[9], x[10], x[11]).mov_inv_diccionario() for x in datos]
         return resultado
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
 
 # Devuelve en forma de diccionario la fila del inventario para su uso en la validación de las demas tablas
 def obtener_inventario_por_uuid(uuid):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = "SELECT * FROM inventarios WHERE uuid = %s"
         cursor.execute(sql, (uuid,))
         return cursor.fetchone()
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()

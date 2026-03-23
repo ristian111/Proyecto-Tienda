@@ -3,95 +3,76 @@ from MySQLdb.cursors import DictCursor
 from datetime import datetime
 import uuid as uuidGenerado
 from models import Usuario
+from .utils_db import manejar_error_base_de_datos
 
 # Toma las filas de la base de datos para convertirlas en un diccionario 
 def listar_usuarios():
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = "SELECT * FROM usuarios"
         cursor.execute(sql)
         datos = cursor.fetchall()
         resultado = [Usuario(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).usu_diccionario() for x in datos]  
         return resultado
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
-
+    
 # Genera un uuid al momento de registrar y retorna un diccionario
 def registrar_usuario(nombre, username, password_hash, rol):
-    cursor = None
+    
     try:
-        cursor = current_app.mysql.connection.cursor()
         uuid = str(uuidGenerado.uuid4())
         usuario  = Usuario(None, uuid, nombre, username, password_hash, rol, datetime.now().isoformat())
-        sql = "INSERT INTO usuarios (uuid, nombre, username, password_hash, rol) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(sql, (uuid, nombre, usuario.get_usuario(), usuario.get_contraseña(), rol))
-        current_app.mysql.connection.commit()
-        id = cursor.lastrowid
-        usuario.id = id
-        return usuario.usu_diccionario()
+        
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "INSERT INTO usuarios (uuid, nombre, username, password_hash, rol) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(sql, (uuid, nombre, usuario.get_usuario(), usuario.get_contraseña(), rol))
+            current_app.mysql.connection.commit()
+            id = cursor.lastrowid
+            usuario.id = id
+            return usuario.usu_diccionario()
+        
     except Exception as e:
-        current_app.mysql.connection.rollback()
-        if isinstance(e, ValueError):
-            raise e
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+        manejar_error_base_de_datos(e, "usuario", "registrar", "Ya existe un usuario con ese nombre de usuario")
 
 # Utiliza uuid para acceder a al usuario y retorna True o False si modifico al usuario
 def actualizar_usuario(uuid, nombre, username, password_hash, rol):  
-    cursor = None
-    try:  
-        cursor = current_app.mysql.connection.cursor()
+    
+    try: 
         usuario  = Usuario(None, uuid, nombre, username, password_hash, rol, datetime.now())
-        sql = "UPDATE usuarios SET nombre=%s, username=%s, password_hash=%s, rol=%s WHERE uuid=%s"
-        cursor.execute(sql, (nombre, usuario.get_usuario(), usuario.get_contraseña(), rol, uuid))
-        current_app.mysql.connection.commit()
-        return usuario.usu_diccionario()
+        
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "UPDATE usuarios SET nombre=%s, username=%s, password_hash=%s, rol=%s WHERE uuid=%s"
+            cursor.execute(sql, (nombre, usuario.get_usuario(), usuario.get_contraseña(), rol, uuid))
+            current_app.mysql.connection.commit()
+            return usuario.usu_diccionario()
+        
     except Exception as e:
-        current_app.mysql.connection.rollback()
-        if isinstance(e, ValueError):
-            raise e 
-        raise e
-    finally:
-        if cursor:
-            cursor.close()  
+        manejar_error_base_de_datos(e, "usuario", "actualizar", "Ya existe un usuario con ese nombre de usuario")
 
 def eliminar_usuario(uuid):
-    cursor = None
+    
     try:
-        cursor = current_app.mysql.connection.cursor()
-        sql = "DELETE FROM usuarios WHERE uuid = %s"
-        cursor.execute(sql, (uuid,))
-        current_app.mysql.connection.commit()
-        return cursor.rowcount > 0
-    except Exception as e:
+        with current_app.mysql.connection.cursor() as cursor:
+            sql = "DELETE FROM usuarios WHERE uuid = %s"
+            cursor.execute(sql, (uuid,))
+            current_app.mysql.connection.commit()
+            return cursor.rowcount > 0
+    except Exception:
         current_app.mysql.connection.rollback()
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
-
+        raise
+    
 # Devuelve en forma de diccionario la fila del usuario para su uso en la validación de las demas tablas
 def obtener_usuario_por_uuid(uuid):
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+        
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = "SELECT * FROM usuarios WHERE uuid = %s"
         cursor.execute(sql, (uuid,))
         return cursor.fetchone()
-    except Exception as e: raise e
-    finally: 
-        if cursor: cursor.close()
+
 
 # Devuelve en forma de diccionario un registro del numero de pedidos por usuario a traves de su username
 def pedidos_de_un_usuario(user):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT
                 u.nombre as nombre_de_usuario,
@@ -103,22 +84,11 @@ def pedidos_de_un_usuario(user):
         """
         cursor.execute(sql, (user,))
         return cursor.fetchone()
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
-
+    
 # Devuelve en forma de diccionario la fila del usuario para poder autenticarlo validando su username, password_hash y rol
 def obtener_usuario_por_username(user):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor(DictCursor)
+    
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = "SELECT uuid, username, password_hash, rol FROM usuarios WHERE username = %s"
         cursor.execute(sql, (user,))
         return cursor.fetchone()
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()

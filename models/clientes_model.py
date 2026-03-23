@@ -1,3 +1,5 @@
+from utils import errores
+
 class Cliente:
     def __init__(self, id, uuid, nombre, telefono, direccion):
         self.id         = id
@@ -22,4 +24,4 @@ class Cliente:
         if len(telefono) == 10:
             self.__telefono = telefono
         else:
-            raise ValueError("El teléfono debe tener 10 carácteres")
+            raise errores.ErrorNegocio("El teléfono debe tener 10 carácteres")

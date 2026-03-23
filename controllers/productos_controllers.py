@@ -27,11 +27,10 @@ def prod_registro():
     categoria_uuid  = data['ref_categoria']
 
     # Valida los campos numericos para verificar que cumplen esta regla
-    try:
-        precio_venta  = float(precio_venta)
-        precio_compra = float(precio_compra)
-    except ValueError:
-        return jsonify({"mensaje": "Los campos precio_venta y precio_compra deben ser números"}), 400
+    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "precio_compra": precio_compra})
+    
+    if validar_numeros:
+        return validar_numeros
     
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     validar_datos = controllers.limpieza_datos(
@@ -48,16 +47,9 @@ def prod_registro():
     # Donde se guarda en una variable para acceder a la id del producto
     categoria_id = categoria['id']
 
-    try:
-        commit = productos_services.registrar_producto(nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
-        return jsonify({"mensaje": "Producto registrado exitosamente",
-                        "Producto": commit}), 201
-    except ValueError as e:
-        return jsonify({"mensaje": str(e)}), 400
-    except RuntimeError as e:
-        return jsonify({"mensaje": str(e)}), 500
-    except Exception as e:
-        return jsonify({"mensaje": "Ya existe un producto con este nombre"}), 409
+    commit = productos_services.registrar_producto(nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
+    return jsonify({"mensaje": "Producto registrado exitosamente",
+                    "Producto": commit}), 201
     
 @manejo_errores
 def prod_eliminacion(uuid):
@@ -88,11 +80,10 @@ def prod_actualizacion(uuid):
     unidad_medida   = data['unidad_medida']
     categoria_uuid  = data['ref_categoria']
     
-    try:
-        precio_venta  = float(precio_venta)
-        precio_compra = float(precio_compra)
-    except ValueError:
-        return jsonify({"mensaje": "Los campos precio_venta y precio_compra deben ser números"}), 400
+    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "precio_compra": precio_compra})
+    
+    if validar_numeros:
+        return validar_numeros
 
     validar_datos = controllers.limpieza_datos(
         {"nombre": nombre, "unidad_medida": unidad_medida, "ref_categoria": categoria_uuid})
@@ -108,12 +99,9 @@ def prod_actualizacion(uuid):
     
     producto = productos_services.obtener_producto_por_uuid(uuid)
     if producto:
-        try:
-            commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
-            return jsonify({"mensaje": "Producto actualizado exitosamente",
-                            "Producto": commit}), 200
-        except ValueError as e:
-            return jsonify({"mensaje": str(e)}), 400
-        except Exception:
-            return jsonify({"mensaje": "Error al actualizar producto"}), 500
+            
+        commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip())
+        return jsonify({"mensaje": "Producto actualizado exitosamente",
+                        "Producto": commit}), 200
+        
     return jsonify({"mensaje": "El producto no existe"}), 404

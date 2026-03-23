@@ -21,14 +21,10 @@ def fac_registro(pedido_uuid):
     pedido_id = pedidos_services.obtener_pedido_por_uuid(pedido_uuid)
     if pedido_id:
         pedido = pedido_id["id"]
-        try:
-            commit = facturas_services.registrar_factura(pedido, tipo_venta, pedido_uuid)
-            return jsonify({"mensaje": "Factura registrada",
-                            "Factura": commit}), 201
-        except ValueError as e:
-            return jsonify({"mensaje": str(e)}), 400
-        except Exception as e:
-            return jsonify({"mensaje": str(e)}), 500
+
+        commit = facturas_services.registrar_factura(pedido, tipo_venta, pedido_uuid)
+        return jsonify({"mensaje": "Factura registrada",
+                        "Factura": commit}), 201
     
     return jsonify({"mensaje": "Error no existe el pedido"}), 404
 
@@ -60,10 +56,10 @@ def fac_actualizacion(uuid):
     estado         = data['estado']
     ref_pedido     = data['ref_pedido']
 
-    try:
-        total = int(total)
-    except ValueError:
-        return jsonify({"mensaje": "El campo total debe ser número entero"}), 400
+    validar_numeros = controllers.limpieza_numeros({"total": total})
+    
+    if validar_numeros:
+        return validar_numeros
     
     validar_datos = controllers.limpieza_datos({"numero_factura": numero_factura, "estado": estado, "ref_pedido": ref_pedido})
 
@@ -82,10 +78,9 @@ def fac_actualizacion(uuid):
 
     factura = facturas_services.obtener_factura_por_uuid(uuid)
     if factura:
-        try:
-            commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id, ref_pedido.strip())
-            return jsonify({"mensaje": "Factura actualizada exitosamente",
-                            "Factura": commit}), 200
-        except Exception:
-            return jsonify({"mensaje": "Error al actualizar factura"}), 500
+
+        commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id, ref_pedido.strip())
+        return jsonify({"mensaje": "Factura actualizada exitosamente",
+                        "Factura": commit}), 200
+    
     return jsonify({"mensaje": "La factura no existe"}), 404

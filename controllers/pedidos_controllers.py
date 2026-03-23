@@ -27,10 +27,10 @@ def ped_registro():
     ref_usuario       = data['ref_usuario']
 
     # Valida los campos numericos para verificar que cumplen esta regla
-    try:
-        total = float(total)
-    except ValueError:
-        return jsonify({"mensaje": "El campo total debe ser un número entero"}), 400
+    validar_numeros = controllers.limpieza_numeros({"total": total})
+
+    if validar_numeros:
+        return validar_numeros
 
     # Valida que los datos sean de la clase adecuada o si el campo lo rellenan con un espacio 
     validar_datos = controllers.limpieza_datos(
@@ -54,12 +54,9 @@ def ped_registro():
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
-    try:
-        commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
-        return jsonify({"mensaje": "Pedido registrado exitosamente",
-                        "Pedido": commit}), 201
-    except RuntimeError as e:
-        return jsonify({"mensaje": str(e)}), 500
+    commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+    return jsonify({"mensaje": "Pedido registrado exitosamente",
+                    "Pedido": commit}), 201
 
 @manejo_errores
 def ped_eliminacion(uuid):
@@ -90,10 +87,10 @@ def ped_actualizacion(uuid):
     ref_cliente       = data['ref_cliente']
     ref_usuario       = data['ref_usuario']
 
-    try:
-        total = float(total)
-    except ValueError:
-        return jsonify({"mensaje": "El campo total debe ser un número entero"}), 400
+    validar_numeros = controllers.limpieza_numeros({"total": total})
+    
+    if validar_numeros:
+        return validar_numeros
     
     validar_datos = controllers.limpieza_datos(
         {"estado": estado, "total": total, "direccion_entrega": direccion_entrega, 
@@ -115,12 +112,11 @@ def ped_actualizacion(uuid):
 
     pedido = pedidos_services.obtener_pedido_por_uuid(uuid)
     if pedido:
-        try:
-            commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
-            return jsonify({"mensaje": "Pedido actualizado exitosamente",
-                            "Pedido": commit}), 200
-        except Exception:
-            return jsonify({"mensaje": "Error al actualizar pedido"}), 500
+            
+        commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+        return jsonify({"mensaje": "Pedido actualizado exitosamente",
+                        "Pedido": commit}), 200
+
     return jsonify({"mensaje": "El pedido no existe"}), 404
 
 @manejo_errores

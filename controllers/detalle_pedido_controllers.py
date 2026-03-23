@@ -26,11 +26,10 @@ def det_pedido_registro():
     ref_producto    = datos['ref_producto']
 
     # Valida los campos numericos para verificar que cumplen esta regla 
-    try:
-        cantidad        = int(cantidad)
-        precio_unitario = float(precio_unitario)
-    except ValueError:
-        return jsonify({"mensaje": "El campo cantidad y precio_unitario deben ser números enteros"}), 400
+    validar_numeros = controllers.limpieza_numeros({"cantidad": cantidad, "precio_unitario": precio_unitario})
+    
+    if validar_numeros:
+        return validar_numeros
 
     validar_datos = controllers.limpieza_datos({"ref_pedido": ref_pedido, "ref_producto": ref_producto})
     
@@ -53,14 +52,9 @@ def det_pedido_registro():
     pedido_id   = pedido['id']
     producto_id = producto['id']
 
-    try:
-        commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
-        return jsonify({"mensaje": "detalle_pedido registrado exitosamente",
-                        "Detalle_pedido": commit}), 201
-    except ValueError as e:
-        return jsonify({"mensaje": str(e)}), 400
-    except RuntimeError as e:
-        return jsonify({"mensaje": str(e)}), 500
+    commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
+    return jsonify({"mensaje": "detalle_pedido registrado exitosamente",
+                    "Detalle_pedido": commit}), 201
 
 @manejo_errores
 def det_pedido_eliminacion(uuid):
@@ -91,11 +85,10 @@ def det_pedido_actualizacion(uuid):
     ref_pedido      = datos['ref_pedido']
     ref_producto    = datos['ref_producto']
 
-    try:
-        cantidad        = int(cantidad)
-        precio_unitario = float(precio_unitario)
-    except ValueError:
-        return jsonify({"mensaje": "El campo cantidad y precio_unitario deben ser números enteros"}), 400
+    validar_numeros = controllers.limpieza_numeros({"cantidad": cantidad, "precio_unitario": precio_unitario})
+    
+    if validar_numeros:
+        return validar_numeros
 
     validar_datos = controllers.limpieza_datos({"ref_pedido": ref_pedido, "ref_producto": ref_producto})
     

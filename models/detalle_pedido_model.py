@@ -1,3 +1,5 @@
+from utils import errores
+
 class DetallePedido:
     def __init__(self, id, uuid, cantidad, precio_unitario, subtotal, pedido_id, producto_id):
         self.id                = id
@@ -28,10 +30,10 @@ class DetallePedido:
     
     def set_precio_unitario(self, precio_unitario):
         if precio_unitario <= 0:
-            raise ValueError("El precio_unitario no puede ser negativo o igual a cero")
+            raise errores.ErrorNegocio("El precio_unitario no puede ser negativo o igual a cero")
         self.__precio_unitario = precio_unitario
     
     def set_cantidad(self, cantidad):
         if cantidad <= 0:
-            raise ValueError("La cantidad no puede ser negativa o igual a cero")
+            raise errores.ErrorNegocio("La cantidad no puede ser negativa o igual a cero")
         self.__cantidad = cantidad

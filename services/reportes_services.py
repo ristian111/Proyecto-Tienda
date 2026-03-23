@@ -7,9 +7,8 @@ from models.reportes.pedidos import PedidosPorFecha
 from models.reportes.facturas import Ingresos
 
 def listar_clientes_con_mas_pedidos(limit):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+    
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 c.nombre,
@@ -25,16 +24,10 @@ def listar_clientes_con_mas_pedidos(limit):
         resultados = [{"cliente": x[0], "numero_pedidos": x[1]} for x in datos]
         reporte = ClientesMasPedidos(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
 
 def listar_usuarios_con_mas_registro_pedidos(limit):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 u.nombre,
@@ -50,16 +43,11 @@ def listar_usuarios_con_mas_registro_pedidos(limit):
         resultados = [{"usuario": x[0], "registro_pedidos": x[1]} for x in datos]
         reporte = UsuariosMasRegistrosPedidos(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+    
 
 def listar_productos_mas_vendidos(desde, hasta, limit):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 prod.uuid,
@@ -79,16 +67,11 @@ def listar_productos_mas_vendidos(desde, hasta, limit):
         resultados = [{"id": x[0], "producto": x[1], "total_vendido": x[2]} for x in datos]
         reporte = ProductosMasVendidos(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+    
 
 def listar_pedidos_por_fecha(desde, hasta, estado=None):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 count(id) as cantidad_pedidos
@@ -101,16 +84,11 @@ def listar_pedidos_por_fecha(desde, hasta, estado=None):
         resultados = [{"cantidad_pedidos": x} for x in datos]
         reporte = PedidosPorFecha(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+    
  
 def listar_productos_mas_ganancias(desde, hasta, limit):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 prod.uuid,
@@ -130,16 +108,11 @@ def listar_productos_mas_ganancias(desde, hasta, limit):
         resultados = [{"id": x[0], "producto": x[1], "total_ganado": x[2]} for x in datos]
         reporte = ProductosMasGanancia(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+    
 
 def listar_ingresos_por_ventas(desde, hasta):
-    cursor = None
-    try:
-        cursor = current_app.mysql.connection.cursor()
+
+    with current_app.mysql.connection.cursor() as cursor:
         sql = """
             SELECT
                 sum(total) as ingresos
@@ -151,8 +124,4 @@ def listar_ingresos_por_ventas(desde, hasta):
         resultados = [{"ingresos_generados": x} for x in datos]
         reporte = Ingresos(resultados).rep_diccionario()
         return reporte
-    except Exception as e:
-        raise e
-    finally:
-        if cursor:
-            cursor.close()
+    

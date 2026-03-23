@@ -43,10 +43,25 @@ def limpieza_datos(campos: dict):
    Retorna un json con el codigo http 400 o None
    """
 
-   validar_limpieza = [campo for campo, valor in campos.items() if not isinstance(valor, str) or not valor.strip()]
+   validar_limpieza = [campo for campo, valor in campos.items() if not isinstance(valor, str) or not valor.strip() or valor.strip().isdigit()]
    
    if validar_limpieza:
       return jsonify({"mensaje": 
                       f"Los campos {(", ".join(validar_limpieza))} deben ser una cadena de texto o no pueden estar vacíos"}), 400
    
    return None
+
+def limpieza_numeros(campos: dict):
+    """
+    Valida que los campos sean numéricos (int o float).
+
+    Retorna un json con código 400 o None
+    """
+
+    validar_numeros = [campo for campo, valor in campos.items() if not isinstance(valor, (int, float))]
+
+    if validar_numeros:
+        return jsonify({"mensaje": 
+                        f"Los campos {', '.join(validar_numeros)} deben ser numéricos válidos"}), 400
+
+    return None

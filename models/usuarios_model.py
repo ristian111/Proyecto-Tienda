@@ -1,3 +1,5 @@
+from utils import errores
+
 class Usuario:
     def __init__(self, id, uuid, nombre, user, password, rol, ultimo_acceso):
         self.id            = id
@@ -28,10 +30,10 @@ class Usuario:
 
     def set_usuario(self, user):
         if len(user.strip()) < 10:
-            return ValueError("El usuario debe tener al menos 10 caracteres")
+            return errores.ErrorNegocio("El usuario debe tener al menos 10 caracteres")
         self.__user = user
     
     def set_contraseña(self, password):
         if len(password.strip()) < 10:
-            return ValueError("La contraseña debe tener al menos 10 caracteres")
+            return errores.ErrorNegocio("La contraseña debe tener al menos 10 caracteres")
         self.__password = password

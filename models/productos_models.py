@@ -1,3 +1,5 @@
+from utils import errores
+
 class Producto:
     def __init__(self, id, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_uuid):
         self.id              = id
@@ -28,10 +30,10 @@ class Producto:
     
     def set_precio_compra(self, precio_compra):
         if precio_compra < 0:
-            raise ValueError("precio_compra no puede ser negativa")
+            raise errores.ErrorNegocio("El precio de compra no puede ser negativo")
         self.__precio_compra = precio_compra
 
     def set_precio_venta(self, precio_venta):
         if precio_venta < 0 or precio_venta < self.__precio_compra:
-            raise ValueError("precio_venta no puede ser negativa ni puede ser menor al precio_compra")
+            raise errores.ErrorNegocio("El precio de venta no puede ser negativo ni puede ser menor al precio de compra")
         self.__precio_venta = precio_venta

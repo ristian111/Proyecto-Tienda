@@ -30,14 +30,9 @@ def cat_registro():
     if validar_datos:
         return validar_datos
     
-    try:
-        commit = categorias_services.registrar_categoria(nombre.strip(), descripcion.strip())
-        return jsonify({"mensaje": "Categoria registrada exitosamente",
-                        "Categoría": commit}), 201
-    except ValueError as e:
-        return jsonify({"mensaje": str(e)}), 409
-    except RuntimeError as e:
-        return jsonify({"mensaje": str(e)}), 500
+    commit = categorias_services.registrar_categoria(nombre.strip(), descripcion.strip())
+    return jsonify({"mensaje": "Categoria registrada exitosamente",
+                    "Categoría": commit}), 201
 
 @manejo_errores
 def cat_eliminacion(uuid):
@@ -71,10 +66,9 @@ def cat_actualizacion(uuid):
     
     categoria = categorias_services.obtener_categoria_por_uuid(uuid)
     if categoria:
-        try:
-            commit = categorias_services.actualizar_categoria(uuid, nombre, descripcion)
-            return jsonify({"mensaje": "Categoria actualizada exitosamente",
-                            "Categoría": commit}), 200
-        except Exception:
-            return jsonify({"mensaje: Error al actualizar categoría"}), 500
+
+        commit = categorias_services.actualizar_categoria(uuid, nombre, descripcion)
+        return jsonify({"mensaje": "Categoria actualizada exitosamente",
+                        "Categoría": commit}), 200
+    
     return jsonify({"mensaje": "La categoría no existe"}), 404

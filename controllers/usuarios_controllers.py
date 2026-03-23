@@ -35,14 +35,9 @@ def usu_registro():
     # Genera un hash de la contraseña donde se envia a la base de datos
     pass_encriptado = current_app.bcrypt.generate_password_hash(password_hash, 10).decode('utf-8')
     
-    try:
-        commit = usuarios_services.registrar_usuario(nombre.strip(), username, pass_encriptado, rol.strip().capitalize())  
-        return jsonify({"mensaje": "Usuario registrado exitosamente",
-                        "Usuario": commit}), 201
-    except ValueError as e:
-        return jsonify({"mensaje": str(e)}), 400
-    except Exception:
-        return jsonify({"mensaje": "Error al registrar usuario"}), 500
+    commit = usuarios_services.registrar_usuario(nombre.strip(), username, pass_encriptado, rol.strip().capitalize())  
+    return jsonify({"mensaje": "Usuario registrado exitosamente",
+                    "Usuario": commit}), 201
     
 @manejo_errores
 def usu_eliminacion(uuid):
@@ -82,14 +77,11 @@ def usu_actualizacion(uuid):
 
     usuario = usuarios_services.obtener_usuario_por_uuid(uuid)
     if usuario:
-        try:
-            commit = usuarios_services.actualizar_usuario(uuid.strip(), nombre.strip(), username, pass_encriptado, rol.strip().capitalize())
-            return jsonify({"mensaje": "Usuario actualizado exitosamente",
-                            "Usuario": commit}), 200
-        except ValueError as e:
-            return jsonify({"mensaje": str(e)}), 400
-        except Exception:
-            return jsonify({"mensaje": "Error al actualizar usuario"}), 500
+
+        commit = usuarios_services.actualizar_usuario(uuid.strip(), nombre.strip(), username, pass_encriptado, rol.strip().capitalize())
+        return jsonify({"mensaje": "Usuario actualizado exitosamente",
+                        "Usuario": commit}), 200
+        
     return jsonify({"mensaje": "El usuario no existe"}), 404
 
 @manejo_errores
