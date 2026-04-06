@@ -9,23 +9,20 @@ from utils import errores
 # Toma las filas de la base de datos utilizando inner join para ref_pedido donde luego se convierte en un diccionario 
 def listar_facturas():
         
-    with current_app.mysql.connection.cursor() as cursor:
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT
-                f.id,
-                f.uuid,
+                f.uuid as ref,
                 f.numero_factura,
                 f.total,
                 f.fecha_emision,
                 f.estado,
-                ped.uuid
+                ped.uuid as ref_pedido
             FROM facturas f 
             INNER JOIN pedidos ped on f.pedido_id = ped.id
         """
         cursor.execute(sql)
-        datos = cursor.fetchall()
-        resultado = [Factura(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).fac_diccionario() for x in datos]
-        return resultado
+        return cursor.fetchall()
     
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
@@ -102,6 +99,7 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
             return resultado
     
     except Exception as e:
+        conn.rollback()
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido")
 
 # Utiliza uuid para acceder a la factura y retorna True o False si modifico la factura
@@ -117,6 +115,7 @@ def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uu
             return factura.fac_diccionario()
         
     except Exception as e:
+        current_app.mysql.connection.rollback()
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido") 
 
 def eliminar_factura(uuid):

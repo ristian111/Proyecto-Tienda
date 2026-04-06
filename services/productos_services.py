@@ -7,23 +7,20 @@ from .utils_db import manejar_error_base_de_datos
 # Toma las filas de la base de datos utilizando inner join para ref_categoria donde luego se convierte en un diccionario 
 def listar_productos():
     
-    with current_app.mysql.connection.cursor() as cursor:
+    with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT 
-                p.id,
-                p.uuid,
+                p.uuid as ref,
                 p.nombre,
                 p.precio_venta,
                 p.precio_compra,
                 p.unidad_medida,
-                c.uuid AS categoria_uuid
+                c.uuid AS ref_categoria
             FROM productos p
             JOIN categorias c ON c.id = p.categoria_id
         """
         cursor.execute(sql)
-        datos = cursor.fetchall()
-        resultado = [Producto(x[0], x[1], x[2], x[3], x[4], x[5], x[6]).prod_diccionario() for x in datos]
-        return resultado
+        return cursor.fetchall()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categoria_id, categoria_uuid):
@@ -46,6 +43,7 @@ def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categ
             return producto.prod_diccionario()
         
     except Exception as e:
+        current_app.mysql.connection.rollback()
         manejar_error_base_de_datos(e, "producto", "registrar")
 
 # Utiliza uuid para acceder al producto y retorna True o False si modifico el producto
@@ -65,6 +63,7 @@ def actualizar_producto(uuid, nombre, precio_venta, precio_compra, unidad_medida
             return producto.prod_diccionario()
         
     except Exception as e:
+         current_app.mysql.connection.rollback()
          manejar_error_base_de_datos(e, "producto", "actualizar")
 
 def eliminar_producto(uuid):
