@@ -161,4 +161,29 @@ export const api = {
         });
         return handleRes(res);
     },
+
+    getResumenHoy: async () => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/resumen-hoy`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    },
+    getTopProductos: async (filtro: string = 'mensual') => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/top-productos?filtro=${filtro}`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    },
+    getIngresosGanancias: async (dias: number = 7) => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/ingresos-ganancias?dias=${dias}`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    },
+    getHorasPico: async () => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/horas-pico`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    },
+    getProductosEstancados: async () => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/productos-estancados`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    },
+    getPorcentajeCategorias: async () => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/porcentaje-categorias`, { headers: getAuthHeaders() });
+        return handleRes<any>(res);
+    }
 };

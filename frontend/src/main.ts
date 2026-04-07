@@ -6,6 +6,7 @@ import { renderCompras } from './views/compras';
 import { renderSidebar } from './components/navbar';
 import { renderFacturas } from './views/facturas';
 import { renderMisc } from './views/misc';
+import { renderEstadisticas } from './views/estadisticas';
 import { api } from './api/endpoints';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -51,6 +52,8 @@ export function router() {
     content.innerHTML = '<h1>Pedidos</h1><p style="color: #666;">En construcción...</p>';
   } else if (hash === '#/facturas') {
     renderFacturas(content);
+  } else if (hash === '#/estadisticas') {
+    renderEstadisticas(content);
   } else if (hash === '#/misc') {
     renderMisc(content);
   }
