@@ -4,13 +4,13 @@ export function renderLogin() {
     return `
         <div class="login-card">
             <h2>Bienvenido de vuelta</h2>
-            <p class="subtitle">Inicia sesión para acceder al panel</p>
+            <p class="subtitle">Inicia sesión</p>
             <form id="login-form">
                 <input type="text" id="username" placeholder="Usuario" required>
                 <input type="password" id="password" placeholder="Contraseña" required>
                 <p id="login-error" style="color: #ef4444; font-size: 0.85rem; display: none; margin-top: 4px;"></p>
                 <button type="submit" class="btn" id="btn-login" style="margin-top: 8px; width: 100%; justify-content: center;">
-                    Entrar al Panel →
+                    Submit →
                 </button>
             </form>
         </div>

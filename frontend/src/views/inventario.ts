@@ -95,6 +95,8 @@ export async function renderInventario(container: HTMLElement) {
             </dialog>
         `;
 
+
+        // Para la busqueda :v
         const searchInput = document.getElementById('search-input') as HTMLInputElement;
         searchInput?.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();

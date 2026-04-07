@@ -71,13 +71,23 @@ def eliminar_producto(uuid, usuario_uuid):
     
     try:
         with current_app.mysql.connection.cursor() as cursor:
-            sql = "DELETE FROM productos WHERE uuid = %s AND usuario_uuid = %s"
-            cursor.execute(sql, (uuid, usuario_uuid))
+            # Obtener el ID del producto
+            cursor.execute("SELECT id FROM productos WHERE uuid = %s AND usuario_uuid = %s", (uuid, usuario_uuid))
+            res = cursor.fetchone()
+            if not res:
+                return False
+                
+            producto_id = res['id'] if isinstance(res, dict) else res[0]
+            
+            # Eliminar inventario asociado para evitar error de foreign key
+            cursor.execute("DELETE FROM inventarios WHERE producto_id = %s", (producto_id,))
+            
+            sql = "DELETE FROM productos WHERE id = %s AND usuario_uuid = %s"
+            cursor.execute(sql, (producto_id, usuario_uuid))
             current_app.mysql.connection.commit()
             return cursor.rowcount > 0
-    except Exception:
-        current_app.mysql.connection.rollback()
-        raise 
+    except Exception as e:
+        manejar_error_base_de_datos(e, "producto", "eliminar")
 
 # Devuelve en forma de diccionario la fila del producto para su uso en la validación de las demas tablas
 def obtener_producto_por_uuid(uuid, usuario_uuid):
