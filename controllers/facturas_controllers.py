@@ -5,8 +5,8 @@ from decoradores import manejo_errores
 
 @manejo_errores
 def fac_listado():
-    # Devuelve en formato json el listado de facturas junto al codigo http 
-    datos = facturas_services.listar_facturas()
+    uuid_usuario = request.usuario['uuid']
+    datos = facturas_services.listar_facturas(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -18,11 +18,12 @@ def fac_registro(pedido_uuid):
     
     tipo_venta = True
 
-    pedido_id = pedidos_services.obtener_pedido_por_uuid(pedido_uuid)
+    uuid_usuario = request.usuario['uuid']
+    pedido_id = pedidos_services.obtener_pedido_por_uuid(pedido_uuid, uuid_usuario)
     if pedido_id:
         pedido = pedido_id["id"]
 
-        commit = facturas_services.registrar_factura(pedido, tipo_venta, pedido_uuid)
+        commit = facturas_services.registrar_factura(pedido, tipo_venta, pedido_uuid, uuid_usuario)
         return jsonify({"mensaje": "Factura registrada",
                         "Factura": commit}), 201
     
@@ -30,11 +31,12 @@ def fac_registro(pedido_uuid):
 
 @manejo_errores
 def fac_eliminacion(uuid):
+    uuid_usuario = request.usuario['uuid']
     # Valida la existencia de la factura a través del uuid 
-    factura = facturas_services.obtener_factura_por_uuid(uuid)
+    factura = facturas_services.obtener_factura_por_uuid(uuid, uuid_usuario)
 
     if factura:
-        commit = facturas_services.eliminar_factura(uuid)
+        commit = facturas_services.eliminar_factura(uuid, uuid_usuario)
         if commit:
             return jsonify({"mensaje": "Factura eliminada exitosamente"}), 200
     
@@ -69,17 +71,18 @@ def fac_actualizacion(uuid):
     if total <= 0:
         return jsonify({"mensaje": "El total no puede ser negativo o igual a cero"}), 400
     
-    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip())
+    uuid_usuario = request.usuario['uuid']
+    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip(), uuid_usuario)
 
     if not pedido:
         return jsonify({"mensaje": "El pedido no existe"}), 404
     
     pedido_id = pedido['id']
 
-    factura = facturas_services.obtener_factura_por_uuid(uuid)
+    factura = facturas_services.obtener_factura_por_uuid(uuid, uuid_usuario)
     if factura:
 
-        commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id, ref_pedido.strip())
+        commit = facturas_services.actualizar_factura(uuid.strip(), numero_factura.strip(), total, estado.strip(), pedido_id, ref_pedido.strip(), uuid_usuario)
         return jsonify({"mensaje": "Factura actualizada exitosamente",
                         "Factura": commit}), 200
     

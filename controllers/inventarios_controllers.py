@@ -5,13 +5,14 @@ from decoradores import manejo_errores
 
 @manejo_errores
 def inv_listado():
-    # Devuelve en formato json el listado de inventarios junto al codigo http 
-    datos = inventarios_services.listar_inventarios()
+    uuid_usuario = request.usuario['uuid']
+    datos = inventarios_services.listar_inventarios(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
 def inv_listado_movimiento_inventario():
-    datos = inventarios_services.listar_movimiento_inventario()
+    uuid_usuario = request.usuario['uuid']
+    datos = inventarios_services.listar_movimiento_inventario(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -42,8 +43,9 @@ def inv_registro():
     if validar_datos:
         return validar_datos
 
+    uuid_usuario = request.usuario['uuid']
     # Revisa si la referencia del producto existe a través del uuid
-    producto = productos_services.obtener_producto_por_uuid(producto_uuid.strip())
+    producto = productos_services.obtener_producto_por_uuid(producto_uuid.strip(), uuid_usuario)
     if not producto:
         return jsonify({"mensaje": "El producto no existe"}), 404
 
@@ -56,11 +58,12 @@ def inv_registro():
 
 @manejo_errores
 def inv_eliminacion(uuid):
+    uuid_usuario = request.usuario['uuid']
     # Valida la existencia del inventario a través del uuid 
-    inventario = inventarios_services.obtener_inventario_por_uuid(uuid)
+    inventario = inventarios_services.obtener_inventario_por_uuid(uuid, uuid_usuario)
 
     if inventario:
-        commit = inventarios_services.eliminar_inventario(uuid)
+        commit = inventarios_services.eliminar_inventario(uuid, uuid_usuario)
         if commit:
             return jsonify({"mensaje": "Inventario eliminado exitosamente"}), 200
     
@@ -92,15 +95,16 @@ def inv_actualizacion(uuid):
     if validar_datos:
         return validar_datos
     
-    producto = productos_services.obtener_producto_por_uuid(producto_uuid.strip())
+    uuid_usuario = request.usuario['uuid']
+    producto = productos_services.obtener_producto_por_uuid(producto_uuid.strip(), uuid_usuario)
     if not producto:
         return jsonify({"mensaje": "El producto no existe"}), 404
 
     producto_id = producto['id']
-    inventario = inventarios_services.obtener_inventario_por_uuid(uuid)
+    inventario = inventarios_services.obtener_inventario_por_uuid(uuid, uuid_usuario)
     if inventario:
 
-        commit = inventarios_services.actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, producto_uuid.strip())
+        commit = inventarios_services.actualizar_inventario(uuid, producto_id, cantidad_actual, cantidad_reservada, punto_reorden, producto_uuid.strip(), uuid_usuario)
         return jsonify({"mensaje": "Inventario actualizado exitosamente",
                         "Inventario": commit}), 200
         
@@ -110,8 +114,9 @@ def inv_actualizacion(uuid):
 def inv_productos_stock_bajo():
 
     limite = request.args.get("limit", default=1, type=int)
+    uuid_usuario = request.usuario['uuid']
 
-    commit = inventarios_services.listar_productos_stock_bajo(limite)
+    commit = inventarios_services.listar_productos_stock_bajo(limite, uuid_usuario)
 
     if commit:
         return jsonify({"mensaje": "Producto encontrado exitosamente",
@@ -121,8 +126,8 @@ def inv_productos_stock_bajo():
 
 @manejo_errores
 def inv_stock_producto(producto):
-
-    commit = inventarios_services.listar_stock_producto(producto)
+    uuid_usuario = request.usuario['uuid']
+    commit = inventarios_services.listar_stock_producto(producto, uuid_usuario)
         
     if commit:
         return jsonify({"mensaje": "Producto encontrado exitosamente",

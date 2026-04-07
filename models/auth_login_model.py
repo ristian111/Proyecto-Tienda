@@ -1,5 +1,5 @@
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from flask import current_app
 
 # A través del usuario autenticado se genera el token
@@ -8,7 +8,7 @@ def generar_token(usuario):
     payload = {
         "uuid": usuario["uuid"],
         "rol": usuario["rol"],
-        "exp": datetime.utcnow() + timedelta(hours=2)
+        "exp": datetime.now(timezone.utc) + timedelta(hours=2)
     }
 
     token = jwt.encode(

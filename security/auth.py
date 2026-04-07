@@ -33,10 +33,10 @@ def token_requerido(f):
             # Guarda la petición del usuario para recordar sus datos (Luego se utiliza para la validación de roles)
             request.usuario = payload
 
-        except jwt.InvalidTokenError:
-            return jsonify({"mensaje": "Token inválido"}), 401
         except jwt.ExpiredSignatureError:
              return jsonify({"mensaje": "Token expirado"}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({"mensaje": "Token inválido"}), 401
         
         # Los parametros se reenvian a la funcion base sin ningun cambio
         return f(*args, **kwargs)

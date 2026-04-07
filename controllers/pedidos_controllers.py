@@ -5,8 +5,8 @@ from decoradores import manejo_errores
 
 @manejo_errores
 def ped_listado():
-    # Devuelve en formato json el listado de pedidos junto al codigo http 
-    datos = pedidos_services.listar_pedidos()
+    uuid_usuario = request.usuario['uuid']
+    datos = pedidos_services.listar_pedidos(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -45,8 +45,9 @@ def ped_registro():
     if not cliente:
         return jsonify({"mensaje": "El cliente no existe"}), 404
 
+    uuid_usuario = request.usuario['uuid']
     # Revisa si la referencia del usuario existe a través del uuid
-    usuario = usuarios_services.obtener_usuario_por_uuid(ref_usuario.strip())
+    usuario = usuarios_services.obtener_usuario_por_uuid(uuid_usuario)
     if not usuario:
         return jsonify({"mensaje": "El usuario no existe"}), 404
 
@@ -54,17 +55,18 @@ def ped_registro():
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
-    commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+    commit = pedidos_services.registrar_pedido(estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), uuid_usuario)
     return jsonify({"mensaje": "Pedido registrado exitosamente",
                     "Pedido": commit}), 201
 
 @manejo_errores
 def ped_eliminacion(uuid):
+    uuid_usuario = request.usuario['uuid']
     # Valida la existencia del inventario a través del uuid 
-    pedido = pedidos_services.obtener_pedido_por_uuid(uuid)
+    pedido = pedidos_services.obtener_pedido_por_uuid(uuid, uuid_usuario)
 
     if pedido:
-        commit = pedidos_services.eliminar_pedido(uuid)
+        commit = pedidos_services.eliminar_pedido(uuid, uuid_usuario)
         if commit:
             return jsonify({"mensaje": "Pedido eliminado exitosamente"}), 200
     
@@ -103,17 +105,18 @@ def ped_actualizacion(uuid):
     if not cliente:
         return jsonify({"mensaje": "El cliente no existe"}), 404
     
-    usuario = usuarios_services.obtener_usuario_por_uuid(ref_usuario.strip())
+    uuid_usuario = request.usuario['uuid']
+    usuario = usuarios_services.obtener_usuario_por_uuid(uuid_usuario)
     if not usuario:
         return jsonify({"mensaje": "El usuario no existe"}), 404
     
     cliente_id = cliente['id']
     usuario_id = usuario['id']
 
-    pedido = pedidos_services.obtener_pedido_por_uuid(uuid)
+    pedido = pedidos_services.obtener_pedido_por_uuid(uuid, uuid_usuario)
     if pedido:
             
-        commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), ref_usuario.strip())
+        commit = pedidos_services.actualizar_pedido(uuid.strip(), estado.strip(), total, direccion_entrega.strip(), cliente_id, usuario_id, ref_cliente.strip(), uuid_usuario)
         return jsonify({"mensaje": "Pedido actualizado exitosamente",
                         "Pedido": commit}), 200
 
@@ -121,5 +124,6 @@ def ped_actualizacion(uuid):
 
 @manejo_errores
 def ped_listar_pedidos_pendientes():
-    datos = pedidos_services.listar_pedidos_pendientes()
+    uuid_usuario = request.usuario['uuid']
+    datos = pedidos_services.listar_pedidos_pendientes(uuid_usuario)
     return jsonify(datos), 200

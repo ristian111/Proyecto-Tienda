@@ -17,7 +17,6 @@ class Usuario:
             'ref'          : self.uuid,
             'nombre'       : self.nombre,
             'user'         : self.__user,
-            'password'     : self.__password,
             'rol'          : self.rol,
             'ultimo_acceso': self.ultimo_acceso
         }
@@ -30,10 +29,10 @@ class Usuario:
 
     def set_usuario(self, user):
         if len(user.strip()) < 10:
-            return errores.ErrorNegocio("El usuario debe tener al menos 10 caracteres")
+            raise errores.ErrorNegocio("El usuario debe tener al menos 10 caracteres")
         self.__user = user
     
     def set_contraseña(self, password):
         if len(password.strip()) < 10:
-            return errores.ErrorNegocio("La contraseña debe tener al menos 10 caracteres")
+            raise errores.ErrorNegocio("La contraseña debe tener al menos 10 caracteres")
         self.__password = password

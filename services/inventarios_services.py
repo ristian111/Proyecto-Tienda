@@ -6,7 +6,7 @@ from models import Inventario, MovimientoInventario
 from .utils_db import manejar_error_base_de_datos
 
 # Toma las filas de la base de datos utilizando inner join para ref_producto donde luego se convierte en un diccionario 
-def listar_inventarios():
+def listar_inventarios(usuario_uuid):
 
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
@@ -15,12 +15,12 @@ def listar_inventarios():
                 p.uuid AS ref_producto,
                 i.cantidad_actual,
                 i.cantidad_reservada,
-                i.punto_reorden,
-                i.ultima_actualizacion
+                i.punto_reorden
             FROM inventarios i
             JOIN productos p ON p.id = i.producto_id
+            WHERE p.usuario_uuid = %s
         """
-        cursor.execute(sql)
+        cursor.execute(sql, (usuario_uuid,))
         return cursor.fetchall()
 # Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_inventario(producto_id, cantidad_actual, cantidad_reservada, punto_reorden):
@@ -79,7 +79,7 @@ def eliminar_inventario(uuid):
         raise 
 
 # Devuelve en forma de diccionario el producto o productos con stock mas bajos
-def listar_productos_stock_bajo(limit):
+def listar_productos_stock_bajo(limit, usuario_uuid):
     
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
@@ -90,15 +90,15 @@ def listar_productos_stock_bajo(limit):
                 i.punto_reorden
             FROM inventarios i 
             INNER JOIN productos prod on prod.id = i.producto_id
-            WHERE i.cantidad_actual <= punto_reorden + 2
+            WHERE i.cantidad_actual <= punto_reorden + 2 AND prod.usuario_uuid = %s
             LIMIT %s
         """
-        cursor.execute(sql, (limit,))
+        cursor.execute(sql, (usuario_uuid, limit))
         return cursor.fetchall()
 
 
 # Devuelve stock del producto buscado
-def listar_stock_producto(producto):
+def listar_stock_producto(producto, usuario_uuid):
     
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
@@ -106,20 +106,19 @@ def listar_stock_producto(producto):
                 prod.nombre as producto,
                 i.cantidad_actual as inventario_actual,
                 i.cantidad_reservada,
-                i.punto_reorden,
-                i.ultima_actualizacion as ultima_modificacion
+                i.punto_reorden
             FROM inventarios i 
             INNER JOIN productos prod on prod.id = i.producto_id
-            WHERE prod.nombre = %s
+            WHERE prod.nombre = %s AND prod.usuario_uuid = %s
         """
-        cursor.execute(sql, (producto,))
+        cursor.execute(sql, (producto, usuario_uuid))
         return cursor.fetchone()
 
-def listar_movimiento_inventario():
+def listar_movimiento_inventario(usuario_uuid):
     
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
-        sql = "SELECT * FROM movimiento_inventario"
-        cursor.execute(sql)
+        sql = "SELECT * FROM movimiento_inventario WHERE usuario_id = %s"
+        cursor.execute(sql, (usuario_uuid,))
         # Using pure DictCursor since the native dict maps identically except for some keys
         # We need to map to the model's mov_inv_diccionario
         datos = cursor.fetchall()
@@ -129,9 +128,13 @@ def listar_movimiento_inventario():
         return resultado
 
 # Devuelve en forma de diccionario la fila del inventario para su uso en la validación de las demas tablas
-def obtener_inventario_por_uuid(uuid):
+def obtener_inventario_por_uuid(uuid, usuario_uuid):
 
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
-        sql = "SELECT * FROM inventarios WHERE uuid = %s"
-        cursor.execute(sql, (uuid,))
+        sql = """
+            SELECT i.* FROM inventarios i
+            INNER JOIN productos p ON i.producto_id = p.id
+            WHERE i.uuid = %s AND p.usuario_uuid = %s
+        """
+        cursor.execute(sql, (uuid, usuario_uuid))
         return cursor.fetchone()

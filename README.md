@@ -58,4 +58,11 @@ La documentación interactiva está disponible en:
 
 ```
 http://localhost:5000/swagger
+
 ```
+
+## Frontend
+
+El frontend esta hecho en vite y puedes ejecutarlo con `npm run dev`. ¿Por qué? Porque sí.
+
+Son las 4 de la mañana, me quiero matar

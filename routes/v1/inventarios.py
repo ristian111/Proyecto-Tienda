@@ -5,6 +5,7 @@ from controllers import inventarios_controllers
 inventarios_bp = Blueprint('inventarios_v1', __name__)
 
 @inventarios_bp.route('/', methods=['GET'])
+@token_requerido
 def listar():
     datos = inventarios_controllers.inv_listado()
     return datos
@@ -28,16 +29,19 @@ def actualizar(uuid):
     return datos
 
 @inventarios_bp.route('/stock-bajo', methods=['GET'])
+@token_requerido
 def listar_productos_con_stock_bajo():
     datos = inventarios_controllers.inv_productos_stock_bajo()
     return datos
 
 @inventarios_bp.route('/<string:producto>/productos', methods=['GET'])
+@token_requerido
 def listar_stock_producto(producto):
     datos = inventarios_controllers.inv_stock_producto(producto)
     return datos
 
 @inventarios_bp.route('/movimiento-inventario', methods=['GET'])
+@token_requerido
 def listar_movimiento_inventario():
     datos = inventarios_controllers.inv_listado_movimiento_inventario()
     return datos

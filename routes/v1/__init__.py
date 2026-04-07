@@ -9,9 +9,11 @@ from .detalle_pedido import detalle_pedido_bp
 from .auth_login import auth_login_bp
 from ..swagger import swagger_bp
 from .reportes import reportes_bp
+from .ventas import ventas_bp
 
 def cargarRutas_v1(app):
     app.register_blueprint(reportes_bp, url_prefix='/v1/reportes')
+    app.register_blueprint(ventas_bp, url_prefix='/v1/ventas')
     app.register_blueprint(swagger_bp, url_prefix='/swagger')
     app.register_blueprint(auth_login_bp, url_prefix='/v1/auth')
     app.register_blueprint(usuarios_bp, url_prefix='/v1/usuarios')

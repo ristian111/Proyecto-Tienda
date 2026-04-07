@@ -5,8 +5,8 @@ from decoradores import manejo_errores
 
 @manejo_errores
 def cli_listado():
-    # Devuelve en formato json el listado de clientes junto al codigo http 
-    datos = clientes_services.listar_clientes()
+    uuid_usuario = request.usuario['uuid']
+    datos = clientes_services.listar_clientes(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -30,17 +30,20 @@ def cli_registro():
     if validar_datos:
         return validar_datos
     
-    commit = clientes_services.registrar_clientes(nombre.strip(), telefono.strip(), direccion.strip())
+    uuid_usuario = request.usuario['uuid']
+    commit = clientes_services.registrar_clientes(nombre.strip(), telefono.strip(), direccion.strip(), uuid_usuario)
     
     return jsonify({"mensaje": "Cliente registrado exitosamente",
                     "Cliente": commit}), 201
 
+
 @manejo_errores
 def cli_eliminacion(uuid):
+    uuid_usuario = request.usuario['uuid']
     # Valida la existencia del cliente a través del uuid 
-    cliente = clientes_services.obtener_cliente_por_uuid(uuid)
+    cliente = clientes_services.obtener_cliente_por_uuid(uuid, uuid_usuario)
     if cliente:
-        commit = clientes_services.eliminar_cliente(uuid)
+        commit = clientes_services.eliminar_cliente(uuid, uuid_usuario)
         if commit:
             return jsonify({"mensaje": "Cliente eliminado exitosamente"}), 200
         
@@ -66,10 +69,11 @@ def cli_actualizacion(uuid):
     if validar_datos:
         return validar_datos
     
-    cliente = clientes_services.obtener_cliente_por_uuid(uuid)
+    uuid_usuario = request.usuario['uuid']
+    cliente = clientes_services.obtener_cliente_por_uuid(uuid, uuid_usuario)
     if cliente:
     
-        commit = clientes_services.actualizar_cliente(uuid.strip(), nombre.strip(), telefono.strip(), direccion.strip())
+        commit = clientes_services.actualizar_cliente(uuid.strip(), nombre.strip(), telefono.strip(), direccion.strip(), uuid_usuario)
         return jsonify({"mensaje": "Cliente actualizado exitosamente",
                         "Cliente": commit}), 200
     

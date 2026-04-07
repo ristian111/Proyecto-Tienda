@@ -5,8 +5,8 @@ from decoradores import manejo_errores
 
 @manejo_errores
 def det_pedido_listado():
-    # Devuelve en formato json el listado del detalle_pedido junto al codigo http 
-    datos = detalle_pedido_services.listar_detalles_pedidos()
+    uuid_usuario = request.usuario['uuid']
+    datos = detalle_pedido_services.listar_detalles_pedidos(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -36,14 +36,15 @@ def det_pedido_registro():
     if validar_datos:
         return validar_datos
 
+    uuid_usuario = request.usuario['uuid']
     # Revisa si la referencia del pedido existe a través del uuid
-    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip())
+    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip(), uuid_usuario)
 
     if not pedido:
         return jsonify({"mensaje": "El pedido no existe"}), 404
 
     # Revisa si la referencia del producto existe a través del uuid
-    producto = productos_services.obtener_producto_por_uuid(ref_producto.strip())
+    producto = productos_services.obtener_producto_por_uuid(ref_producto.strip(), uuid_usuario)
 
     if not producto:
         return jsonify({"mensaje": "El producto no existe"}), 404
@@ -52,17 +53,18 @@ def det_pedido_registro():
     pedido_id   = pedido['id']
     producto_id = producto['id']
 
-    commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
+    commit = detalle_pedido_services.registrar_detalle_pedido(cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip(), uuid_usuario)
     return jsonify({"mensaje": "detalle_pedido registrado exitosamente",
                     "Detalle_pedido": commit}), 201
 
 @manejo_errores
 def det_pedido_eliminacion(uuid):
+    uuid_usuario = request.usuario['uuid']
     # Valida la existencia del detalle_pedido a través del uuid 
-    detalle_pedido = detalle_pedido_services.obtener_detalle_pedido_por_uuid(uuid)
+    detalle_pedido = detalle_pedido_services.obtener_detalle_pedido_por_uuid(uuid, uuid_usuario)
 
     if detalle_pedido:
-        commit = detalle_pedido_services.eliminar_detalle_pedido(uuid)
+        commit = detalle_pedido_services.eliminar_detalle_pedido(uuid, uuid_usuario)
 
         if commit:
             return jsonify({"mensaje": "detalle_pedido eliminado exitosamente"}), 200
@@ -95,12 +97,13 @@ def det_pedido_actualizacion(uuid):
     if validar_datos:
         return validar_datos
 
-    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip())
+    uuid_usuario = request.usuario['uuid']
+    pedido = pedidos_services.obtener_pedido_por_uuid(ref_pedido.strip(), uuid_usuario)
 
     if not pedido:
         return jsonify({"mensaje": "El pedido no existe"}), 404
 
-    producto = productos_services.obtener_producto_por_uuid(ref_producto.strip())
+    producto = productos_services.obtener_producto_por_uuid(ref_producto.strip(), uuid_usuario)
 
     if not producto:
         return jsonify({"mensaje": "El producto no existe"}), 404
@@ -108,10 +111,10 @@ def det_pedido_actualizacion(uuid):
     pedido_id   = pedido['id']
     producto_id = producto['id']
 
-    detalle_pedido = detalle_pedido_services.obtener_detalle_pedido_por_uuid(uuid)
+    detalle_pedido = detalle_pedido_services.obtener_detalle_pedido_por_uuid(uuid, uuid_usuario)
     if detalle_pedido:
         try:
-            commit = detalle_pedido_services.actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip())
+            commit = detalle_pedido_services.actualizar_detalle_pedido(uuid, cantidad, precio_unitario, pedido_id, producto_id, ref_pedido.strip(), ref_producto.strip(), uuid_usuario)
             return jsonify({"mensaje": "detalle_pedido actualizado exitosamente",
                             "Detalle_pedido": commit}), 200
         except ValueError as e:

@@ -27,7 +27,7 @@ def validar_campos(datos: any, requeridos: list[str]):
    faltantes  = [x for x in requeridos if x not in datos]
 
    if faltantes:
-      return jsonify({"mensaje": f"Faltan los campos {", ".join(faltantes)}"}), 400
+      return jsonify({"mensaje": f"Faltan los campos {', '.join(faltantes)}"}), 400
    
    return None
 
@@ -47,7 +47,7 @@ def limpieza_datos(campos: dict):
    
    if validar_limpieza:
       return jsonify({"mensaje": 
-                      f"Los campos {(", ".join(validar_limpieza))} deben ser una cadena de texto o no pueden estar vacíos"}), 400
+                      f"Los campos {', '.join(validar_limpieza)} deben ser una cadena de texto o no pueden estar vacíos"}), 400
    
    return None
 

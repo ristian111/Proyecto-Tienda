@@ -7,7 +7,7 @@ from .utils_db import manejar_error_base_de_datos
 from utils import errores
 
 # Toma las filas de la base de datos utilizando inner join para ref_pedido donde luego se convierte en un diccionario 
-def listar_facturas():
+def listar_facturas(usuario_uuid):
         
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
@@ -17,15 +17,48 @@ def listar_facturas():
                 f.total,
                 f.fecha_emision,
                 f.estado,
-                ped.uuid as ref_pedido
+                ped.uuid as ref_pedido,
+                dp.cantidad as producto_cantidad,
+                dp.precio_unitario as producto_precio_unitario,
+                dp.subtotal as producto_subtotal,
+                p.nombre as producto_nombre
             FROM facturas f 
             INNER JOIN pedidos ped on f.pedido_id = ped.id
+            INNER JOIN detalle_pedido dp on f.pedido_id = dp.pedido_id
+            INNER JOIN productos p on dp.producto_id = p.id
+            WHERE f.usuario_uuid = %s
+            ORDER BY f.fecha_emision DESC
         """
-        cursor.execute(sql)
-        return cursor.fetchall()
+        cursor.execute(sql, (usuario_uuid,))
+        rows = cursor.fetchall()
+        
+        facturas_dict = {}
+        for row in rows:
+            f_ref = row['ref']
+            if f_ref not in facturas_dict:
+                facturas_dict[f_ref] = {
+                    "ref": f_ref,
+                    "numero_factura": row['numero_factura'],
+                    "total": row['total'],
+                    "fecha_emision": row['fecha_emision'],
+                    "estado": row['estado'],
+                    "ref_pedido": row['ref_pedido'],
+                    "cantidad_productos": 0,
+                    "detalles": []
+                }
+            
+            facturas_dict[f_ref]["cantidad_productos"] += int(row['producto_cantidad'])
+            facturas_dict[f_ref]["detalles"].append({
+                "nombre": row['producto_nombre'],
+                "cantidad": row['producto_cantidad'],
+                "precio_unitario": row['producto_precio_unitario'],
+                "subtotal": row['producto_subtotal']
+            })
+            
+        return list(facturas_dict.values())
     
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
+def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
 
     conn = current_app.mysql.connection
 
@@ -72,10 +105,10 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
             estado = "pagada" if venta_presencial else "emitida"
 
             sql_insertar_factura = """
-                INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id)
-                VALUES (%s, %s, %s, %s, %s)
+                INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id, usuario_uuid)
+                VALUES (%s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(sql_insertar_factura, (factura_uuid, numero_factura, total, estado, pedido_id))
+            cursor.execute(sql_insertar_factura, (factura_uuid, numero_factura, total, estado, pedido_id, usuario_uuid))
             factura_id = cursor.lastrowid
 
             #Actualizar inventario
@@ -103,14 +136,14 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid):
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido")
 
 # Utiliza uuid para acceder a la factura y retorna True o False si modifico la factura
-def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uuid):
+def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uuid, usuario_uuid):
     
     try:
         factura = Factura(None, uuid, numero_factura, total, datetime.now().isoformat(), estado, pedido_uuid)
         
         with current_app.mysql.connection.cursor() as cursor:
-            sql = "UPDATE facturas SET numero_factura=%s, total=%s, estado=%s, pedido_id=%s WHERE uuid = %s"
-            cursor.execute(sql,(numero_factura, total, estado, pedido_id, uuid))
+            sql = "UPDATE facturas SET numero_factura=%s, total=%s, estado=%s, pedido_id=%s WHERE uuid = %s AND usuario_uuid = %s"
+            cursor.execute(sql,(numero_factura, total, estado, pedido_id, uuid, usuario_uuid))
             current_app.mysql.connection.commit()
             return factura.fac_diccionario()
         
@@ -118,12 +151,12 @@ def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uu
         current_app.mysql.connection.rollback()
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido") 
 
-def eliminar_factura(uuid):
+def eliminar_factura(uuid, usuario_uuid):
 
     try:
         with current_app.mysql.connection.cursor() as cursor:
-            sql = "DELETE FROM facturas WHERE uuid = %s"
-            cursor.execute(sql,(uuid,))
+            sql = "DELETE FROM facturas WHERE uuid = %s AND usuario_uuid = %s"
+            cursor.execute(sql,(uuid, usuario_uuid))
             current_app.mysql.connection.commit()
             return cursor.rowcount > 0
         
@@ -132,10 +165,10 @@ def eliminar_factura(uuid):
         raise 
 
 # Devuelve en forma de diccionario la fila de la factura para su uso en la validación de las demas tablas
-def obtener_factura_por_uuid(uuid):
+def obtener_factura_por_uuid(uuid, usuario_uuid):
 
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
-        sql = "SELECT * FROM facturas WHERE uuid = %s"
-        cursor.execute(sql,(uuid,))
+        sql = "SELECT * FROM facturas WHERE uuid = %s AND usuario_uuid = %s"
+        cursor.execute(sql,(uuid, usuario_uuid))
         return cursor.fetchone()
         

@@ -6,7 +6,8 @@ from decoradores import manejo_errores
 @manejo_errores
 def cat_listado():
     # Devuelve en formato json el listado de categorias junto al codigo http 
-    datos = categorias_services.listar_categorias()
+    uuid_usuario = request.usuario['uuid']
+    datos = categorias_services.listar_categorias(uuid_usuario)
     return jsonify(datos), 200
 
 @manejo_errores
@@ -30,16 +31,18 @@ def cat_registro():
     if validar_datos:
         return validar_datos
     
-    commit = categorias_services.registrar_categoria(nombre.strip(), descripcion.strip())
+    uuid_usuario = request.usuario['uuid']
+    commit = categorias_services.registrar_categoria(nombre.strip(), descripcion.strip(), uuid_usuario)
     return jsonify({"mensaje": "Categoria registrada exitosamente",
                     "Categoría": commit}), 201
 
 @manejo_errores
 def cat_eliminacion(uuid):
     # Valida la existencia de la categoria a través del uuid 
-    categoria = categorias_services.obtener_categoria_por_uuid(uuid)
+    uuid_usuario = request.usuario['uuid']
+    categoria = categorias_services.obtener_categoria_por_uuid(uuid, uuid_usuario)
     if categoria:
-        commit = categorias_services.eliminar_categoria(uuid)
+        commit = categorias_services.eliminar_categoria(uuid, uuid_usuario)
         if commit:
             return jsonify({"mensaje": "Categoria eliminada exitosamente"}), 200
     
@@ -64,10 +67,11 @@ def cat_actualizacion(uuid):
     if validar_datos:
         return validar_datos
     
-    categoria = categorias_services.obtener_categoria_por_uuid(uuid)
+    uuid_usuario = request.usuario['uuid']
+    categoria = categorias_services.obtener_categoria_por_uuid(uuid, uuid_usuario)
     if categoria:
 
-        commit = categorias_services.actualizar_categoria(uuid, nombre, descripcion)
+        commit = categorias_services.actualizar_categoria(uuid, nombre, descripcion, uuid_usuario)
         return jsonify({"mensaje": "Categoria actualizada exitosamente",
                         "Categoría": commit}), 200
     

@@ -6,21 +6,21 @@ from models import Categoria
 from .utils_db import manejar_error_base_de_datos
 
 # Toma las filas de la base de datos para convertirlas en un diccionario 
-def listar_categorias():
+def listar_categorias(usuario_uuid):
 
     with current_app.mysql.connection.cursor() as cursor:
-        datos = CategoriaDAO.listar(cursor)
+        datos = CategoriaDAO.listar(cursor, usuario_uuid)
         resultado = [Categoria(x[0], x[1], x[2], x[3]).cat_diccionario() for x in datos]
         return resultado
 
 # Genera un uuid al momento de registrar y retorna un diccionario
-def registrar_categoria(nombre, descripcion):
+def registrar_categoria(nombre, descripcion, usuario_uuid):
 
     try:
         uuid = str(uuidGenerado.uuid4())
         
         with current_app.mysql.connection.cursor() as cursor:
-            id = CategoriaDAO.insertar(cursor, uuid, nombre, descripcion)
+            id = CategoriaDAO.insertar(cursor, uuid, nombre, descripcion, usuario_uuid)
             return Categoria(id, uuid, nombre, descripcion).cat_diccionario()
         
     except Exception as e:
@@ -28,29 +28,29 @@ def registrar_categoria(nombre, descripcion):
         
 
 # Utiliza uuid para acceder a la categoria y retorna True o False si modifico la categoria
-def actualizar_categoria(uuid, nombre, descripcion):
+def actualizar_categoria(uuid, nombre, descripcion, usuario_uuid):
 
     try:
         with current_app.mysql.connection.cursor() as cursor:
-            CategoriaDAO.actualizar(cursor, uuid, nombre, descripcion)
+            CategoriaDAO.actualizar(cursor, uuid, nombre, descripcion, usuario_uuid)
             return Categoria(None, uuid, nombre, descripcion).cat_diccionario()
         
     except Exception as e:
         manejar_error_base_de_datos(e, "categoría", "actualizar", "Ya existe una categoría con este nombre")
 
-def eliminar_categoria(uuid):
+def eliminar_categoria(uuid, usuario_uuid):
 
     try:
         with current_app.mysql.connection.cursor() as cursor:
-            resultado = CategoriaDAO.eliminar(cursor, uuid)
+            resultado = CategoriaDAO.eliminar(cursor, uuid, usuario_uuid)
             return resultado
     except Exception:
         current_app.mysql.connection.rollback()
         raise
 
 # Devuelve en forma de diccionario la fila de la categoria para su uso en la validación de las demas tablas
-def obtener_categoria_por_uuid(uuid):
+def obtener_categoria_por_uuid(uuid, usuario_uuid):
 
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
-        resultado = CategoriaDAO.obtener_por_uuid(cursor, uuid)
+        resultado = CategoriaDAO.obtener_por_uuid(cursor, uuid, usuario_uuid)
         return resultado

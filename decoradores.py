@@ -17,5 +17,7 @@ def manejo_errores(f):
       except RuntimeError as e:
          return jsonify({"mensaje": str(e)}), 500
       except Exception as e:
+         import traceback
+         traceback.print_exc()
          return jsonify({"mensaje": "Error interno del servidor"}), 500
    return decorador
