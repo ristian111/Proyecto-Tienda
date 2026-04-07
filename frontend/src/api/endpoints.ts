@@ -1,8 +1,7 @@
 import { API_URL, getAuthHeaders } from './config';
 
-// ─── Tipos ───────────────────────────────────────────────
 export interface Producto {
-    ref: string;       // uuid
+    ref: string;
     nombre: string;
     precio_venta: number | string;
     costo_promedio: number | string;
@@ -33,7 +32,6 @@ export interface Inventario {
     ref_producto: string;
 }
 
-// ─── Helper para manejar respuestas ──────────────────────
 async function handleRes<T>(res: Response): Promise<T> {
     if (!res.ok) {
         const body = await res.json().catch(() => ({}));
@@ -42,10 +40,8 @@ async function handleRes<T>(res: Response): Promise<T> {
     return res.json();
 }
 
-// ─── API ─────────────────────────────────────────────────
 export const api = {
 
-    // ── Auth ──────────────────────────────────────────────
     login: async (username: string, password: string): Promise<{ token: string }> => {
         const res = await fetch(`${API_URL}/v1/auth/login`, {
             method: 'POST',
@@ -55,7 +51,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Productos ─────────────────────────────────────────
     getProductos: async (): Promise<Producto[]> => {
         const res = await fetch(`${API_URL}/v1/productos/`, {
             headers: getAuthHeaders(),
@@ -102,7 +97,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Categorías ────────────────────────────────────────
     getCategorias: async (): Promise<Categoria[]> => {
         const res = await fetch(`${API_URL}/v1/categorias/`, {
             headers: getAuthHeaders(),
@@ -136,7 +130,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Inventarios ───────────────────────────────────────
     getInventarios: async (): Promise<Inventario[]> => {
         const res = await fetch(`${API_URL}/v1/inventarios/`, {
             headers: getAuthHeaders(),
@@ -144,7 +137,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Facturas ──────────────────────────────────────────
     getFacturas: async (): Promise<Factura[]> => {
         const res = await fetch(`${API_URL}/v1/facturas/`, {
             headers: getAuthHeaders(),
@@ -152,7 +144,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Ventas (POS) ─────────────────────────────────────
     registrarVentaRapida: async (items: { ref_producto: string; cantidad: number; precio_unitario: number }[]) => {
         const res = await fetch(`${API_URL}/v1/ventas/rapida`, {
             method: 'POST',
@@ -162,7 +153,6 @@ export const api = {
         return handleRes(res);
     },
 
-    // ── Compras ──────────────────────────────────────────
     registrarCompraRapida: async (items: any[]) => {
         const res = await fetch(`${API_URL}/v1/compras/rapida`, {
             method: 'POST',

@@ -27,7 +27,6 @@ export function router() {
     return;
   }
 
-  // Si tiene token pero está en login o en la raíz, mandarlo a venta
   if (hash === '#/login' || hash === '') {
     window.location.hash = '#/venta';
     return;
@@ -35,7 +34,6 @@ export function router() {
 
   app.className = 'dashboard-mode';
 
-  // Inyectamos el shell
   app.innerHTML = `
         ${renderSidebar(hash)}
         <main class="main-content" id="content"></main>
@@ -43,7 +41,6 @@ export function router() {
 
   const content = document.getElementById('content')!;
 
-  // Resolviendo las rutas
   if (hash === '#/venta') {
     renderNuevaVenta(content);
   } else if (hash === '#/compras') {
@@ -59,22 +56,18 @@ export function router() {
   }
 }
 
-// Iniciar aplicación
 window.addEventListener('hashchange', router);
 router();
 
-// ─── Lógica Global de UI (Delegación de Eventos) ─────────────────
 document.addEventListener('click', async (e) => {
   const target = e.target as HTMLElement;
 
-  // --- Logout ---
   if (target.id === 'btn-logout') {
     localStorage.removeItem('token');
     window.location.hash = '';
     router();
   }
 
-  // --- Eliminar Producto ---
   if (target.classList.contains('btn-delete')) {
     const uuid = target.getAttribute('data-uuid');
     if (uuid && confirm(`¿Seguro que quieres eliminar este producto?`)) {
@@ -88,12 +81,10 @@ document.addEventListener('click', async (e) => {
     }
   }
 
-  // --- Editar Producto (abrir modal con datos) ---
   if (target.classList.contains('btn-edit')) {
     const modal = document.getElementById('product-modal') as HTMLDialogElement;
     if (!modal) return;
 
-    // Rellenar modal con los datos del producto
     const title = document.getElementById('modal-title');
     if (title) title.textContent = 'Editar Producto';
 
@@ -118,7 +109,6 @@ document.addEventListener('click', async (e) => {
     modal.showModal();
   }
 
-  // --- Crear Producto (abrir modal vacío) ---
   if (target.id === 'btn-add-product') {
     const modal = document.getElementById('product-modal') as HTMLDialogElement;
     if (!modal) return;
@@ -126,7 +116,6 @@ document.addEventListener('click', async (e) => {
     const title = document.getElementById('modal-title');
     if (title) title.textContent = 'Nuevo Producto';
 
-    // Limpiar formulario
     (document.getElementById('product-uuid') as HTMLInputElement).value = '';
     (document.getElementById('product-nombre') as HTMLInputElement).value = '';
     (document.getElementById('product-precio-venta') as HTMLInputElement).value = '';
@@ -148,13 +137,11 @@ document.addEventListener('click', async (e) => {
     modal.showModal();
   }
 
-  // --- Cancelar Modal Producto ---
   if (target.id === 'btn-cancel-modal') {
     const modal = document.getElementById('product-modal') as HTMLDialogElement;
     if (modal) modal.close();
   }
 
-  // --- CATEGORÍAS (Misc) ---
   if (target.classList.contains('btn-delete-cat')) {
     const uuid = target.getAttribute('data-uuid');
     if (uuid && confirm(`¿Seguro que quieres eliminar esta categoría?`)) {
@@ -204,7 +191,6 @@ document.addEventListener('click', async (e) => {
   }
 });
 
-// ─── Submit del formulario de productos ──────────────────────────
 document.addEventListener('submit', async (e) => {
   const target = e.target as HTMLFormElement;
 
@@ -233,14 +219,11 @@ document.addEventListener('submit', async (e) => {
 
     try {
       if (uuid) {
-        // Editar
         await api.updateProducto(uuid, data);
       } else {
-        // Crear
         await api.createProducto(data);
       }
 
-      // Cerrar modal y recargar inventario
       const modal = document.getElementById('product-modal') as HTMLDialogElement;
       if (modal) modal.close();
 
@@ -255,7 +238,6 @@ document.addEventListener('submit', async (e) => {
     }
   }
 
-  // Submit modal Categorías
   if (target.id === 'category-form') {
     e.preventDefault();
 

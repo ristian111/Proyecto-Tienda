@@ -1,6 +1,6 @@
 import { api } from '../api/endpoints';
 import type { Producto, Inventario } from '../api/endpoints';
-
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 interface ProductoConStock {
     ref: string;
     nombre: string;
@@ -60,7 +60,6 @@ function renderizarCarrito() {
 }
 
 export async function renderNuevaVenta(container: HTMLElement) {
-    // Reset estado
     carrito = [];
     inventarioGlobal = [];
 
@@ -72,7 +71,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             api.getInventarios(),
         ]);
 
-        // Merge productos + inventarios
         const stockMap: Record<string, number> = {};
         inventarios.forEach(inv => {
             stockMap[inv.ref_producto] = inv.cantidad_actual;
@@ -136,13 +134,11 @@ export async function renderNuevaVenta(container: HTMLElement) {
             <div id="venta-feedback" class="pos-feedback" style="display: none;"></div>
         `;
         // Asi se ven 10 años de seniorio en UX, :v.
-        // ─── Auto-focus ──────────────────────────────
         const inputBuscador = document.getElementById('buscador-productos') as HTMLInputElement;
         const dropdown = document.getElementById('dropdown-resultados')!;
 
         inputBuscador.focus();
 
-        // ─── Autocompletado ──────────────────────────
         inputBuscador.addEventListener('input', () => {
             const texto = inputBuscador.value.toLowerCase().trim();
 
@@ -157,7 +153,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
 
             if (resultados.length > 0) {
                 dropdown.innerHTML = resultados.map(p => {
-                    // Calcular cuánto ya está en el carrito
                     const enCarrito = carrito.find(c => c.ref === p.ref)?.cantidad ?? 0;
                     const stockDisponible = p.stock - enCarrito;
                     const sinStock = stockDisponible <= 0;
@@ -181,7 +176,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             }
         });
 
-        // ─── Click en resultado → agregar al carrito ─
         dropdown.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             const itemDiv = target.closest('.pos-dropdown-item') as HTMLElement;
@@ -195,7 +189,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 const enCarrito = carrito.find(item => item.ref === producto.ref);
                 const cantidadActual = enCarrito?.cantidad ?? 0;
 
-                // Verificar stock disponible
                 if (cantidadActual >= producto.stock) return;
 
                 if (enCarrito) {
@@ -218,7 +211,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             }
         });
 
-        // ─── Tecla Enter para seleccionar primer resultado ─
         inputBuscador.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -229,7 +221,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             }
         });
 
-        // ─── Cerrar dropdown al hacer click fuera ────
         document.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             if (!target.closest('.pos-search-wrapper')) {
@@ -237,7 +228,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             }
         });
 
-        // ─── Botones de la tabla (+, -, X) ───────────
         document.getElementById('tabla-carrito')!.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             const btn = target.closest('[data-index]') as HTMLElement;
@@ -247,7 +237,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             if (index === -1) return;
 
             if (btn.classList.contains('btn-sumar')) {
-                // Verificar que no exceda el stock
                 const prod = inventarioGlobal.find(p => p.ref === carrito[index].ref);
                 if (prod && carrito[index].cantidad >= prod.stock) return;
                 carrito[index].cantidad += 1;
@@ -265,7 +254,6 @@ export async function renderNuevaVenta(container: HTMLElement) {
             inputBuscador.focus();
         });
 
-        // ─── Registrar Venta ─────────────────────────
         document.getElementById('btn-cobrar')!.addEventListener('click', async () => {
             if (carrito.length === 0) return;
 
@@ -284,12 +272,10 @@ export async function renderNuevaVenta(container: HTMLElement) {
 
                 const result: any = await api.registrarVentaRapida(items);
 
-                // Éxito
                 carrito = [];
                 actualizarVisibilidadTabla();
                 renderizarCarrito();
 
-                // Refrescar inventario local
                 const nuevosInv = await api.getInventarios();
                 const nuevoStock: Record<string, number> = {};
                 nuevosInv.forEach(inv => {

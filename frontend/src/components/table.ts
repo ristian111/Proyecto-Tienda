@@ -1,4 +1,3 @@
-// Placeholder para el componente de tabla
 export function renderTable(headers: string[], bodyHtml: string) {
     return `
         <table>

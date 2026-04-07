@@ -85,7 +85,6 @@ function renderComprasCarrito() {
     }
 }
 
-/** Checks for duplicate names (case-insensitive) in the cart */
 function tieneDuplicados(): string | null {
     const nombres = carritoCompras.map(c => c.nombre.trim().toLowerCase());
     const visto = new Set<string>();
@@ -96,7 +95,6 @@ function tieneDuplicados(): string | null {
     return null;
 }
 
-/** Adds an existing product to the cart */
 function agregarProductoExistente(producto: Producto & { stock: number }) {
     const yaEsta = carritoCompras.find(c => c.ref === producto.ref);
     if (!yaEsta) {
@@ -114,11 +112,9 @@ function agregarProductoExistente(producto: Producto & { stock: number }) {
     }
 }
 
-/** Adds a brand-new product to the cart */
 function agregarProductoNuevo(nombreBase: string) {
-    // If the name already exists in the cart → prevent
     const existe = carritoCompras.some(c => c.nombre.trim().toLowerCase() === nombreBase.trim().toLowerCase());
-    if (existe) return; // silently ignore
+    if (existe) return;
 
     carritoCompras.push({
         nombre: nombreBase || 'Nuevo Producto',
@@ -210,7 +206,6 @@ export async function renderCompras(container: HTMLElement) {
         const dropdown = document.getElementById('dropdown-compras')!;
         inputBuscador.focus();
 
-        // ─── Autocomplete ────────────────────────────────
         inputBuscador.addEventListener('input', () => {
             const texto = inputBuscador.value.toLowerCase().trim();
             if (!texto) { dropdown.style.display = 'none'; return; }
@@ -234,7 +229,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Click on dropdown item ──────────────────────
         dropdown.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             const itemDiv = target.closest('.pos-dropdown-item') as HTMLElement;
@@ -253,7 +247,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Keyboard: Enter = first result, Shift+Enter = new ─
         inputBuscador.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -261,8 +254,6 @@ export async function renderCompras(container: HTMLElement) {
                 if (!texto) return;
 
                 if (e.shiftKey) {
-                    // Shift+Enter → crear nuevo
-                    // Check no duplicate name in cart AND in existing products
                     const existeEnCarrito = carritoCompras.some(c => c.nombre.trim().toLowerCase() === texto.toLowerCase());
                     const existeEnInventario = inventarioGlobal.some(p => p.nombre.trim().toLowerCase() === texto.toLowerCase());
                     if (existeEnCarrito || existeEnInventario) {
@@ -271,11 +262,10 @@ export async function renderCompras(container: HTMLElement) {
                     }
                     agregarProductoNuevo(texto);
                 } else {
-                    // Enter → seleccionar primer resultado del dropdown
                     const primerItem = dropdown.querySelector('.pos-dropdown-item:not(.pos-dropdown-empty)') as HTMLElement;
                     if (primerItem) {
                         primerItem.click();
-                        return; // click handler does the rest
+                        return;
                     }
                 }
 
@@ -287,7 +277,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Close dropdown on outside click ─────────────
         document.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             if (!target.closest('.pos-search-wrapper')) {
@@ -295,7 +284,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Table events: inline edit inputs & checkbox ─
         document.getElementById('tabla-compras')!.addEventListener('change', (e) => {
             const target = e.target as HTMLInputElement | HTMLSelectElement;
             const index = target.getAttribute('data-index');
@@ -307,7 +295,6 @@ export async function renderCompras(container: HTMLElement) {
                 if (field === 'cantidad' || field === 'costo' || field === 'precio_venta') {
                     (carritoCompras[i] as any)[field] = parseFloat(target.value) || 0;
                 } else if (field === 'nombre') {
-                    // Check duplicates before accepting
                     const nuevoNombre = target.value.trim().toLowerCase();
                     const dupEnCarrito = carritoCompras.some((c, ci) => ci !== i && c.nombre.trim().toLowerCase() === nuevoNombre);
                     const dupEnInventario = inventarioGlobal.some(p =>
@@ -315,7 +302,7 @@ export async function renderCompras(container: HTMLElement) {
                     );
                     if (dupEnCarrito || dupEnInventario) {
                         mostrarFeedback('error', `Ya existe un producto con ese nombre`);
-                        target.value = carritoCompras[i].nombre; // revert
+                        target.value = carritoCompras[i].nombre;
                         return;
                     }
                     carritoCompras[i].nombre = target.value;
@@ -329,7 +316,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Table events: delete button ─────────────────
         document.getElementById('tabla-compras')!.addEventListener('click', (e) => {
             const target = e.target as HTMLElement;
             const btn = target.closest('.btn-eliminar-compra');
@@ -341,11 +327,9 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Submit purchase ─────────────────────────────
         document.getElementById('btn-registrar-compra')!.addEventListener('click', async () => {
             if (carritoCompras.length === 0) return;
 
-            // Final duplicate check
             const dup = tieneDuplicados();
             if (dup) {
                 mostrarFeedback('error', `Hay nombres duplicados en la lista: "${dup}"`);
@@ -387,7 +371,6 @@ export async function renderCompras(container: HTMLElement) {
             }
         });
 
-        // ─── Helpers ─────────────────────────────────────
         function mostrarFeedback(tipo: 'success' | 'error', msg: string) {
             const feedback = document.getElementById('compra-feedback')!;
             feedback.className = `pos-feedback pos-feedback-${tipo}`;

@@ -28,7 +28,6 @@ document.addEventListener('submit', async (e) => {
         const errorEl = document.getElementById('login-error')!;
         const btnLogin = document.getElementById('btn-login') as HTMLButtonElement;
 
-        // Feedback visual
         btnLogin.disabled = true;
         btnLogin.textContent = 'Conectando...';
         errorEl.style.display = 'none';

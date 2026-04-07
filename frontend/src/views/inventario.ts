@@ -9,7 +9,6 @@ export async function renderInventario(container: HTMLElement) {
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando inventario...</h2>';
 
     try {
-        // Cargar productos, categorías e inventarios en paralelo
         const [productos, categorias, inventarios] = await Promise.all([
             api.getProductos(),
             api.getCategorias(),
@@ -72,7 +71,6 @@ export async function renderInventario(container: HTMLElement) {
                 </tbody>
             </table>
             
-            <!-- Modal nativo (Dialog) para crear/editar productos -->
             <dialog id="product-modal">
                 <h2 id="modal-title">Nuevo Producto</h2>
                 <form id="product-form">
@@ -97,7 +95,6 @@ export async function renderInventario(container: HTMLElement) {
             </dialog>
         `;
 
-        // Búsqueda en tiempo real
         const searchInput = document.getElementById('search-input') as HTMLInputElement;
         searchInput?.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();
