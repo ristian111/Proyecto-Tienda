@@ -14,7 +14,7 @@ def prod_listado():
 def prod_registro():
     data = request.get_json()
 
-    validar_requeridos = controllers.validar_campos(data, ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria", "cantidad_actual"])
+    validar_requeridos = controllers.validar_campos(data, ["nombre", "precio_venta", "costo_promedio", "unidad_medida", "ref_categoria", "cantidad_actual"])
 
     if validar_requeridos:
         return validar_requeridos
@@ -22,13 +22,13 @@ def prod_registro():
     # Guarda los valores de la petición en variables
     nombre          = data['nombre']
     precio_venta    = data['precio_venta']
-    precio_compra   = data['precio_compra']
+    costo_promedio   = data['costo_promedio']
     unidad_medida   = data['unidad_medida']
     categoria_uuid  = data['ref_categoria']
     cantidad_actual = data['cantidad_actual']
 
     # Valida los campos numericos para verificar que cumplen esta regla
-    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "precio_compra": precio_compra, "cantidad_actual": cantidad_actual})
+    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "costo_promedio": costo_promedio, "cantidad_actual": cantidad_actual})
     
     if validar_numeros:
         return validar_numeros
@@ -49,7 +49,7 @@ def prod_registro():
     # Donde se guarda en una variable para acceder a la id del producto
     categoria_id = categoria['id']
 
-    commit = productos_services.registrar_producto(nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip(), uuid_usuario)
+    commit = productos_services.registrar_producto(nombre.strip(), precio_venta, costo_promedio, unidad_medida.strip(), categoria_id, categoria_uuid.strip(), uuid_usuario)
     
     producto_creado = productos_services.obtener_producto_por_uuid(commit['ref'], uuid_usuario)
     if producto_creado:
@@ -77,18 +77,18 @@ def prod_eliminacion(uuid):
 def prod_actualizacion(uuid):
     data = request.get_json()
 
-    validar_requeridos = controllers.validar_campos(data, ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria"])
+    validar_requeridos = controllers.validar_campos(data, ["nombre", "precio_venta", "costo_promedio", "unidad_medida", "ref_categoria"])
 
     if validar_requeridos:
         return validar_requeridos
     
     nombre          = data['nombre']
     precio_venta    = data['precio_venta']
-    precio_compra   = data['precio_compra']
+    costo_promedio   = data['costo_promedio']
     unidad_medida   = data['unidad_medida']
     categoria_uuid  = data['ref_categoria']
     
-    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "precio_compra": precio_compra})
+    validar_numeros = controllers.limpieza_numeros({"precio_venta": precio_venta, "costo_promedio": costo_promedio})
     
     if validar_numeros:
         return validar_numeros
@@ -109,7 +109,7 @@ def prod_actualizacion(uuid):
     producto = productos_services.obtener_producto_por_uuid(uuid, uuid_usuario)
     if producto:
             
-        commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, precio_compra, unidad_medida.strip(), categoria_id, categoria_uuid.strip(), uuid_usuario)
+        commit = productos_services.actualizar_producto(uuid.strip(), nombre.strip(), precio_venta, costo_promedio, unidad_medida.strip(), categoria_id, categoria_uuid.strip(), uuid_usuario)
         return jsonify({"mensaje": "Producto actualizado exitosamente",
                         "Producto": commit}), 200
         

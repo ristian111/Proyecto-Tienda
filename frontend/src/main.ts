@@ -2,6 +2,7 @@ import './style.css';
 import { renderLogin } from './views/login';
 import { renderInventario } from './views/inventario';
 import { renderNuevaVenta } from './views/nueva_venta';
+import { renderCompras } from './views/compras';
 import { renderSidebar } from './components/navbar';
 import { renderFacturas } from './views/facturas';
 import { renderMisc } from './views/misc';
@@ -45,6 +46,8 @@ export function router() {
   // Resolviendo las rutas
   if (hash === '#/venta') {
     renderNuevaVenta(content);
+  } else if (hash === '#/compras') {
+    renderCompras(content);
   } else if (hash === '#/inventario') {
     renderInventario(content);
   } else if (hash === '#/pedidos') {
@@ -211,7 +214,7 @@ document.addEventListener('submit', async (e) => {
     const uuid = (document.getElementById('product-uuid') as HTMLInputElement).value;
     const nombre = (document.getElementById('product-nombre') as HTMLInputElement).value.trim();
     const precio_venta = parseFloat((document.getElementById('product-precio-venta') as HTMLInputElement).value);
-    const precio_compra = parseFloat((document.getElementById('product-precio-compra') as HTMLInputElement).value);
+    const costo_promedio = parseFloat((document.getElementById('product-precio-compra') as HTMLInputElement).value);
     const unidad_medida = (document.getElementById('product-unidad') as HTMLInputElement).value.trim();
     const ref_categoria = (document.getElementById('product-categoria') as HTMLSelectElement).value;
 
@@ -222,7 +225,7 @@ document.addEventListener('submit', async (e) => {
     btnSave.disabled = true;
     btnSave.textContent = 'Guardando...';
 
-    const data: any = { nombre, precio_venta, precio_compra, unidad_medida, ref_categoria };
+    const data: any = { nombre, precio_venta, costo_promedio, unidad_medida, ref_categoria };
     
     if (!uuid) {
       data.cantidad_actual = parseInt((document.getElementById('product-cantidad-actual') as HTMLInputElement).value) || 0;

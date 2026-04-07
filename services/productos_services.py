@@ -13,7 +13,7 @@ def listar_productos(usuario_uuid):
                 p.uuid as ref,
                 p.nombre,
                 p.precio_venta,
-                p.precio_compra,
+                p.costo_promedio,
                 p.unidad_medida,
                 c.uuid AS ref_categoria
             FROM productos p
@@ -24,20 +24,20 @@ def listar_productos(usuario_uuid):
         return cursor.fetchall()
 
 # Genera un uuid al momento de registrar y retorna un diccionario 
-def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categoria_id, categoria_uuid, usuario_uuid):
+def registrar_producto(nombre, precio_venta, costo_promedio, unidad_medida, categoria_id, categoria_uuid, usuario_uuid):
     
     try:
         uuid = str(uuidGenerado.uuid4())
-        producto = Producto(None, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_uuid)
+        producto = Producto(None, uuid, nombre, precio_venta, costo_promedio, unidad_medida, categoria_uuid)
         
         with current_app.mysql.connection.cursor() as cursor:
             
             sql = """INSERT INTO productos (
-            uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id, usuario_uuid
+            uuid, nombre, precio_venta, costo_promedio, unidad_medida, categoria_id, usuario_uuid
             ) 
             VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
-            cursor.execute(sql, (uuid, nombre, producto.get_precio_venta(), producto.get_precio_compra(), unidad_medida, categoria_id, usuario_uuid))
+            cursor.execute(sql, (uuid, nombre, producto.get_precio_venta(), producto.get_costo_promedio(), unidad_medida, categoria_id, usuario_uuid))
             current_app.mysql.connection.commit()
             id = cursor.lastrowid
             producto.id = id
@@ -48,18 +48,18 @@ def registrar_producto(nombre, precio_venta, precio_compra, unidad_medida, categ
         manejar_error_base_de_datos(e, "producto", "registrar")
 
 # Utiliza uuid para acceder al producto y retorna True o False si modifico el producto
-def actualizar_producto(uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_id, categoria_uuid, usuario_uuid):
+def actualizar_producto(uuid, nombre, precio_venta, costo_promedio, unidad_medida, categoria_id, categoria_uuid, usuario_uuid):
     
     try:
-        producto = Producto(None, uuid, nombre, precio_venta, precio_compra, unidad_medida, categoria_uuid)
+        producto = Producto(None, uuid, nombre, precio_venta, costo_promedio, unidad_medida, categoria_uuid)
         
         with current_app.mysql.connection.cursor() as cursor:
 
             sql = """UPDATE productos SET 
-            nombre=%s, precio_venta=%s, precio_compra=%s, unidad_medida=%s, categoria_id=%s
+            nombre=%s, precio_venta=%s, costo_promedio=%s, unidad_medida=%s, categoria_id=%s
             WHERE uuid=%s AND usuario_uuid=%s
             """
-            cursor.execute(sql, (nombre, producto.get_precio_venta(), producto.get_precio_compra(), unidad_medida, categoria_id, uuid, usuario_uuid))
+            cursor.execute(sql, (nombre, producto.get_precio_venta(), producto.get_costo_promedio(), unidad_medida, categoria_id, uuid, usuario_uuid))
             current_app.mysql.connection.commit()
             return producto.prod_diccionario()
         

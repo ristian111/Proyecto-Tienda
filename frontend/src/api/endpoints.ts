@@ -5,7 +5,7 @@ export interface Producto {
     ref: string;       // uuid
     nombre: string;
     precio_venta: number | string;
-    precio_compra: number | string;
+    costo_promedio: number | string;
     unidad_medida: string;
     ref_categoria: string;
 }
@@ -66,7 +66,7 @@ export const api = {
     createProducto: async (data: {
         nombre: string;
         precio_venta: number;
-        precio_compra: number;
+        costo_promedio: number;
         unidad_medida: string;
         ref_categoria: string;
         cantidad_actual: number;
@@ -82,7 +82,7 @@ export const api = {
     updateProducto: async (uuid: string, data: {
         nombre: string;
         precio_venta: number;
-        precio_compra: number;
+        costo_promedio: number;
         unidad_medida: string;
         ref_categoria: string;
     }) => {
@@ -155,6 +155,16 @@ export const api = {
     // ── Ventas (POS) ─────────────────────────────────────
     registrarVentaRapida: async (items: { ref_producto: string; cantidad: number; precio_unitario: number }[]) => {
         const res = await fetch(`${API_URL}/v1/ventas/rapida`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ items }),
+        });
+        return handleRes(res);
+    },
+
+    // ── Compras ──────────────────────────────────────────
+    registrarCompraRapida: async (items: any[]) => {
+        const res = await fetch(`${API_URL}/v1/compras/rapida`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify({ items }),

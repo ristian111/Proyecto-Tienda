@@ -1,6 +1,7 @@
 export function renderSidebar(activeRoute: string = '') {
     const links = [
         { hash: '#/venta',      label: 'Venta',      icon: "<i class='bx bx-dollar-circle'></i>" },
+        { hash: '#/compras',    label: 'Compras',    icon: "<i class='bx bx-archive-in'></i>" },
         { hash: '#/inventario', label: 'Inventario', icon: "<i class='bx bx-package'></i>" },
         { hash: '#/pedidos',    label: 'Pedidos',    icon: "<i class='bx bx-cart'></i>" },
         { hash: '#/facturas',   label: 'Facturas',   icon: "<i class='bx bx-receipt'></i>" },

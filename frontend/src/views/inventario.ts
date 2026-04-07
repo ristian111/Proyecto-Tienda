@@ -27,7 +27,7 @@ export async function renderInventario(container: HTMLElement) {
                 <td style="color: #6b7280; font-weight: 500; font-size: 0.75rem;" title="${p.ref}">${p.ref.slice(0, 8)}…</td>
                 <td style="font-weight: 500; color: #f3f4f6;">${p.nombre}</td>
                 <td>${precioBadge(p.precio_venta)}</td>
-                <td style="color: #9ca3af;">$${Number(p.precio_compra).toFixed(2)}</td>
+                <td style="color: #9ca3af;">$${Number(p.costo_promedio).toFixed(2)}</td>
                 <td style="color: #9ca3af;">${p.unidad_medida}</td>
                 <td style="font-weight: bold; color: #10b981;">${cantPorProd[p.ref] ?? 0}</td>
                 <td>
@@ -35,7 +35,7 @@ export async function renderInventario(container: HTMLElement) {
                         data-uuid="${p.ref}"
                         data-nombre="${p.nombre}"
                         data-precio-venta="${p.precio_venta}"
-                        data-precio-compra="${p.precio_compra}"
+                        data-precio-compra="${p.costo_promedio}"
                         data-unidad="${p.unidad_medida}"
                         data-categoria="${p.ref_categoria}">Editar</button>
                     <button class="btn btn-danger btn-sm btn-delete" data-uuid="${p.ref}" style="margin-left: 6px;">Eliminar</button>

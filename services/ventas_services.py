@@ -79,9 +79,9 @@ def registrar_venta_rapida(items, usuario_uuid):
         factura_uuid = str(uuidGenerado.uuid4())
         numero_factura = f"FAC-{datetime.now().strftime('%Y%m%d')}-{factura_uuid[:8]}"
         cursor.execute(
-            """INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id, usuario_uuid)
-               VALUES (%s, %s, %s, %s, %s, %s)""",
-            (factura_uuid, numero_factura, total, 'pagada', pedido_id, usuario_uuid)
+            """INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id, usuario_uuid, tipo)
+               VALUES (%s, %s, %s, %s, %s, %s, %s)""",
+            (factura_uuid, numero_factura, total, 'pagada', pedido_id, usuario_uuid, 'venta')
         )
 
         conn.commit()
