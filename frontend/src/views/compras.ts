@@ -189,12 +189,12 @@ export async function renderCompras(container: HTMLElement) {
                 </table>
             </div>
 
-            <div class="pos-footer" style="padding: 15px 0;">
+            <div class="pos-footer">
                 <div class="pos-total">
                     Total Inversión: <span class="pos-total-amount" style="color: #10b981;">$<span id="total-compra">0.00</span></span>
                 </div>
                 <button id="btn-registrar-compra" class="btn pos-btn-cobrar" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);" disabled>
-                    <i class='bx bx-save' style="font-size: 1.3rem;"></i>
+                    <i class='bx bx-save' style="font-size: 1.1rem;"></i>
                     Registrar Compra
                 </button>
             </div>
@@ -367,7 +367,7 @@ export async function renderCompras(container: HTMLElement) {
             } finally {
                 btnReg.disabled = carritoCompras.length === 0;
                 btnReg.style.opacity = carritoCompras.length === 0 ? '0.5' : '1';
-                btnReg.innerHTML = `<i class='bx bx-save' style="font-size: 1.3rem;"></i> Registrar Compra`;
+                btnReg.innerHTML = `<i class='bx bx-save' style="font-size: 1.1rem;"></i> Registrar Compra`;
             }
         });
 
