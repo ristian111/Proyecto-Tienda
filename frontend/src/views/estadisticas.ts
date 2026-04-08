@@ -5,7 +5,6 @@ declare var Chart: any;
 let chartTopProductos: any = null;
 let chartCategorias: any = null;
 let chartIngresos: any = null;
-let chartHoras: any = null;
 
 export function renderEstadisticas(container: HTMLElement) {
     container.innerHTML = `
@@ -46,14 +45,10 @@ export function renderEstadisticas(container: HTMLElement) {
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
             <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e;">
                 <h3 style="margin-bottom: 15px; font-size: 15px; color:#e0e0e0;">Ventas vs Ganancia (7 días)</h3>
                 <canvas id="chart-ingresos" style="max-height: 250px;"></canvas>
-            </div>
-            <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e;">
-                <h3 style="margin-bottom: 15px; font-size: 15px; color:#e0e0e0;">Horas Pico</h3>
-                <canvas id="chart-horas" style="max-height: 250px;"></canvas>
             </div>
         </div>
         
@@ -66,13 +61,14 @@ export function renderEstadisticas(container: HTMLElement) {
                     <tr style="background:#16161a;">
                         <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; border-top-left-radius: 4px; color:#999;">Ref</th>
                         <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; color:#999;">Producto</th>
-                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; border-top-right-radius: 4px; color:#999;">Acción</th>
+                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; color:#999;">Días sin vender</th>
+                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; border-top-right-radius: 4px; color:#999;">Stock</th>
                     </tr>
                 </thead>
                 <tbody id="lista-estancados">
                 </tbody>
             </table>
-            <p id="msg-estancados-vacio" style="color: #888; margin-top: 10px; display: none;">¡Excelente! No tienes productos estancados.</p>
+            <p id="msg-estancados-vacio" style="color: #888; margin-top: 10px; display: none;">Nada por aqui.</p>
         </div>
     `;
 
@@ -91,11 +87,10 @@ const formatCurrency = (amount: number) => {
 
 async function loadEstadisticas() {
     try {
-        const [resumen, topProd, ingresos, horasPico, estancados, categorias] = await Promise.all([
+        const [resumen, topProd, ingresos, estancados, categorias] = await Promise.all([
             api.getResumenHoy(),
             api.getTopProductos('mensual'),
             api.getIngresosGanancias(7),
-            api.getHorasPico(),
             api.getProductosEstancados(),
             api.getPorcentajeCategorias()
         ]);
@@ -151,26 +146,6 @@ async function loadEstadisticas() {
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#ccc' } } }, scales: { x: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } }, y: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } } } }
         });
 
-        const ctxHoras = document.getElementById('chart-horas') as HTMLCanvasElement;
-        if (chartHoras) chartHoras.destroy();
-        chartHoras = new Chart(ctxHoras, {
-            type: 'bar',
-            data: {
-                labels: horasPico.map((h: any) => h.hora),
-                datasets: [{
-                    label: '# Ventas',
-                    data: horasPico.map((h: any) => h.ventas),
-                    backgroundColor: '#e67e22'
-                }]
-            },
-            options: { 
-                responsive: true, 
-                maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#ccc' } } },
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1, color: '#999' }, grid: { color: '#2a2a2e' } }, x: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } } }
-            }
-        });
-
         const tbody = document.getElementById('lista-estancados')!;
         const emptyMsg = document.getElementById('msg-estancados-vacio')!;
         tbody.innerHTML = '';
@@ -183,7 +158,8 @@ async function loadEstadisticas() {
                 tr.innerHTML = `
                     <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.ref}</td>
                     <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.nombre}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e;"><span style="color:#e74c3c; font-weight:bold;">¡Hacer Promo!</span></td>
+                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#e74c3c;">${p.dias_estancado ?? 'None'} días</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.stock ?? 0} unds.</td>
                 `;
                 tbody.appendChild(tr);
             });

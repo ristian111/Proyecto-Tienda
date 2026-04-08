@@ -1,7 +1,7 @@
 import './style.css';
 import { renderLogin } from './views/login';
 import { renderInventario } from './views/inventario';
-import { renderNuevaVenta } from './views/nueva_venta';
+import { renderNuevaVenta } from './views/venta';
 import { renderCompras } from './views/compras';
 import { renderSidebar } from './components/navbar';
 import { renderFacturas } from './views/facturas';

@@ -96,30 +96,23 @@ def ingresos_ganancias(usuario_uuid, dias=7):
     finally:
         cursor.close()
 
-def horas_pico(usuario_uuid):
-    conn = current_app.mysql.connection
-    cursor = conn.cursor(DictCursor)
-    try:
-        query = """
-            SELECT HOUR(fecha_hora) as hora, COUNT(id) as ventas
-            FROM pedidos
-            WHERE usuario_uuid = %s AND DATE(fecha_hora) = CURDATE()
-            GROUP BY HOUR(fecha_hora)
-            ORDER BY hora ASC
-        """
-        cursor.execute(query, (usuario_uuid,))
-        resultados = cursor.fetchall()
-        return [{"hora": f"{r['hora']}:00", "ventas": r["ventas"]} for r in resultados]
-    finally:
-        cursor.close()
-
 def productos_estancados(usuario_uuid):
     conn = current_app.mysql.connection
     cursor = conn.cursor(DictCursor)
     try:
         query = """
-            SELECT pr.nombre, pr.uuid as ref
+            SELECT 
+                pr.nombre, 
+                pr.uuid as ref,
+                COALESCE(inv.cantidad_actual, 0) as stock,
+                (
+                    SELECT DATEDIFF(CURDATE(), MAX(p.fecha_hora))
+                    FROM detalle_pedido dp2
+                    JOIN pedidos p ON dp2.pedido_id = p.id
+                    WHERE dp2.producto_id = pr.id
+                ) as dias_estancado
             FROM productos pr
+            LEFT JOIN inventarios inv ON pr.id = inv.producto_id
             WHERE pr.usuario_uuid = %s AND pr.id NOT IN (
                 SELECT DISTINCT dp.producto_id 
                 FROM detalle_pedido dp
@@ -129,7 +122,13 @@ def productos_estancados(usuario_uuid):
         """
         cursor.execute(query, (usuario_uuid, usuario_uuid))
         resultados = cursor.fetchall()
-        return [{"nombre": r["nombre"], "ref": r["ref"]} for r in resultados]
+        
+        return [{
+            "nombre": r["nombre"], 
+            "ref": r["ref"],
+            "stock": int(r["stock"]),
+            "dias_estancado": r["dias_estancado"] if r["dias_estancado"] is not None else "Nunca"
+        } for r in resultados]
     finally:
         cursor.close()
 

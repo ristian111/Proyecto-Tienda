@@ -19,7 +19,7 @@ export function renderSidebar(activeRoute: string = '') {
     return `
         <aside class="sidebar">
             <div class="sidebar-brand">
-                <span style="font-size: 1.4rem; transform: translateY(2px);"><i class='bx bxs-store-alt'></i></span> Mi Tienda
+                <span style="font-size: 1.4rem; transform: translateY(2px);"><i class='bx bxs-store-alt'></i></span> Tienda Sin Nombre
             </div>
             ${navHTML}
             <div class="sidebar-footer">

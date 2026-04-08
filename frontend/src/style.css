@@ -1,5 +1,8 @@
 /* ======== Base & Reset ======== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Si van a agregar un nuevo estilo complejo, háganlo aquí y mantengalo separado con separadores (obviamente). Si no, se vuelve inmantenible este codigo. */
+
+/* ────── General ──────── */
 
 *,
 *::before,
@@ -523,20 +526,20 @@ dialog form {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 24px;
+    padding: 16px 24px;
     background: #16161a;
     border: 1px solid #1f1f23;
     border-radius: 12px;
 }
 
 .pos-total {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     color: #9ca3af;
 }
 
 .pos-total-amount {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #10b981;
     margin-left: 8px;
@@ -544,8 +547,8 @@ dialog form {
 
 .pos-btn-cobrar {
     background: #3b82f6;
-    font-size: 1.1rem;
-    padding: 14px 32px;
+    font-size: 0.95rem;
+    padding: 10px 24px;
     gap: 8px;
 }
 

@@ -37,35 +37,35 @@ function renderComprasCarrito() {
             <tr class="compra-row ${item.solo_stock ? 'compra-row--solo-stock' : ''}">
                 <td>
                     <div style="display:flex;align-items:center;gap:6px;">
-                        ${esNuevo ? '<span style="background:#6366f1;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:4px;font-weight:600;">NUEVO</span>' : ''}
-                        <input type="text" class="pos-input-edit compra-input" data-field="nombre" data-index="${index}" value="${item.nombre}" placeholder="Nombre del producto" />
+                        ${esNuevo ? '<span style="background:#6366f1;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:4px;font-weight:600;white-space:nowrap;">NUEVO</span>' : ''}
+                        <input type="text" class="pos-input-edit compra-input" data-field="nombre" data-index="${index}" value="${item.nombre}" placeholder="Nombre del producto" style="width:100%; box-sizing:border-box; min-width:0;" />
                     </div>
                 </td>
                 <td>
-                    <select class="pos-input-edit compra-select" data-field="ref_categoria" data-index="${index}">
+                    <select class="pos-input-edit compra-select" data-field="ref_categoria" data-index="${index}" style="width:100%; box-sizing:border-box; min-width:0;">
                         <option value="">—</option>
                         ${catOptions}
                     </select>
                 </td>
                 <td>
-                    <div class="compra-price-cell">
-                        <span class="compra-dollar">$</span>
-                        <input type="number" step="0.01" min="0" class="pos-input-edit compra-input compra-input--num" data-field="costo" data-index="${index}" value="${item.costo}" ${item.solo_stock ? 'disabled' : ''} />
+                    <div class="compra-price-cell" style="display:flex; align-items:center; gap:4px;">
+                        <span class="compra-dollar" style="margin:0; line-height:1; display:flex; align-items:center;">$</span>
+                        <input type="number" step="0.01" min="0" class="pos-input-edit compra-input compra-input--num" data-field="costo" data-index="${index}" value="${item.costo}" ${item.solo_stock ? 'disabled' : ''} style="width:100%; box-sizing:border-box; min-width:0;" />
                     </div>
                 </td>
                 <td>
-                    <div class="compra-price-cell">
-                        <span class="compra-dollar">$</span>
-                        <input type="number" step="0.01" min="0" class="pos-input-edit compra-input compra-input--num" data-field="precio_venta" data-index="${index}" value="${item.precio_venta}" />
+                    <div class="compra-price-cell" style="display:flex; align-items:center; gap:4px;">
+                        <span class="compra-dollar" style="margin:0; line-height:1; display:flex; align-items:center;">$</span>
+                        <input type="number" step="0.01" min="0" class="pos-input-edit compra-input compra-input--num" data-field="precio_venta" data-index="${index}" value="${item.precio_venta}" style="width:100%; box-sizing:border-box; min-width:0;" />
                     </div>
                 </td>
                 <td>
-                    <input type="number" min="1" step="1" class="pos-input-edit compra-input compra-input--qty" data-field="cantidad" data-index="${index}" value="${item.cantidad}" />
+                    <input type="number" min="1" step="1" class="pos-input-edit compra-input compra-input--qty" data-field="cantidad" data-index="${index}" value="${item.cantidad}" style="width:100%; box-sizing:border-box; min-width:0;" />
                 </td>
                 <td style="text-align:center;">
-                    <label class="compra-checkbox-label">
-                        <input type="checkbox" class="pos-input-checkbox" data-index="${index}" ${item.solo_stock ? 'checked' : ''} />
-                        <span>Solo stock</span>
+                    <label class="compra-checkbox-label" style="display:flex; align-items:center; justify-content:center; gap:6px; margin:0; cursor:pointer;">
+                        <input type="checkbox" class="pos-input-checkbox" data-index="${index}" ${item.solo_stock ? 'checked' : ''} style="margin:0;" />
+                        <span style="white-space:nowrap;">Solo stock</span>
                     </label>
                 </td>
                 <td style="text-align:center;">
@@ -173,16 +173,16 @@ export async function renderCompras(container: HTMLElement) {
             </div>
 
             <div style="overflow-x: auto; margin-top: 1rem; width: 100%;">
-                <table id="tabla-compras" class="compra-table" style="display: none;">
+                <table id="tabla-compras" class="compra-table" style="display: none; width: 100%; table-layout: fixed; min-width: 900px;">
                     <thead>
                         <tr>
-                            <th style="width:26%;">Producto</th>
-                            <th style="width:14%;">Categoría</th>
-                            <th style="width:12%;">Costo Un.</th>
-                            <th style="width:12%;">P. Venta</th>
+                            <th style="width:25%;">Producto</th>
+                            <th style="width:15%;">Categoría</th>
+                            <th style="width:14%;">Costo Un.</th>
+                            <th style="width:14%;">P. Venta</th>
                             <th style="width:10%;">Cant.</th>
-                            <th style="width:13%;">Opción</th>
-                            <th style="width:50px;"></th>
+                            <th style="width:14%;">Opción</th>
+                            <th style="width:8%;"></th>
                         </tr>
                     </thead>
                     <tbody id="tabla-compras-carrito"></tbody>

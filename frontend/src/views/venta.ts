@@ -100,7 +100,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 <div id="dropdown-resultados" class="pos-dropdown"></div>
             </div>
 
-            <!-- CARRITO VACÍO / TABLA -->
+            <!-- CARRITO VACÍO O TABLA, depende de si se selecciono algo -->
             <div id="carrito-vacio" class="pos-empty-state">
                 <i class='bx bx-cart' style="font-size: 3rem; color: #2a2a2e;"></i>
                 <p>Agrega productos usando el buscador</p>
@@ -171,7 +171,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 }).join('');
                 dropdown.style.display = 'block';
             } else {
-                dropdown.innerHTML = `<div class="pos-dropdown-item pos-dropdown-empty">No se encontraron productos</div>`;
+                dropdown.innerHTML = `<div class="pos-dropdown-item pos-dropdown-empty">Nada por aqui</div>`;
                 dropdown.style.display = 'block';
             }
         });
@@ -206,7 +206,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 dropdown.style.display = 'none';
                 inputBuscador.focus();
 
-                actualizarVisibilidadTabla();
+                updateTable();
                 renderizarCarrito();
             }
         });
@@ -249,7 +249,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 carrito.splice(index, 1);
             }
 
-            actualizarVisibilidadTabla();
+            updateTable();
             renderizarCarrito();
             inputBuscador.focus();
         });
@@ -273,7 +273,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 const result: any = await api.registrarVentaRapida(items);
 
                 carrito = [];
-                actualizarVisibilidadTabla();
+                updateTable();
                 renderizarCarrito();
 
                 const nuevosInv = await api.getInventarios();
@@ -314,7 +314,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
     }
 }
 
-function actualizarVisibilidadTabla() {
+function updateTable() {
     const tabla = document.getElementById('tabla-venta');
     const vacio = document.getElementById('carrito-vacio');
 

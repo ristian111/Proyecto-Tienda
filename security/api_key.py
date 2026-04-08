@@ -21,3 +21,5 @@ def api_key_requerido(f):
         return f(*args, **kwargs)
     
     return decorated
+
+# Gracias Cristian
