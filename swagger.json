@@ -24,46 +24,58 @@
       "url": "http://127.0.0.1:5000"
     }
   ],
-  "tags":[
+  "tags": [
     {
-    "name": "Categorías",
-    "description": "Todo sobre la gestión de Categorías"
+      "name": "Categorías",
+      "description": "Todo sobre la gestión de Categorías"
     },
     {
-    "name": "Clientes",
-    "description": "Todo sobre la gestión de Clientes"
+      "name": "Clientes",
+      "description": "Todo sobre la gestión de Clientes"
     },
     {
-    "name": "Productos",
-    "description": "Todo sobre la gestión de Productos"
+      "name": "Productos",
+      "description": "Todo sobre la gestión de Productos"
     },
     {
-    "name": "Inventarios",
-    "description": "Todo sobre la gestión de Inventarios"
+      "name": "Inventarios",
+      "description": "Todo sobre la gestión de Inventarios"
     },
     {
-    "name": "Pedidos",
-    "description": "Todo sobre la gestión de Pedidos"
+      "name": "Pedidos",
+      "description": "Todo sobre la gestión de Pedidos"
     },
     {
-    "name": "Detalles",
-    "description": "Todo sobre los detalles de pedidos"
+      "name": "Detalles",
+      "description": "Todo sobre los detalles de pedidos"
     },
     {
-    "name": "Facturas",
-    "description": "Todo sobre la gestión de Facturas"
+      "name": "Facturas",
+      "description": "Todo sobre la gestión de Facturas"
     },
     {
-    "name": "Usuarios",
-    "description": "Todo sobre la gestión de Usuarios"
+      "name": "Usuarios",
+      "description": "Todo sobre la gestión de Usuarios"
     },
     {
-    "name": "Autenticación",
-    "description": "Valida credenciales del usuario"
+      "name": "Autenticación",
+      "description": "Valida credenciales del usuario"
     },
     {
-    "name": "Reportes",
-    "description": "Todo sobre los reportes generados de la tienda"
+      "name": "Reportes",
+      "description": "Todo sobre los reportes generados de la tienda"
+    },
+    {
+      "name": "Ventas",
+      "description": "Todo sobre la gestión de Ventas"
+    },
+    {
+      "name": "Compras",
+      "description": "Todo sobre la gestión de Compras"
+    },
+    {
+      "name": "Estadísticas",
+      "description": "Endpoints de estadísticas y métricas"
     }
   ],
   "security": [
@@ -72,13 +84,14 @@
       "BearerAuth": []
     }
   ],
-  
   "paths": {
     "/v1/categorias": {
       "get": {
-        "tags":["Categorías"],
+        "tags": [
+          "Categorías"
+        ],
         "summary": "Listar todos las categorías",
-        "description":"Este endpoint permite obtener un listado completo de las categorías registrados en el sistema. La respuesta incluye información básica como nombre, descripción y referencia de cada categoría.",
+        "description": "Este endpoint permite obtener un listado completo de las categorías registrados en el sistema. La respuesta incluye información básica como nombre, descripción y referencia de cada categoría.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de categorías.",
@@ -89,16 +102,21 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre": { "type": "string" },
-                      "descripcion": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "nombre": {
+                        "type": "string"
+                      },
+                      "descripcion": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre": "Alimentos por lb",
-                        "descripcion": "Destinado a productos que se venden por libras",
-                        "referencia": "5a0a22fa-83b9-45b8-b37d-bbe5b45b7838"
-                      }                      
+                    "example": {
+                      "nombre": "Alimentos por lb",
+                      "descripcion": "Destinado a productos que se venden por libras",
+                      "referencia": "5a0a22fa-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -111,7 +129,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -122,9 +142,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Categorías"],
+        "tags": [
+          "Categorías"
+        ],
         "summary": "Registrar una nueva categoría",
         "description": "Este endpoint permite registrar una nueva categoría en el sistema. Requiere enviar un objeto JSON con los datos de la categoría como nombre y decripción.",
         "requestBody": {
@@ -133,10 +154,17 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "descripcion"],
+                "required": [
+                  "nombre",
+                  "descripcion"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "descripcion": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "descripcion": {
+                    "type": "string"
+                  }
                 },
                 "example": {
                   "nombre": "Alimentos por lb",
@@ -154,8 +182,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Categoría": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Categoría": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Categoría registrada exitosamente",
@@ -176,7 +208,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -192,7 +226,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Ya existe una categoría con este nombre"
@@ -208,16 +244,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar categoría" }
+                      "value": {
+                        "mensaje": "Error al registrar categoría"
+                      }
                     }
                   }
                 }
@@ -229,14 +271,18 @@
     },
     "/v1/categorias/{ref}": {
       "put": {
-        "tags":["Categorías"],
+        "tags": [
+          "Categorías"
+        ],
         "summary": "Editar categoría existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -245,10 +291,17 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "descripcion"],
+                "required": [
+                  "nombre",
+                  "descripcion"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "descripcion": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "descripcion": {
+                    "type": "string"
+                  }
                 },
                 "example": {
                   "nombre": "Alimentos por lb",
@@ -266,8 +319,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Categoría": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Categoría": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Categoría actualizada exitosamente",
@@ -288,7 +345,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -304,7 +363,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "La categoría no existe"
@@ -320,16 +381,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar categoría" }
+                      "value": {
+                        "mensaje": "Error al actualizar categoría"
+                      }
                     }
                   }
                 }
@@ -338,17 +405,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Categorías"],
+        "tags": [
+          "Categorías"
+        ],
         "summary": "Eliminar una categoría por referencia",
-        "description":"Este endpoint permite eliminar una categoría del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una categoría existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar una categoría del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una categoría existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -359,7 +429,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Categoría eliminada exitosamente"
@@ -375,7 +447,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "La categoría no existe"
@@ -391,16 +465,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar categoría" }
+                      "value": {
+                        "mensaje": "Error al eliminar categoría"
+                      }
                     }
                   }
                 }
@@ -408,13 +488,15 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/clientes": {
       "get": {
-        "tags":["Clientes"],
+        "tags": [
+          "Clientes"
+        ],
         "summary": "Listar todos los clientes",
-        "description":"Este endpoint permite obtener un listado completo de los clientes registrados en el sistema. La respuesta incluye información básica como nombre, teléfono, dirección y referencia de cada cliente.",
+        "description": "Este endpoint permite obtener un listado completo de los clientes registrados en el sistema. La respuesta incluye información básica como nombre, teléfono, dirección y referencia de cada cliente.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de clientes.",
@@ -425,18 +507,25 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre": { "type": "string" },
-                      "teléfono": { "type": "string" },
-                      "dirección": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "nombre": {
+                        "type": "string"
+                      },
+                      "teléfono": {
+                        "type": "string"
+                      },
+                      "dirección": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre": "Pedro",
-                        "teléfono": "3048831247",
-                        "dirección": "Cra 45 #12-65",
-                        "referencia": "9a0a22ba-83b9-45b8-b37d-bbe5b45b7562"
-                      }                      
+                    "example": {
+                      "nombre": "Pedro",
+                      "teléfono": "3048831247",
+                      "dirección": "Cra 45 #12-65",
+                      "referencia": "9a0a22ba-83b9-45b8-b37d-bbe5b45b7562"
+                    }
                   }
                 }
               }
@@ -449,7 +538,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -460,9 +551,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Clientes"],
+        "tags": [
+          "Clientes"
+        ],
         "summary": "Registrar un nuevo cliente",
         "description": "Este endpoint permite registrar un nuevo cliente en el sistema. Requiere enviar un objeto JSON con los datos del cliente como nombre, teléfono y dirección",
         "requestBody": {
@@ -471,11 +563,21 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "telefono", "direccion"],
+                "required": [
+                  "nombre",
+                  "telefono",
+                  "direccion"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "telefono": { "type": "string" },
-                  "direccion": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "telefono": {
+                    "type": "string"
+                  },
+                  "direccion": {
+                    "type": "string"
+                  }
                 },
                 "example": {
                   "nombre": "Pedro",
@@ -494,8 +596,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Cliente": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Cliente": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Cliente registrado exitosamente",
@@ -517,7 +623,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -533,7 +641,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Ya existe un cliente con este teléfono"
@@ -549,16 +659,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar cliente" }
+                      "value": {
+                        "mensaje": "Error al registrar cliente"
+                      }
                     }
                   }
                 }
@@ -570,14 +686,18 @@
     },
     "/v1/clientes/{ref}": {
       "put": {
-        "tags":["Clientes"],
+        "tags": [
+          "Clientes"
+        ],
         "summary": "Editar cliente existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -586,11 +706,21 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "telefono", "direccion"],
+                "required": [
+                  "nombre",
+                  "telefono",
+                  "direccion"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "telefono": { "type": "string" },
-                  "direccion": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "telefono": {
+                    "type": "string"
+                  },
+                  "direccion": {
+                    "type": "string"
+                  }
                 },
                 "example": {
                   "nombre": "Pedro",
@@ -609,8 +739,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Cliente": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Cliente": {
+                      "type": "object"
+                    }
                   },
                   "mensaje": "Cliente actualizado exitosamente",
                   "Cliente": {
@@ -630,7 +764,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -646,7 +782,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El cliente no existe"
@@ -662,16 +800,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar cliente" }
+                      "value": {
+                        "mensaje": "Error al actualizar cliente"
+                      }
                     }
                   }
                 }
@@ -680,17 +824,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Clientes"],
+        "tags": [
+          "Clientes"
+        ],
         "summary": "Eliminar un cliente por referencia",
-        "description":"Este endpoint permite eliminar un cliente del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un cliente existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un cliente del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un cliente existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -701,7 +848,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Cliente eliminado exitosamente"
@@ -717,7 +866,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El cliente no existe"
@@ -733,16 +884,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar cliente" }
+                      "value": {
+                        "mensaje": "Error al eliminar cliente"
+                      }
                     }
                   }
                 }
@@ -750,13 +907,15 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/productos": {
       "get": {
-        "tags":["Productos"],
+        "tags": [
+          "Productos"
+        ],
         "summary": "Listar todos los productos",
-        "description":"Este endpoint permite obtener un listado completo de los productos registrados en el sistema. La respuesta incluye información básica como nombre, precio de venta, precio de compra, unidad por medida, referencia de cada categoria y referencia de cada producto.",
+        "description": "Este endpoint permite obtener un listado completo de los productos registrados en el sistema. La respuesta incluye información básica como nombre, precio de venta, precio de compra, unidad por medida, referencia de cada categoria y referencia de cada producto.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de productos.",
@@ -767,22 +926,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre": { "type": "string" },
-                      "precio_venta": { "type": "float" },
-                      "precio_compra": { "type": "float" },
-                      "unidad_medida": { "type": "string" },
-                      "ref_categoria": { "type": "integer" },
-                      "referencia": { "type": "string" }
+                      "nombre": {
+                        "type": "string"
+                      },
+                      "precio_venta": {
+                        "type": "float"
+                      },
+                      "precio_compra": {
+                        "type": "float"
+                      },
+                      "unidad_medida": {
+                        "type": "string"
+                      },
+                      "ref_categoria": {
+                        "type": "integer"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre": "Arroz",
-                        "precio_venta": 7500,
-                        "precio_compra": 5000,
-                        "unidad_medida": "1 lb",
-                        "ref_categoria": "3a0a22fa-83b9-45b8-b37d-bbe5b45b7838",
-                        "referencia": "5a0f22ba-83b9-45b8-b37d-bbe5b45b7838"
-                      }                      
+                    "example": {
+                      "nombre": "Arroz",
+                      "precio_venta": 7500,
+                      "precio_compra": 5000,
+                      "unidad_medida": "1 lb",
+                      "ref_categoria": "3a0a22fa-83b9-45b8-b37d-bbe5b45b7838",
+                      "referencia": "5a0f22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -795,7 +965,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -806,9 +978,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Productos"],
+        "tags": [
+          "Productos"
+        ],
         "summary": "Registrar un nuevo producto",
         "description": "Este endpoint permite registrar un nuevo producto en el sistema. Requiere enviar un objeto JSON con los datos del producto como nombre, precio de venta, precio de compra, unidad por medida y referencia de la categoria.",
         "requestBody": {
@@ -817,22 +990,37 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria"],
+                "required": [
+                  "nombre",
+                  "precio_venta",
+                  "precio_compra",
+                  "unidad_medida",
+                  "ref_categoria"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "precio_venta": { "type": "float" },
-                  "precio_compra": { "type": "float" },
-                  "unidad_medida": { "type": "string" },
-                  "ref_categoria": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "precio_venta": {
+                    "type": "float"
+                  },
+                  "precio_compra": {
+                    "type": "float"
+                  },
+                  "unidad_medida": {
+                    "type": "string"
+                  },
+                  "ref_categoria": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "nombre": "Arroz",
-                    "precio_venta": 7500,
-                    "precio_compra": 5000,
-                    "unidad_medida": "1 lb",
-                    "ref_categoria": ""
-                }     
+                "example": {
+                  "nombre": "Arroz",
+                  "precio_venta": 7500,
+                  "precio_compra": 5000,
+                  "unidad_medida": "1 lb",
+                  "ref_categoria": ""
+                }
               }
             }
           }
@@ -845,8 +1033,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Producto": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Producto": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Producto registrado exitosamente",
@@ -870,7 +1062,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -886,10 +1080,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
-                    "mensaje": "La categoría no existe" 
+                    "mensaje": "La categoría no existe"
                   }
                 }
               }
@@ -902,7 +1098,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Ya existe un producto con este nombre"
@@ -918,16 +1116,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar producto" }
+                      "value": {
+                        "mensaje": "Error al registrar producto"
+                      }
                     }
                   }
                 }
@@ -939,14 +1143,18 @@
     },
     "/v1/productos/{ref}": {
       "put": {
-        "tags":["Productos"],
+        "tags": [
+          "Productos"
+        ],
         "summary": "Editar producto existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -955,26 +1163,41 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "precio_venta", "precio_compra", "unidad_medida", "ref_categoria"],
+                "required": [
+                  "nombre",
+                  "precio_venta",
+                  "precio_compra",
+                  "unidad_medida",
+                  "ref_categoria"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "precio_venta": { "type": "float" },
-                  "precio_compra": { "type": "float" },
-                  "unidad_medida": { "type": "string" },
-                  "ref_categoria": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "precio_venta": {
+                    "type": "float"
+                  },
+                  "precio_compra": {
+                    "type": "float"
+                  },
+                  "unidad_medida": {
+                    "type": "string"
+                  },
+                  "ref_categoria": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "nombre": "Arroz",
-                    "precio_venta": 7500,
-                    "precio_compra": 5000,
-                    "unidad_medida": "1 lb",
-                    "ref_categoria": ""
-                  }     
+                "example": {
+                  "nombre": "Arroz",
+                  "precio_venta": 7500,
+                  "precio_compra": 5000,
+                  "unidad_medida": "1 lb",
+                  "ref_categoria": ""
                 }
               }
             }
-          },
+          }
+        },
         "responses": {
           "200": {
             "description": "Devuelve un mensaje de confirmación indicando que el producto fue editado correctamente del sistema.",
@@ -983,8 +1206,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Producto": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Producto": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Producto actualizado exitosamente",
@@ -1008,7 +1235,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -1024,16 +1253,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "categoriaNoExiste": {
                       "summary": "Recurso categoría inexistente",
-                      "value": { "mensaje": "La categoría no existe" }
+                      "value": {
+                        "mensaje": "La categoría no existe"
+                      }
                     },
                     "productoNoExiste": {
                       "summary": "Recurso producto inexistente",
-                      "value": { "mensaje": "El producto no existe" }
+                      "value": {
+                        "mensaje": "El producto no existe"
+                      }
                     }
                   }
                 }
@@ -1047,16 +1282,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar producto" }
+                      "value": {
+                        "mensaje": "Error al actualizar producto"
+                      }
                     }
                   }
                 }
@@ -1065,17 +1306,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Productos"],
+        "tags": [
+          "Productos"
+        ],
         "summary": "Eliminar un producto por referencia",
-        "description":"Este endpoint permite eliminar un producto del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un producto existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un producto del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un producto existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1086,7 +1330,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Producto eliminado exitosamente"
@@ -1102,7 +1348,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El producto no existe"
@@ -1118,16 +1366,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar producto" }
+                      "value": {
+                        "mensaje": "Error al eliminar producto"
+                      }
                     }
                   }
                 }
@@ -1135,13 +1389,15 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/inventarios": {
       "get": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Listar todos los inventarios",
-        "description":"Este endpoint permite obtener un listado completo de los inventarios registrados en el sistema. La respuesta incluye información básica como producto_id, cantidad_actual, cantidad_reservada, punto_reorden, ultima_actualización y referencia de cada inventario.",
+        "description": "Este endpoint permite obtener un listado completo de los inventarios registrados en el sistema. La respuesta incluye información básica como producto_id, cantidad_actual, cantidad_reservada, punto_reorden, ultima_actualización y referencia de cada inventario.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de inventarios.",
@@ -1152,22 +1408,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "ref_producto": { "type": "string" },
-                      "cantidad_actual": { "type": "integer" },
-                      "cantidad_reservada": { "type": "integer" },
-                      "punto_reorden": { "type": "integer" },
-                      "ultima_actualización": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "ref_producto": {
+                        "type": "string"
+                      },
+                      "cantidad_actual": {
+                        "type": "integer"
+                      },
+                      "cantidad_reservada": {
+                        "type": "integer"
+                      },
+                      "punto_reorden": {
+                        "type": "integer"
+                      },
+                      "ultima_actualización": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "ref_producto": "3a0f22ba-83b9-45b8-b37d-bbe5b45b7838",
-                        "cantidad_actual": 20,
-                        "cantidad_reservada": 4,
-                        "punto_reorden": 7,
-                        "ultima_actualización": "2025-12-18 17:30:28",
-                        "referencia": "7a0g22ba-83b9-45b8-b37d-bbe5b45b7838"
-                    }                      
+                    "example": {
+                      "ref_producto": "3a0f22ba-83b9-45b8-b37d-bbe5b45b7838",
+                      "cantidad_actual": 20,
+                      "cantidad_reservada": 4,
+                      "punto_reorden": 7,
+                      "ultima_actualización": "2025-12-18 17:30:28",
+                      "referencia": "7a0g22ba-83b9-45b8-b37d-bbe5b45b7838"
+                    }
                   }
                 }
               }
@@ -1180,7 +1447,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -1191,12 +1460,15 @@
           }
         }
       },
-
       "post": {
         "security": [
-          { "BearerAuth": [] }
+          {
+            "BearerAuth": []
+          }
         ],
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Registrar un nuevo inventario",
         "description": "Este endpoint permite registrar un nuevo inventario en el sistema. Requiere enviar un objeto JSON con los datos del inventario como producto_id, cantidad_actual, cantidad_reservada y punto_reorden.",
         "requestBody": {
@@ -1205,19 +1477,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["ref_producto", "cantidad_actual", "cantidad_reservada", "punto_reorden"],
+                "required": [
+                  "ref_producto",
+                  "cantidad_actual",
+                  "cantidad_reservada",
+                  "punto_reorden"
+                ],
                 "properties": {
-                  "ref_producto": { "type": "string" },
-                  "cantidad_actual": { "type": "integer" },
-                  "cantidad_reservada": { "type": "integer" },
-                  "punto_reorden": { "type": "integer" }
+                  "ref_producto": {
+                    "type": "string"
+                  },
+                  "cantidad_actual": {
+                    "type": "integer"
+                  },
+                  "cantidad_reservada": {
+                    "type": "integer"
+                  },
+                  "punto_reorden": {
+                    "type": "integer"
+                  }
                 },
-                "example": 
-                  {
-                    "ref_producto": "",
-                    "cantidad_actual": 20,
-                    "cantidad_reservada": 4,
-                    "punto_reorden": 7
+                "example": {
+                  "ref_producto": "",
+                  "cantidad_actual": 20,
+                  "cantidad_reservada": 4,
+                  "punto_reorden": 7
                 }
               }
             }
@@ -1231,8 +1515,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Inventario": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Inventario": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Inventario registrado exitoxamente",
@@ -1256,7 +1544,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -1272,10 +1562,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
-                    "mensaje": "El producto no existe" 
+                    "mensaje": "El producto no existe"
                   }
                 }
               }
@@ -1288,16 +1580,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar inventario" }
+                      "value": {
+                        "mensaje": "Error al registrar inventario"
+                      }
                     }
                   }
                 }
@@ -1309,14 +1607,18 @@
     },
     "/v1/inventarios/{ref}": {
       "put": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Editar inventario existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -1325,19 +1627,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["ref_producto", "cantidad_actual", "cantidad_reservada", "punto_reorden"],
+                "required": [
+                  "ref_producto",
+                  "cantidad_actual",
+                  "cantidad_reservada",
+                  "punto_reorden"
+                ],
                 "properties": {
-                  "ref_producto": { "type": "string" },
-                  "cantidad_actual": { "type": "integer" },
-                  "cantidad_reservada": { "type": "integer" },
-                  "punto_reorden": { "type": "integer" }
+                  "ref_producto": {
+                    "type": "string"
+                  },
+                  "cantidad_actual": {
+                    "type": "integer"
+                  },
+                  "cantidad_reservada": {
+                    "type": "integer"
+                  },
+                  "punto_reorden": {
+                    "type": "integer"
+                  }
                 },
-                "example": 
-                  {
-                    "ref_producto": "",
-                    "cantidad_actual": 20,
-                    "cantidad_reservada": 4,
-                    "punto_reorden": 7
+                "example": {
+                  "ref_producto": "",
+                  "cantidad_actual": 20,
+                  "cantidad_reservada": 4,
+                  "punto_reorden": 7
                 }
               }
             }
@@ -1351,8 +1665,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Inventario": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Inventario": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Inventario actualizado exitoxamente",
@@ -1376,7 +1694,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -1392,16 +1712,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "productoNoExiste": {
                       "summary": "Recurso producto inexistente",
-                      "value": { "mensaje": "El producto no existe" }
+                      "value": {
+                        "mensaje": "El producto no existe"
+                      }
                     },
                     "inventarioNoExiste": {
                       "summary": "Recurso inventario inexistente",
-                      "value": { "mensaje": "El inventario no existe" }
+                      "value": {
+                        "mensaje": "El inventario no existe"
+                      }
                     }
                   }
                 }
@@ -1415,16 +1741,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar inventario" }
+                      "value": {
+                        "mensaje": "Error al actualizar inventario"
+                      }
                     }
                   }
                 }
@@ -1433,17 +1765,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Eliminar un inventario por referencia",
-        "description":"Este endpoint permite eliminar un inventario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un inventario existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un inventario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un inventario existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1454,7 +1789,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Inventario eliminado exitosamente"
@@ -1470,7 +1807,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El inventario no existe"
@@ -1486,16 +1825,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar inventario" }
+                      "value": {
+                        "mensaje": "Error al eliminar inventario"
+                      }
                     }
                   }
                 }
@@ -1503,14 +1848,16 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/inventarios/stock-bajo": {
       "get": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Lista los productos con stock bajo",
-        "description":"Este endpoint permite obtener un listado completo de los productos con stock bajo en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada y punto_reorden.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado completo de los productos con stock bajo en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada y punto_reorden.",
+        "parameters": [
           {
             "name": "limit",
             "in": "query",
@@ -1532,19 +1879,22 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "mensaje": { "type": "string" },
-                      "Stock producto": { "type": "object" }
+                      "mensaje": {
+                        "type": "string"
+                      },
+                      "Stock producto": {
+                        "type": "object"
+                      }
                     },
-                    "example": 
-                      {
-                        "mensaje": "Producto encontrado exitosamente",
-                        "Stock producto": {
-                          "producto": "Arroz",
-                          "inventario_actual": 20,
-                          "cantidad_reservada": 4,
-                          "punto_reorden": 7
-                      } 
-                    }                      
+                    "example": {
+                      "mensaje": "Producto encontrado exitosamente",
+                      "Stock producto": {
+                        "producto": "Arroz",
+                        "inventario_actual": 20,
+                        "cantidad_reservada": 4,
+                        "punto_reorden": 7
+                      }
+                    }
                   }
                 }
               }
@@ -1557,16 +1907,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al buscar producto" }
+                      "value": {
+                        "mensaje": "Error al buscar producto"
+                      }
                     }
                   }
                 }
@@ -1578,15 +1934,19 @@
     },
     "/v1/inventarios/{prod}/productos": {
       "get": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Lista el stock del producto",
-        "description":"Este endpoint permite obtener un listado completo del stock del producto en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada, punto_reorden y ultima_modificación.",
+        "description": "Este endpoint permite obtener un listado completo del stock del producto en el sistema. La respuesta incluye información básica como producto, inventario_actual, cantidad_reservada, punto_reorden y ultima_modificación.",
         "parameters": [
           {
             "name": "prod",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1599,20 +1959,23 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "mensaje": { "type": "string" },
-                      "Stock producto": { "type": "object" }
+                      "mensaje": {
+                        "type": "string"
+                      },
+                      "Stock producto": {
+                        "type": "object"
+                      }
                     },
-                    "example": 
-                      {
-                        "mensaje": "Producto encontrado exitosamente",
-                        "Stock producto": {
-                          "producto": "Arroz",
-                          "inventario_actual": 20,
-                          "cantidad_reservada": 4,
-                          "punto_reorden": 7,
-                          "ultima_modificación": "2025-12-18 17:30:28"
-                      } 
-                    }                      
+                    "example": {
+                      "mensaje": "Producto encontrado exitosamente",
+                      "Stock producto": {
+                        "producto": "Arroz",
+                        "inventario_actual": 20,
+                        "cantidad_reservada": 4,
+                        "punto_reorden": 7,
+                        "ultima_modificación": "2025-12-18 17:30:28"
+                      }
+                    }
                   }
                 }
               }
@@ -1625,16 +1988,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al buscar producto" }
+                      "value": {
+                        "mensaje": "Error al buscar producto"
+                      }
                     }
                   }
                 }
@@ -1646,9 +2015,11 @@
     },
     "/v1/inventarios/movimiento-inventario": {
       "get": {
-        "tags":["Inventarios"],
+        "tags": [
+          "Inventarios"
+        ],
         "summary": "Lista los movimiento del inventario",
-        "description":"Este endpoint permite obtener un listado completo de los movimiento del inventario, como los cambios registrados hechos por acciones INSERT, UPDATE Y DELETE en la tabla inventarios, además de registrar la referenica del usuario que hizo los cambios y la hora del cambio. La respuesta incluye información básica como cantidad_actual_ant, cantidad_reservada_ant, punto_reorden_ant, cantidad_actual_nue, cantidad_reservada_nue, punto_reorden_nue, accion, fecha_hora y referencia del usuario.",
+        "description": "Este endpoint permite obtener un listado completo de los movimiento del inventario, como los cambios registrados hechos por acciones INSERT, UPDATE Y DELETE en la tabla inventarios, además de registrar la referenica del usuario que hizo los cambios y la hora del cambio. La respuesta incluye información básica como cantidad_actual_ant, cantidad_reservada_ant, punto_reorden_ant, cantidad_actual_nue, cantidad_reservada_nue, punto_reorden_nue, accion, fecha_hora y referencia del usuario.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de los movimiento del inventario registrados.",
@@ -1659,15 +2030,34 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "cantidad_actual_ant": { "type": "integer" },
-                      "cantidad_reservada_ant": { "type": "integer" },
-                      "punto_reorden_ant": { "type": "integer" },
-                      "cantidad_actual_nue": { "type": "integer" },
-                      "cantidad_reservada_nue": { "type": "integer" },
-                      "punto_reorden_nue": { "type": "integer" },
-                      "accion": { "type": "string" },
-                      "fecha_hora": { "type": "string", "format": "date-time" },
-                      "ref_usuario": { "type": "integer" }
+                      "cantidad_actual_ant": {
+                        "type": "integer"
+                      },
+                      "cantidad_reservada_ant": {
+                        "type": "integer"
+                      },
+                      "punto_reorden_ant": {
+                        "type": "integer"
+                      },
+                      "cantidad_actual_nue": {
+                        "type": "integer"
+                      },
+                      "cantidad_reservada_nue": {
+                        "type": "integer"
+                      },
+                      "punto_reorden_nue": {
+                        "type": "integer"
+                      },
+                      "accion": {
+                        "type": "string"
+                      },
+                      "fecha_hora": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "ref_usuario": {
+                        "type": "integer"
+                      }
                     },
                     "example": {
                       "cantidad_actual_ant": 20,
@@ -1679,7 +2069,7 @@
                       "accion": "UPDATE",
                       "fecha_hora": "2025-12-18 17:30:28",
                       "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461"
-                    }                      
+                    }
                   }
                 }
               }
@@ -1692,7 +2082,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -1706,9 +2098,11 @@
     },
     "/v1/pedidos": {
       "get": {
-        "tags":["Pedidos"],
+        "tags": [
+          "Pedidos"
+        ],
         "summary": "Listar todos los pedidos",
-        "description":"Este endpoint permite obtener un listado completo de los pedidos registrados en el sistema. La respuesta incluye información básica como ref_cliente, ref_usuario, estado, total, direccion_entrega, fecha_hora y referencia de cada pedido.",
+        "description": "Este endpoint permite obtener un listado completo de los pedidos registrados en el sistema. La respuesta incluye información básica como ref_cliente, ref_usuario, estado, total, direccion_entrega, fecha_hora y referencia de cada pedido.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de pedidos.",
@@ -1719,24 +2113,37 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "ref_cliente": { "type": "string" },
-                      "ref_usuario": { "type": "string" },
-                      "estado": { "type": "string" },
-                      "total": { "type": "float" },
-                      "direccion_entrega": { "type": "string" },
-                      "fecha_hora": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "ref_cliente": {
+                        "type": "string"
+                      },
+                      "ref_usuario": {
+                        "type": "string"
+                      },
+                      "estado": {
+                        "type": "string"
+                      },
+                      "total": {
+                        "type": "float"
+                      },
+                      "direccion_entrega": {
+                        "type": "string"
+                      },
+                      "fecha_hora": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "ref_cliente": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
-                        "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
-                        "estado": "pendiente",
-                        "total": 35500,
-                        "direccion_entrega": "Cra 10b #54 - 103",
-                        "fecha_hora": "2025-12-18 17:30:28",
-                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
-                    }                      
+                    "example": {
+                      "ref_cliente": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                      "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                      "estado": "pendiente",
+                      "total": 35500,
+                      "direccion_entrega": "Cra 10b #54 - 103",
+                      "fecha_hora": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -1749,7 +2156,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -1760,9 +2169,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Pedidos"],
+        "tags": [
+          "Pedidos"
+        ],
         "summary": "Registrar un nuevo pedido",
         "description": "Este endpoint permite registrar un nuevo pedido en el sistema. Requiere enviar un objeto JSON con los datos del pedido como ref_cliente, ref_usuario, estado, total y direccion_entrega.",
         "requestBody": {
@@ -1771,21 +2181,36 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["ref_cliente", "ref_usuario", "estado", "total", "direccion_entrega"],
+                "required": [
+                  "ref_cliente",
+                  "ref_usuario",
+                  "estado",
+                  "total",
+                  "direccion_entrega"
+                ],
                 "properties": {
-                  "ref_cliente": { "type": "string" },
-                  "ref_usuario": { "type": "string" },
-                  "estado": { "type": "string" },
-                  "total": { "type": "float" },
-                  "direccion_entrega": { "type": "string" }
+                  "ref_cliente": {
+                    "type": "string"
+                  },
+                  "ref_usuario": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "float"
+                  },
+                  "direccion_entrega": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "ref_cliente": "",
-                    "ref_usuario": "",
-                    "estado": "pendiente",
-                    "total": 27500,
-                    "direccion_entrega": "Cra 10b #54 - 103"
+                "example": {
+                  "ref_cliente": "",
+                  "ref_usuario": "",
+                  "estado": "pendiente",
+                  "total": 27500,
+                  "direccion_entrega": "Cra 10b #54 - 103"
                 }
               }
             }
@@ -1799,8 +2224,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Pedido": {"type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Pedido": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Pedido registrado exitosamente",
@@ -1825,7 +2254,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -1841,15 +2272,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "clienteNoExiste": {
-                      "summary": "No existe el recurso cliente",
-                      "value": { "mensaje": "El cliente no existe" }
+                    "summary": "No existe el recurso cliente",
+                    "value": {
+                      "mensaje": "El cliente no existe"
+                    }
                   },
                   "usuarioNoExiste": {
                     "summary": "No existe el recurso usuario",
-                    "value": { "mensaje": "El usuario no existe" }
+                    "value": {
+                      "mensaje": "El usuario no existe"
+                    }
                   }
                 }
               }
@@ -1862,16 +2299,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar pedido" }
+                      "value": {
+                        "mensaje": "Error al registrar pedido"
+                      }
                     }
                   }
                 }
@@ -1883,14 +2326,18 @@
     },
     "/v1/pedidos/{ref}": {
       "put": {
-        "tags":["Pedidos"],
+        "tags": [
+          "Pedidos"
+        ],
         "summary": "Editar pedido existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -1899,21 +2346,36 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["ref_cliente", "ref_usuario", "estado", "total", "direccion_entrega"],
+                "required": [
+                  "ref_cliente",
+                  "ref_usuario",
+                  "estado",
+                  "total",
+                  "direccion_entrega"
+                ],
                 "properties": {
-                  "ref_cliente": { "type": "string" },
-                  "ref_usuario": { "type": "string" },
-                  "estado": { "type": "string" },
-                  "total": { "type": "float" },
-                  "direccion_entrega": { "type": "string" }
+                  "ref_cliente": {
+                    "type": "string"
+                  },
+                  "ref_usuario": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "float"
+                  },
+                  "direccion_entrega": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "ref_cliente": "",
-                    "ref_usuario": "",
-                    "estado": "pendiente",
-                    "total": 27500,
-                    "direccion_entrega": "Cra 10b #54 - 103"
+                "example": {
+                  "ref_cliente": "",
+                  "ref_usuario": "",
+                  "estado": "pendiente",
+                  "total": 27500,
+                  "direccion_entrega": "Cra 10b #54 - 103"
                 }
               }
             }
@@ -1927,8 +2389,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Pedido": {"type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Pedido": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Pedido actualizado exitosamente",
@@ -1953,7 +2419,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -1969,20 +2437,28 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "clienteNoExiste": {
-                        "summary": "No existe el recurso cliente",
-                        "value": { "mensaje": "El cliente no existe" }
+                      "summary": "No existe el recurso cliente",
+                      "value": {
+                        "mensaje": "El cliente no existe"
+                      }
                     },
                     "usuarioNoExiste": {
                       "summary": "No existe el recurso usuario",
-                      "value": { "mensaje": "El usuario no existe" }
+                      "value": {
+                        "mensaje": "El usuario no existe"
+                      }
                     },
                     "pedidoNoExiste": {
-                        "summary": "No existe el recurso pedido",
-                        "value": { "mensaje": "El pedido no existe" }
+                      "summary": "No existe el recurso pedido",
+                      "value": {
+                        "mensaje": "El pedido no existe"
+                      }
                     }
                   }
                 }
@@ -1996,16 +2472,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar pedido" }
+                      "value": {
+                        "mensaje": "Error al actualizar pedido"
+                      }
                     }
                   }
                 }
@@ -2014,17 +2496,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Pedidos"],
+        "tags": [
+          "Pedidos"
+        ],
         "summary": "Eliminar un pedido por referencia",
-        "description":"Este endpoint permite eliminar un pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un pedido existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un pedido existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2035,7 +2520,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Pedido eliminado exitosamente"
@@ -2051,7 +2538,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El pedido no existe"
@@ -2067,16 +2556,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar pedido" }
+                      "value": {
+                        "mensaje": "Error al eliminar pedido"
+                      }
                     }
                   }
                 }
@@ -2084,13 +2579,15 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/pedidos/pendientes": {
       "get": {
-        "tags":["Pedidos"],
+        "tags": [
+          "Pedidos"
+        ],
         "summary": "Listar todos los pedidos pendientes",
-        "description":"Este endpoint permite obtener un listado completo de los pedidos registrados como pendientes en el sistema. La respuesta incluye información básica como nombre_cliente, estado_pedido, total, direccion_entrega, hora_pedido y referencia de cada pedido pendiente.",
+        "description": "Este endpoint permite obtener un listado completo de los pedidos registrados como pendientes en el sistema. La respuesta incluye información básica como nombre_cliente, estado_pedido, total, direccion_entrega, hora_pedido y referencia de cada pedido pendiente.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de pedidos pendientes.",
@@ -2101,22 +2598,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "referencia": { "type": "string" },
-                      "nombre_cliente": { "type": "string" },
-                      "estado_pedido": { "type": "string" },
-                      "direccion_entrega": { "type": "string" },
-                      "hora_pedido": { "type": "string" },
-                      "total": { "type": "float" }
+                      "referencia": {
+                        "type": "string"
+                      },
+                      "nombre_cliente": {
+                        "type": "string"
+                      },
+                      "estado_pedido": {
+                        "type": "string"
+                      },
+                      "direccion_entrega": {
+                        "type": "string"
+                      },
+                      "hora_pedido": {
+                        "type": "string"
+                      },
+                      "total": {
+                        "type": "float"
+                      }
                     },
-                    "example": 
-                      {
-                        "referencia": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
-                        "nombre_cliente": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
-                        "estado_pedido": "pendiente",
-                        "direccion_entrega": "Cra 10b #54 - 103",
-                        "hora_pedido": "2025-12-18 17:30:28",
-                        "total": 35500
-                    }                      
+                    "example": {
+                      "referencia": "4a0s65ba-83b9-45b8-b37d-bbe5b45b93753",
+                      "nombre_cliente": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                      "estado_pedido": "pendiente",
+                      "direccion_entrega": "Cra 10b #54 - 103",
+                      "hora_pedido": "2025-12-18 17:30:28",
+                      "total": 35500
+                    }
                   }
                 }
               }
@@ -2129,7 +2637,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -2143,9 +2653,11 @@
     },
     "/v1/detalles/pedidos": {
       "get": {
-        "tags":["Detalles"],
+        "tags": [
+          "Detalles"
+        ],
         "summary": "Listar todos los detalles de pedidos",
-        "description":"Este endpoint permite obtener un listado completo de los detalles de pedidos registrados en el sistema. La respuesta incluye información básica como cantidad, precio_unitario, subtotal, ref_pedido, ref_producto y referencia de cada detalle de los pedidos.",
+        "description": "Este endpoint permite obtener un listado completo de los detalles de pedidos registrados en el sistema. La respuesta incluye información básica como cantidad, precio_unitario, subtotal, ref_pedido, ref_producto y referencia de cada detalle de los pedidos.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de los detalles de pedidos.",
@@ -2156,22 +2668,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "cantidad": { "type": "integer" },
-                      "precio_unitario": { "type": "float" },
-                      "subtotal": { "type": "float" },
-                      "ref_pedido": { "type": "string" },
-                      "ref_producto": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "cantidad": {
+                        "type": "integer"
+                      },
+                      "precio_unitario": {
+                        "type": "float"
+                      },
+                      "subtotal": {
+                        "type": "float"
+                      },
+                      "ref_pedido": {
+                        "type": "string"
+                      },
+                      "ref_producto": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "cantidad": 4,
-                        "precio_unitario": 6500,
-                        "subtotal": 26000,
-                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                        "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
-                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
-                    }                      
+                    "example": {
+                      "cantidad": 4,
+                      "precio_unitario": 6500,
+                      "subtotal": 26000,
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2184,7 +2707,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -2195,9 +2720,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Detalles"],
+        "tags": [
+          "Detalles"
+        ],
         "summary": "Registrar unos nuevos detalles de pedido",
         "description": "Este endpoint permite registrar unos nuevos detalles de pedido en el sistema. Requiere enviar un objeto JSON con los datos de los detalles del pedido como cantidad, precio_unitario, ref_pedido, ref_producto.",
         "requestBody": {
@@ -2206,20 +2732,32 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["cantidad", "precio_unitario", "ref_pedido", "ref_producto"],
+                "required": [
+                  "cantidad",
+                  "precio_unitario",
+                  "ref_pedido",
+                  "ref_producto"
+                ],
                 "properties": {
-                  "cantidad": { "type": "integer" },
-                  "precio_unitario": { "type": "float" },
-                  "ref_pedido": { "type": "string" },
-                  "ref_producto": { "type": "string" }
+                  "cantidad": {
+                    "type": "integer"
+                  },
+                  "precio_unitario": {
+                    "type": "float"
+                  },
+                  "ref_pedido": {
+                    "type": "string"
+                  },
+                  "ref_producto": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "cantidad": 4,
-                    "precio_unitario": 6500,
-                    "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
-                }  
+                "example": {
+                  "cantidad": 4,
+                  "precio_unitario": 6500,
+                  "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                  "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
+                }
               }
             }
           }
@@ -2232,8 +2770,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Detalle pedido": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Detalle pedido": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "detalle_pedido registrado exitosamente",
@@ -2257,7 +2799,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -2273,15 +2817,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "pedidoNoExiste": {
-                      "summary": "No existe el recurso pedido",
-                      "value": { "mensaje": "El pedido no existe" }
+                    "summary": "No existe el recurso pedido",
+                    "value": {
+                      "mensaje": "El pedido no existe"
+                    }
                   },
                   "productoNoExiste": {
                     "summary": "No existe el recurso producto",
-                    "value": { "mensaje": "El producto no existe" }
+                    "value": {
+                      "mensaje": "El producto no existe"
+                    }
                   }
                 }
               }
@@ -2294,16 +2844,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar detalle_pedido" }
+                      "value": {
+                        "mensaje": "Error al registrar detalle_pedido"
+                      }
                     }
                   }
                 }
@@ -2315,14 +2871,18 @@
     },
     "/v1/detalles/pedidos/{ref}": {
       "put": {
-        "tags":["Detalles"],
+        "tags": [
+          "Detalles"
+        ],
         "summary": "Editar detalle pedido existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -2331,19 +2891,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["cantidad", "precio_unitario", "ref_pedido", "ref_producto"],
+                "required": [
+                  "cantidad",
+                  "precio_unitario",
+                  "ref_pedido",
+                  "ref_producto"
+                ],
                 "properties": {
-                  "cantidad": { "type": "integer" },
-                  "precio_unitario": { "type": "float" },
-                  "ref_pedido": { "type": "string" },
-                  "ref_producto": { "type": "string" }
+                  "cantidad": {
+                    "type": "integer"
+                  },
+                  "precio_unitario": {
+                    "type": "float"
+                  },
+                  "ref_pedido": {
+                    "type": "string"
+                  },
+                  "ref_producto": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "cantidad": 4,
-                    "precio_unitario": 6500,
-                    "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
+                "example": {
+                  "cantidad": 4,
+                  "precio_unitario": 6500,
+                  "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                  "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283"
                 }
               }
             }
@@ -2357,8 +2929,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Detalle pedido": { "type": "object" }
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Detalle pedido": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "detalle_pedido actualizado exitosamente",
@@ -2382,7 +2958,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -2398,21 +2976,29 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "pedidoNoExiste": {
-                        "summary": "No existe el recurso pedido",
-                        "value": { "mensaje": "El pedido no existe" }
+                      "summary": "No existe el recurso pedido",
+                      "value": {
+                        "mensaje": "El pedido no existe"
+                      }
                     },
                     "productoNoExiste": {
                       "summary": "No existe el recurso producto",
-                      "value": { "mensaje": "El producto no existe" }
+                      "value": {
+                        "mensaje": "El producto no existe"
+                      }
                     },
                     "detalle_pedidoNoExiste": {
                       "summary": "No existe el recurso detalle_pedido",
-                      "value": { "mensaje": "El detalle_pedido no existe" }
-                    }         
+                      "value": {
+                        "mensaje": "El detalle_pedido no existe"
+                      }
+                    }
                   }
                 }
               }
@@ -2425,16 +3011,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar detalle_pedido" }
+                      "value": {
+                        "mensaje": "Error al actualizar detalle_pedido"
+                      }
                     }
                   }
                 }
@@ -2443,17 +3035,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Detalles"],
+        "tags": [
+          "Detalles"
+        ],
         "summary": "Eliminar un detalle pedido por referencia",
-        "description":"Este endpoint permite eliminar un detalle pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un detalle pedido existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un detalle pedido del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un detalle pedido existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2464,7 +3059,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "detalle_pedido eliminado exitosamente"
@@ -2480,7 +3077,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El detalle_pedido no existe"
@@ -2496,16 +3095,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar detalle_pedido" }
+                      "value": {
+                        "mensaje": "Error al eliminar detalle_pedido"
+                      }
                     }
                   }
                 }
@@ -2513,13 +3118,15 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/facturas": {
       "get": {
-        "tags":["Facturas"],
+        "tags": [
+          "Facturas"
+        ],
         "summary": "Listar todas las facturas",
-        "description":"Este endpoint permite obtener un listado completo de las facturas registradas en el sistema. La respuesta incluye información básica como ref_pedido, numero_factura, total, estado, fecha_emision y referencia de cada factura.",
+        "description": "Este endpoint permite obtener un listado completo de las facturas registradas en el sistema. La respuesta incluye información básica como ref_pedido, numero_factura, total, estado, fecha_emision y referencia de cada factura.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de facturas.",
@@ -2530,22 +3137,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "ref_pedido": { "type": "string" },
-                      "numero_factura": { "type": "string" },
-                      "estado": { "type": "string" },
-                      "total": { "type": "float" },
-                      "fecha_emision": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "ref_pedido": {
+                        "type": "string"
+                      },
+                      "numero_factura": {
+                        "type": "string"
+                      },
+                      "estado": {
+                        "type": "string"
+                      },
+                      "total": {
+                        "type": "float"
+                      },
+                      "fecha_emision": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                        "numero_factura": "FAC-20260117-b93e7637",
-                        "estado": "emitida",
-                        "total": 8700,
-                        "fecha_emision": "2025-12-18 17:30:28",
-                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
-                    }                      
+                    "example": {
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "numero_factura": "FAC-20260117-b93e7637",
+                      "estado": "emitida",
+                      "total": 8700,
+                      "fecha_emision": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2558,7 +3176,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -2572,7 +3192,9 @@
     },
     "/v1/facturas/{ref}": {
       "post": {
-        "tags":["Facturas"],
+        "tags": [
+          "Facturas"
+        ],
         "summary": "Registrar una nueva factura",
         "description": "Este endpoint permite registrar una nueva factura en el sistema. Requiere enviar un objeto JSON con los datos de la factura como ref_pedido, numero_factura, total, estado.",
         "parameters": [
@@ -2605,19 +3227,23 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Factura": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Factura": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Factura registrada",
                     "Factura": {
-                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                        "numero_factura": "FAC-20260117-b93e7637",
-                        "estado": "emitida",
-                        "total": 8700,
-                        "fecha_emision": "2025-12-18 17:30:28",
-                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
-                    } 
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "numero_factura": "FAC-20260117-b93e7637",
+                      "estado": "emitida",
+                      "total": 8700,
+                      "fecha_emision": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2630,7 +3256,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error no existe el pedido"
@@ -2646,7 +3274,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -2657,16 +3287,19 @@
           }
         }
       },
-
       "put": {
-        "tags":["Facturas"],
+        "tags": [
+          "Facturas"
+        ],
         "summary": "Editar factura existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -2675,19 +3308,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["ref_pedido", "numero_factura", "estado", "total"],
+                "required": [
+                  "ref_pedido",
+                  "numero_factura",
+                  "estado",
+                  "total"
+                ],
                 "properties": {
-                  "ref_pedido": { "type": "string" },
-                  "numero_factura": { "type": "string" },
-                  "estado": { "type": "string" },
-                  "total": { "type": "float" }
+                  "ref_pedido": {
+                    "type": "string"
+                  },
+                  "numero_factura": {
+                    "type": "string"
+                  },
+                  "estado": {
+                    "type": "string"
+                  },
+                  "total": {
+                    "type": "float"
+                  }
                 },
-                "example": 
-                  {
-                    "ref_pedido": "",
-                    "numero_factura": "FAC-20260117-b93e7637",
-                    "estado": "pagada",
-                    "total": 50000
+                "example": {
+                  "ref_pedido": "",
+                  "numero_factura": "FAC-20260117-b93e7637",
+                  "estado": "pagada",
+                  "total": 50000
                 }
               }
             }
@@ -2701,19 +3346,23 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Factura": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Factura": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Factura actualizada exitosamente",
                     "Factura": {
-                        "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
-                        "numero_factura": "FAC-20260117-b93e7637",
-                        "estado": "emitida",
-                        "total": 8700,
-                        "fecha_emision": "2025-12-18 17:30:28",
-                        "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
-                    } 
+                      "ref_pedido": "2f8b43ba-83b9-45b8-b37d-bbe5b45b28647",
+                      "numero_factura": "FAC-20260117-b93e7637",
+                      "estado": "emitida",
+                      "total": 8700,
+                      "fecha_emision": "2025-12-18 17:30:28",
+                      "referencia": "1b0m83ba-83b9-45b8-b37d-bbe5b45b8476"
+                    }
                   }
                 }
               }
@@ -2726,7 +3375,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -2742,16 +3393,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "pedidoNoExiste": {
-                        "summary": "No existe el recurso pedido",
-                        "value": { "mensaje": "El pedido no existe" }
+                      "summary": "No existe el recurso pedido",
+                      "value": {
+                        "mensaje": "El pedido no existe"
+                      }
                     },
                     "facturaNoExiste": {
                       "summary": "No existe el recurso factura",
-                      "value": { "mensaje": "La factura no existe" }
+                      "value": {
+                        "mensaje": "La factura no existe"
+                      }
                     }
                   }
                 }
@@ -2765,16 +3422,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar factura" }
+                      "value": {
+                        "mensaje": "Error al actualizar factura"
+                      }
                     }
                   }
                 }
@@ -2783,17 +3446,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Facturas"],
+        "tags": [
+          "Facturas"
+        ],
         "summary": "Eliminar una factura por referencia",
-        "description":"Este endpoint permite eliminar una factura del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una factura existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar una factura del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a una factura existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2804,7 +3470,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Factura eliminada exitosamente"
@@ -2820,7 +3488,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "La factura no existe"
@@ -2836,16 +3506,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar la factura" }
+                      "value": {
+                        "mensaje": "Error al eliminar la factura"
+                      }
                     }
                   }
                 }
@@ -2853,16 +3529,20 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/usuarios": {
       "get": {
         "security": [
-          { "BearerAuth": [] }
+          {
+            "BearerAuth": []
+          }
         ],
-        "tags":["Usuarios"],
+        "tags": [
+          "Usuarios"
+        ],
         "summary": "Listar todos los usuarios",
-        "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
+        "description": "Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, username, password_hash, rol, ultimo_acceso y referencia de cada usuario.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene la lista de usuarios.",
@@ -2873,22 +3553,33 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre": { "type": "string" },
-                      "username": { "type": "string" },
-                      "password_hash": { "type": "string" },
-                      "rol": { "type": "string" },
-                      "ultimo_acceso": { "type": "string" },
-                      "referencia": { "type": "string" }
+                      "nombre": {
+                        "type": "string"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "password_hash": {
+                        "type": "string"
+                      },
+                      "rol": {
+                        "type": "string"
+                      },
+                      "ultimo_acceso": {
+                        "type": "string"
+                      },
+                      "referencia": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre": "Juan",
-                        "username": "JuanADMINISTRADOR",
-                        "password_hash": "A123-AU2U3$ja",
-                        "rol": "Administrador",
-                        "ultimo_acceso": "2025-12-18 17:30:28",
-                        "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
-                    }                      
+                    "example": {
+                      "nombre": "Juan",
+                      "username": "JuanADMINISTRADOR",
+                      "password_hash": "A123-AU2U3$ja",
+                      "rol": "Administrador",
+                      "ultimo_acceso": "2025-12-18 17:30:28",
+                      "referencia": "8e2i11fa-83b9-45b8-b37d-bbe5b45b8564"
+                    }
                   }
                 }
               }
@@ -2901,16 +3592,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "tokenNoValido": {
                       "summary": "Error token no válido",
-                      "value": { "mensaje": "Token inválido" }
+                      "value": {
+                        "mensaje": "Token inválido"
+                      }
                     },
                     "tokenExpirado": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Token expirado" }
+                      "value": {
+                        "mensaje": "Token expirado"
+                      }
                     }
                   }
                 }
@@ -2924,7 +3621,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Acceso denegado"
@@ -2940,7 +3639,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -2951,9 +3652,10 @@
           }
         }
       },
-
       "post": {
-        "tags":["Usuarios"],
+        "tags": [
+          "Usuarios"
+        ],
         "summary": "Registrar un nuevo usuario",
         "description": "Este endpoint permite registrar un nuevo usuario en el sistema. Requiere enviar un objeto JSON con los datos del usuario como nombre, username, password_hash y rol.",
         "requestBody": {
@@ -2962,19 +3664,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "username", "password_hash", "rol"],
+                "required": [
+                  "nombre",
+                  "username",
+                  "password_hash",
+                  "rol"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "username": { "type": "string" },
-                  "password_hash": { "type": "string" },
-                  "rol": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password_hash": {
+                    "type": "string"
+                  },
+                  "rol": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "nombre": "Juan",
-                    "username": "JuanADMINISTRADOR",
-                    "password_hash": "A123-AU2U3$ja",
-                    "rol": "Administrador"
+                "example": {
+                  "nombre": "Juan",
+                  "username": "JuanADMINISTRADOR",
+                  "password_hash": "A123-AU2U3$ja",
+                  "rol": "Administrador"
                 }
               }
             }
@@ -2988,8 +3702,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Usuario": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Usuario": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Usuario registrado exitosamente",
@@ -3013,7 +3731,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -3029,16 +3749,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al registrar usuario" }
+                      "value": {
+                        "mensaje": "Error al registrar usuario"
+                      }
                     }
                   }
                 }
@@ -3050,14 +3776,18 @@
     },
     "/v1/usuarios/{ref}": {
       "put": {
-        "tags":["Usuarios"],
+        "tags": [
+          "Usuarios"
+        ],
         "summary": "Editar usuario existente",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -3066,19 +3796,31 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nombre", "username", "password_hash", "rol"],
+                "required": [
+                  "nombre",
+                  "username",
+                  "password_hash",
+                  "rol"
+                ],
                 "properties": {
-                  "nombre": { "type": "string" },
-                  "username": { "type": "string" },
-                  "password_hash": { "type": "string" },
-                  "rol": { "type": "string" }
+                  "nombre": {
+                    "type": "string"
+                  },
+                  "username": {
+                    "type": "string"
+                  },
+                  "password_hash": {
+                    "type": "string"
+                  },
+                  "rol": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "nombre": "Juan",
-                    "username": "JuanADMINISTRADOR",
-                    "password_hash": "A123-AU2U3$ja",
-                    "rol": "Administrador"
+                "example": {
+                  "nombre": "Juan",
+                  "username": "JuanADMINISTRADOR",
+                  "password_hash": "A123-AU2U3$ja",
+                  "rol": "Administrador"
                 }
               }
             }
@@ -3092,8 +3834,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" },
-                    "Usuario": { "type": "object"}
+                    "mensaje": {
+                      "type": "string"
+                    },
+                    "Usuario": {
+                      "type": "object"
+                    }
                   },
                   "example": {
                     "mensaje": "Usuario actualizado exitosamente",
@@ -3117,7 +3863,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Datos inválidos en la solicitud"
@@ -3133,7 +3881,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El usuario no existe"
@@ -3149,16 +3899,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al actualizar usuario" }
+                      "value": {
+                        "mensaje": "Error al actualizar usuario"
+                      }
                     }
                   }
                 }
@@ -3167,17 +3923,20 @@
           }
         }
       },
-
       "delete": {
-        "tags":["Usuarios"],
+        "tags": [
+          "Usuarios"
+        ],
         "summary": "Eliminar un usuario por referencia",
-        "description":"Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un usuario existente, se eliminará de forma permanente.",
+        "description": "Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ref). Si la referencia proporcionada es válida y corresponde a un usuario existente, se eliminará de forma permanente.",
         "parameters": [
           {
             "name": "ref",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3188,7 +3947,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Usuario eliminado exitosamente"
@@ -3204,7 +3965,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "El pedido no existe"
@@ -3220,16 +3983,22 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "errorGenerico": {
                       "summary": "Error inesperado",
-                      "value": { "mensaje": "Error interno del servidor" }
+                      "value": {
+                        "mensaje": "Error interno del servidor"
+                      }
                     },
                     "errorBaseDatos": {
                       "summary": "Error de conexión",
-                      "value": { "mensaje": "Error al eliminar usuario" }
+                      "value": {
+                        "mensaje": "Error al eliminar usuario"
+                      }
                     }
                   }
                 }
@@ -3237,21 +4006,25 @@
             }
           }
         }
-      }     
+      }
     },
     "/v1/usuarios/{user}/pedidos": {
       "get": {
-        "tags":["Usuarios"],
+        "tags": [
+          "Usuarios"
+        ],
         "summary": "Lista el usuario con el número de pedidos registrados",
         "parameters": [
           {
             "name": "usuario",
             "in": "path",
             "required": true,
-            "schema": { "type": "string" }
+            "schema": {
+              "type": "string"
+            }
           }
         ],
-        "description":"Este endpoint permite obtener un listado del número de pedidos registrados por el usuario buscado en el sistema. La respuesta incluye información básica como nombre del usuario y el número de pedidos registrados por el usuario.",
+        "description": "Este endpoint permite obtener un listado del número de pedidos registrados por el usuario buscado en el sistema. La respuesta incluye información básica como nombre del usuario y el número de pedidos registrados por el usuario.",
         "responses": {
           "200": {
             "description": "Respuesta exitosa que contiene el usuario buscado.",
@@ -3262,17 +4035,20 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "mensaje": { "type": "string" },
-                      "pedidos_por_usuario": { "type": "object" }
+                      "mensaje": {
+                        "type": "string"
+                      },
+                      "pedidos_por_usuario": {
+                        "type": "object"
+                      }
                     },
-                    "example": 
-                      {
+                    "example": {
                       "mensaje": "Usuario encontrado exitosamente",
                       "pedidos_por_usuario": {
-                          "nombre_de_usuario": "Cristian",
-                          "pedidos_por_usuario": 7
+                        "nombre_de_usuario": "Cristian",
+                        "pedidos_por_usuario": 7
                       }
-                    }                      
+                    }
                   }
                 }
               }
@@ -3285,7 +4061,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3299,7 +4077,9 @@
     },
     "/v1/auth/login": {
       "post": {
-        "tags": ["Autenticación"],
+        "tags": [
+          "Autenticación"
+        ],
         "summary": "Iniciar sesión",
         "description": "Este endpoint permite iniciar sesión al usuario. Requiere enviar un objeto JSON con los datos del usuario como usuario y contraseña",
         "requestBody": {
@@ -3308,15 +4088,21 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["usuario", "contraseña"],
+                "required": [
+                  "usuario",
+                  "contraseña"
+                ],
                 "properties": {
-                  "usuario": { "type": "string" },
-                  "contraseña": { "type": "string" }
+                  "usuario": {
+                    "type": "string"
+                  },
+                  "contraseña": {
+                    "type": "string"
+                  }
                 },
-                "example": 
-                  {
-                    "usuario": "JuanADMINISTRADOR",
-                    "contraseña": "1234567890"
+                "example": {
+                  "usuario": "JuanADMINISTRADOR",
+                  "contraseña": "1234567890"
                 }
               }
             }
@@ -3330,8 +4116,12 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "token": { "type": "string" },
-                    "rol": { "type": "string" }
+                    "token": {
+                      "type": "string"
+                    },
+                    "rol": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Token generado",
@@ -3348,7 +4138,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Credenciales inválidas"
@@ -3364,7 +4156,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3378,10 +4172,12 @@
     },
     "/v1/reportes/clientes/mas-pedidos": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista por defecto los 5 clientes con más pedidos",
-        "description":"Este endpoint permite obtener un listado por defecto de los 5 clientes con más pedidos en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado por defecto de los 5 clientes con más pedidos en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "limit",
             "in": "query",
@@ -3403,35 +4199,38 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                      "nombre_reporte": {
+                        "type": "string"
+                      },
+                      "resultado": {
+                        "type": "array"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre_reporte": "clientes_con_mas_pedidos",
-                        "resultado": [
-                          {
+                    "example": {
+                      "nombre_reporte": "clientes_con_mas_pedidos",
+                      "resultado": [
+                        {
                           "cliente": "Hugo",
                           "numero_pedidos": 10
-                          },
-                          {
+                        },
+                        {
                           "cliente": "José",
                           "numero_pedidos": 8
-                          },
-                          {
+                        },
+                        {
                           "cliente": "Juan",
                           "numero_pedidos": 7
-                          },
-                          {
+                        },
+                        {
                           "cliente": "Carlos",
                           "numero_pedidos": 3
-                          },
-                          {
+                        },
+                        {
                           "cliente": "Mario",
                           "numero_pedidos": 1
-                          }
+                        }
                       ]
-                    }                      
+                    }
                   }
                 }
               }
@@ -3444,7 +4243,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3458,10 +4259,12 @@
     },
     "/v1/reportes/usuarios/mas-pedidos-registrados": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista por defecto los 5 usuarios con más pedidos registrados",
-        "description":"Este endpoint permite obtener un listado por defecto de los 5 usuarios con más pedidos registrados en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado por defecto de los 5 usuarios con más pedidos registrados en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "limit",
             "in": "query",
@@ -3483,35 +4286,38 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                      "nombre_reporte": {
+                        "type": "string"
+                      },
+                      "resultado": {
+                        "type": "array"
+                      }
                     },
-                    "example": 
-                      {
-                        "nombre_reporte": "usuarios_con_mas_pedidos_registrados",
-                        "resultado": [
-                          {
+                    "example": {
+                      "nombre_reporte": "usuarios_con_mas_pedidos_registrados",
+                      "resultado": [
+                        {
                           "registro_pedidos": 12,
                           "usuario": "Juan"
-                          },
-                          {
+                        },
+                        {
                           "registro_pedidos": 9,
                           "usuario": "Victor"
-                          },
-                          {
+                        },
+                        {
                           "registro_pedidos": 7,
                           "usuario": "Manolo"
-                          },
-                          {
+                        },
+                        {
                           "registro_pedidos": 4,
                           "usuario": "Duvan"
-                          },
-                          {
+                        },
+                        {
                           "registro_pedidos": 2,
                           "usuario": "Pedro"
-                          }
+                        }
                       ]
-                    }                      
+                    }
                   }
                 }
               }
@@ -3524,7 +4330,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3538,10 +4346,12 @@
     },
     "/v1/reportes/productos/mas-vendidos": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista por defecto el producto más vendido registrado",
-        "description":"Este endpoint permite obtener un listado por defecto el producto más vendido registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado por defecto el producto más vendido registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "desde",
             "in": "query",
@@ -3582,24 +4392,30 @@
                     "type": "object",
                     "properties": {
                       "Productos_mas_vendidos": {
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                        "nombre_reporte": {
+                          "type": "string"
+                        },
+                        "resultado": {
+                          "type": "array"
+                        }
                       },
-                      "mensaje": { "type": "string" }
+                      "mensaje": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      { 
-                        "Productos_mas_vendidos": {
-                          "nombre_reporte": "productos_mas_vendidos",
-                          "resultado": [
-                            {
+                    "example": {
+                      "Productos_mas_vendidos": {
+                        "nombre_reporte": "productos_mas_vendidos",
+                        "resultado": [
+                          {
                             "id": "d341e97c-de10-4baa-9fcd-d632b303f0ad",
                             "producto": "Arroz",
                             "total_vendido": 14
-                            }
-                      ] },
-                        "mensaje": "Producto encontrado exitosamente"
-                    }                      
+                          }
+                        ]
+                      },
+                      "mensaje": "Producto encontrado exitosamente"
+                    }
                   }
                 }
               }
@@ -3612,7 +4428,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3626,10 +4444,12 @@
     },
     "/v1/reportes/pedidos/por-fecha": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista de pedidos según el tipo por fecha especificada",
-        "description":"Este endpoint permite obtener un listado de pedidos según el tipo por fecha especificada en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado de pedidos según el tipo por fecha especificada en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "desde",
             "in": "query",
@@ -3655,7 +4475,11 @@
             "description": "Indica el estado de los pedidos",
             "schema": {
               "type": "string",
-              "enum": ["pendiente", "entregado", "cancelado"],
+              "enum": [
+                "pendiente",
+                "entregado",
+                "cancelado"
+              ],
               "default": "entregado"
             }
           }
@@ -3670,23 +4494,29 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "Productos_mas_vendidos": { 
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                      "Productos_mas_vendidos": {
+                        "nombre_reporte": {
+                          "type": "string"
+                        },
+                        "resultado": {
+                          "type": "array"
+                        }
                       },
-                      "mensaje": { "type": "string" }
+                      "mensaje": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      { 
-                        "Pedidos": {
-                          "nombre_reporte": "pedidos_por_fecha",
-                          "resultado": [
-                            {
+                    "example": {
+                      "Pedidos": {
+                        "nombre_reporte": "pedidos_por_fecha",
+                        "resultado": [
+                          {
                             "cantidad_pedidos": 4
-                            }
-                      ] },
+                          }
+                        ]
+                      },
                       "mensaje": "Pedidos encontrado exitosamente"
-                    }                      
+                    }
                   }
                 }
               }
@@ -3699,7 +4529,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3713,10 +4545,12 @@
     },
     "/v1/reportes/productos/mas-ganancias": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista por defecto el producto con más ganancia registrado",
-        "description":"Este endpoint permite obtener un listado por defecto el producto con más ganancia registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado por defecto el producto con más ganancia registrado en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "desde",
             "in": "query",
@@ -3757,24 +4591,30 @@
                     "type": "object",
                     "properties": {
                       "Producto con más ganancias": {
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                        "nombre_reporte": {
+                          "type": "string"
+                        },
+                        "resultado": {
+                          "type": "array"
+                        }
                       },
-                      "mensaje": { "type": "string" }
+                      "mensaje": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      { 
-                        "Productos_mas_vendidos": {
-                          "nombre_reporte": "producto_con_mas_ganancia",
-                          "resultado": [
-                            {
+                    "example": {
+                      "Productos_mas_vendidos": {
+                        "nombre_reporte": "producto_con_mas_ganancia",
+                        "resultado": [
+                          {
                             "id": "d341e97c-de10-4baa-9fcd-d632b303f0ad",
                             "producto": "Arroz",
-                            "total_ganado": 150000.00
-                            }
-                      ] },
-                        "mensaje": "Producto encontrado exitosamente"
-                    }                      
+                            "total_ganado": 150000.0
+                          }
+                        ]
+                      },
+                      "mensaje": "Producto encontrado exitosamente"
+                    }
                   }
                 }
               }
@@ -3787,7 +4627,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3801,10 +4643,12 @@
     },
     "/v1/reportes/facturas/ingresos": {
       "get": {
-        "tags":["Reportes"],
+        "tags": [
+          "Reportes"
+        ],
         "summary": "Lista por defecto los ingresos de ventas por mes mediante las facturas emitidas",
-        "description":"Este endpoint permite obtener un listado por defecto los ingresos de ventas por mes mediante las facturas emitidas registradas en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
-        "parameters":[
+        "description": "Este endpoint permite obtener un listado por defecto los ingresos de ventas por mes mediante las facturas emitidas registradas en el sistema. La respuesta incluye información básica como nombre_reporte y resultado.",
+        "parameters": [
           {
             "name": "desde",
             "in": "query",
@@ -3835,22 +4679,28 @@
                     "type": "object",
                     "properties": {
                       "Producto con más ganancias": {
-                      "nombre_reporte": { "type": "string" },
-                      "resultado": { "type": "array" }
+                        "nombre_reporte": {
+                          "type": "string"
+                        },
+                        "resultado": {
+                          "type": "array"
+                        }
                       },
-                      "mensaje": { "type": "string" }
+                      "mensaje": {
+                        "type": "string"
+                      }
                     },
-                    "example": 
-                      { 
-                        "Ingresos de ventas": {
-                          "nombre_reporte": "ingresos_de_ventas",
-                          "resultado": [
-                            {
-                            "ingresos_generados": 130600.00
-                            }
-                      ] },
-                        "mensaje": "Ingresos listados exitosamente"
-                    }                      
+                    "example": {
+                      "Ingresos de ventas": {
+                        "nombre_reporte": "ingresos_de_ventas",
+                        "resultado": [
+                          {
+                            "ingresos_generados": 130600.0
+                          }
+                        ]
+                      },
+                      "mensaje": "Ingresos listados exitosamente"
+                    }
                   }
                 }
               }
@@ -3863,7 +4713,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "mensaje": { "type": "string" }
+                    "mensaje": {
+                      "type": "string"
+                    }
                   },
                   "example": {
                     "mensaje": "Error interno del servidor"
@@ -3871,6 +4723,328 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/ventas/rapida": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Ventas"
+        ],
+        "summary": "Registrar venta rápida",
+        "description": "Registrar una venta rápida en el sistema (venta por mostrador).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ref_usuario": {
+                    "type": "string"
+                  },
+                  "detalles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ref_producto": {
+                          "type": "string"
+                        },
+                        "cantidad": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                "detalles": [
+                  {
+                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                    "cantidad": 2
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Venta registrada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "mensaje": "Venta registrada exitosamente",
+                  "referencia": "..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/compras/rapida": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Compras"
+        ],
+        "summary": "Registrar compra rápida",
+        "description": "Registrar una compra rápida en el sistema.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ref_usuario": {
+                    "type": "string"
+                  },
+                  "detalles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "ref_producto": {
+                          "type": "string"
+                        },
+                        "cantidad": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "example": {
+                "ref_usuario": "5m0k53ba-83b9-45b8-b37d-bbe5b45b98461",
+                "detalles": [
+                  {
+                    "ref_producto": "7g4v43ba-83b9-45b8-b37d-bbe5b45b09283",
+                    "cantidad": 10
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Compra registrada exitosamente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "example": {
+                  "mensaje": "Compra registrada exitosamente",
+                  "referencia": "..."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/resumen-hoy": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Resumen del día",
+        "description": "Resumen de métricas del día actual.",
+        "responses": {
+          "200": {
+            "description": "Resumen diario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/top-productos": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Top productos",
+        "description": "Lista de productos más vendidos o mejor rendimiento.",
+        "responses": {
+          "200": {
+            "description": "Lista top productos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/ingresos-ganancias": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Ingresos y ganancias",
+        "description": "Resumen de ingresos y ganancias en un periodo.",
+        "responses": {
+          "200": {
+            "description": "Ingresos calculados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/horas-pico": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Horas pico",
+        "description": "Horas con mayor actividad de ventas.",
+        "responses": {
+          "200": {
+            "description": "Horas pico listadas",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/productos-estancados": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Productos estancados",
+        "description": "Productos con baja rotación o sin movimiento.",
+        "responses": {
+          "200": {
+            "description": "Lista de productos estancados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
+    },
+    "/v1/estadisticas/porcentaje-categorias": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "tags": [
+          "Estadísticas"
+        ],
+        "summary": "Porcentaje por categoría",
+        "description": "Porcentaje de ventas por categoría.",
+        "responses": {
+          "200": {
+            "description": "Porcentajes listados",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor"
           }
         }
       }

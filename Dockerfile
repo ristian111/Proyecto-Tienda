@@ -1,5 +1,5 @@
 FROM python:3.10-slim
-
+# DOCKER para jalar esto donde sea. NO TOCAR.
 WORKDIR /app
 
 # Install system dependencies required for mysqlclient

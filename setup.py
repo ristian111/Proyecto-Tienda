@@ -1,6 +1,7 @@
 # Setup para, obviamente, crear el entorno virtual y descargar las dependencias.
 # ¿Quien es diego sniper?
 # Los prints estan en ingles culpa de las convenciones convenciosas.
+# OJO, esto SOLO se usa si vas a correr el programa SIN docker.
 
 import subprocess
 import sys

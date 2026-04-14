@@ -1,5 +1,5 @@
 import { api } from '../api/endpoints';
-
+// No cambias nada de aqui, cristian. Esto lo voy a migrar pa otro lado xd.
 declare var Chart: any;
 
 let chartTopProductos: any = null;
@@ -158,10 +158,10 @@ async function loadEstadisticas() {
                 tr.innerHTML = `
                     <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.ref}</td>
                     <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.nombre}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#e74c3c;">${p.dias_estancado ?? 'None'} días</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#e74c3c;">${p.dias_estancado ?? 'None'} días</td> 
                     <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.stock ?? 0} unds.</td>
                 `;
-                tbody.appendChild(tr);
+                tbody.appendChild(tr); // Hay que cambiar la vaina esa de "nunca" dias, esta feo asi.
             });
         }
 
