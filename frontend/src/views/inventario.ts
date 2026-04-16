@@ -1,34 +1,34 @@
 import { api } from '../api/endpoints';
 
-function precioBadge(precio: number | string): string {
-    return `<span style="font-weight: 600;">$${Number(precio).toFixed(2)}</span>`;
+function priceBadge(price: number | string): string {
+    return `<span style="font-weight: 600;">$${Number(price).toFixed(2)}</span>`;
 }
 
 
-export async function renderInventario(container: HTMLElement) {
+export async function renderInventory(container: HTMLElement) {
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando inventario...</h2>';
 
     try {
-        const [productos, categorias, inventarios] = await Promise.all([
-            api.getProductos(),
-            api.getCategorias(),
-            api.getInventarios(),
+        const [products, categories, inventories] = await Promise.all([
+            api.getProducts(),
+            api.getCategories(),
+            api.getInventories(),
         ]);
 
-        const cantPorProd: Record<string, number> = {};
-        inventarios.forEach(inv => {
-            cantPorProd[inv.ref_producto] = inv.cantidad_actual;
+        const qtyPerProduct: Record<string, number> = {};
+        inventories.forEach(inv => {
+            qtyPerProduct[inv.ref_producto] = inv.cantidad_actual;
         });
 
 
-        const filasHTML = productos.map(p => `
+        const rowsHTML = products.map(p => `
             <tr>
                 <td style="color: #6b7280; font-weight: 500; font-size: 0.75rem;" title="${p.ref}">${p.ref.slice(0, 8)}…</td>
                 <td style="font-weight: 500; color: #f3f4f6;">${p.nombre}</td>
-                <td>${precioBadge(p.precio_venta)}</td>
+                <td>${priceBadge(p.precio_venta)}</td>
                 <td style="color: #9ca3af;">$${Number(p.costo_promedio).toFixed(2)}</td>
                 <td style="color: #9ca3af;">${p.unidad_medida}</td>
-                <td style="font-weight: bold; color: #10b981;">${cantPorProd[p.ref] ?? 0}</td>
+                <td style="font-weight: bold; color: #10b981;">${qtyPerProduct[p.ref] ?? 0}</td>
                 <td>
                     <button class="btn btn-warning btn-sm btn-edit"
                         data-uuid="${p.ref}"
@@ -42,7 +42,7 @@ export async function renderInventario(container: HTMLElement) {
             </tr>
         `).join('');
 
-        const categoriasOptions = categorias.map(c =>
+        const categoriesOptions = categories.map(c =>
             `<option value="${c.ref}">${c.nombre}</option>`
         ).join('');
 
@@ -67,7 +67,7 @@ export async function renderInventario(container: HTMLElement) {
                     </tr>
                 </thead>
                 <tbody id="productos-tbody">
-                    ${filasHTML}
+                    ${rowsHTML}
                 </tbody>
             </table>
             
@@ -84,7 +84,7 @@ export async function renderInventario(container: HTMLElement) {
                     </div>
                     <select id="product-categoria" required>
                         <option value="" disabled selected>Seleccionar categoría</option>
-                        ${categoriasOptions}
+                        ${categoriesOptions}
                     </select>
                     <p id="form-error" style="color: #ef4444; font-size: 0.85rem; display: none;"></p>
                     <div class="dialog-actions">
@@ -96,7 +96,7 @@ export async function renderInventario(container: HTMLElement) {
         `;
 
 
-        // Para la busqueda :v
+        // Search filter
         const searchInput = document.getElementById('search-input') as HTMLInputElement;
         searchInput?.addEventListener('input', () => {
             const query = searchInput.value.toLowerCase();

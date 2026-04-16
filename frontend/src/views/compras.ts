@@ -1,7 +1,7 @@
 import { api } from '../api/endpoints';
-import type { Producto, Categoria } from '../api/endpoints';
+import type { Product, Category } from '../api/endpoints';
 
-interface ProductoCompraInfo {
+interface PurchaseProductInfo {
     ref?: string;
     nombre: string;
     costo: number;
@@ -11,40 +11,40 @@ interface ProductoCompraInfo {
     solo_stock: boolean;
 }
 
-let inventarioGlobal: (Producto & { stock: number })[] = [];
-let categoriasGlobal: Categoria[] = [];
-let carritoCompras: ProductoCompraInfo[] = [];
+let globalInventory: (Product & { stock: number })[] = [];
+let globalCategories: Category[] = [];
+let purchaseCart: PurchaseProductInfo[] = [];
 
-function renderComprasCarrito() {
+function renderPurchaseCart() {
     const tbody = document.getElementById('tabla-compras-carrito')!;
     const spanTotal = document.getElementById('total-compra')!;
-    const btnRegistrar = document.getElementById('btn-registrar-compra') as HTMLButtonElement;
+    const btnRegister = document.getElementById('btn-registrar-compra') as HTMLButtonElement;
 
     let total = 0;
 
-    tbody.innerHTML = carritoCompras.map((item, index) => {
+    tbody.innerHTML = purchaseCart.map((item, index) => {
         if (!item.solo_stock) {
             total += item.costo * item.cantidad;
         }
 
-        const catOptions = categoriasGlobal.map(c =>
+        const categoryOptions = globalCategories.map(c =>
             `<option value="${c.ref}" ${c.ref === item.ref_categoria ? 'selected' : ''}>${c.nombre}</option>`
         ).join('');
 
-        const esNuevo = !item.ref;
+        const isNew = !item.ref;
 
         return `
             <tr class="compra-row ${item.solo_stock ? 'compra-row--solo-stock' : ''}">
                 <td>
                     <div style="display:flex;align-items:center;gap:6px;">
-                        ${esNuevo ? '<span style="background:#6366f1;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:4px;font-weight:600;white-space:nowrap;">NUEVO</span>' : ''}
+                        ${isNew ? '<span style="background:#6366f1;color:#fff;font-size:0.6rem;padding:1px 5px;border-radius:4px;font-weight:600;white-space:nowrap;">NUEVO</span>' : ''}
                         <input type="text" class="pos-input-edit compra-input" data-field="nombre" data-index="${index}" value="${item.nombre}" placeholder="Nombre del producto" style="width:100%; box-sizing:border-box; min-width:0;" />
                     </div>
                 </td>
                 <td>
                     <select class="pos-input-edit compra-select" data-field="ref_categoria" data-index="${index}" style="width:100%; box-sizing:border-box; min-width:0;">
                         <option value="">—</option>
-                        ${catOptions}
+                        ${categoryOptions}
                     </select>
                 </td>
                 <td>
@@ -79,45 +79,45 @@ function renderComprasCarrito() {
 
     spanTotal.textContent = total.toFixed(2);
 
-    if (btnRegistrar) {
-        btnRegistrar.disabled = carritoCompras.length === 0;
-        btnRegistrar.style.opacity = carritoCompras.length === 0 ? '0.5' : '1';
+    if (btnRegister) {
+        btnRegister.disabled = purchaseCart.length === 0;
+        btnRegister.style.opacity = purchaseCart.length === 0 ? '0.5' : '1';
     }
 }
 
-function tieneDuplicados(): string | null {
-    const nombres = carritoCompras.map(c => c.nombre.trim().toLowerCase());
-    const visto = new Set<string>();
-    for (const n of nombres) {
-        if (visto.has(n)) return n;
-        visto.add(n);
+function hasDuplicates(): string | null {
+    const names = purchaseCart.map(c => c.nombre.trim().toLowerCase());
+    const seen = new Set<string>();
+    for (const n of names) {
+        if (seen.has(n)) return n;
+        seen.add(n);
     }
     return null;
 }
 
-function agregarProductoExistente(producto: Producto & { stock: number }) {
-    const yaEsta = carritoCompras.find(c => c.ref === producto.ref);
-    if (!yaEsta) {
-        carritoCompras.push({
-            ref: producto.ref,
-            nombre: producto.nombre,
-            costo: Number(producto.costo_promedio),
-            precio_venta: Number(producto.precio_venta),
-            ref_categoria: producto.ref_categoria,
+function addExistingProduct(product: Product & { stock: number }) {
+    const alreadyExists = purchaseCart.find(c => c.ref === product.ref);
+    if (!alreadyExists) {
+        purchaseCart.push({
+            ref: product.ref,
+            nombre: product.nombre,
+            costo: Number(product.costo_promedio),
+            precio_venta: Number(product.precio_venta),
+            ref_categoria: product.ref_categoria,
             cantidad: 1,
             solo_stock: false
         });
     } else {
-        yaEsta.cantidad += 1;
+        alreadyExists.cantidad += 1;
     }
 }
 
-function agregarProductoNuevo(nombreBase: string) {
-    const existe = carritoCompras.some(c => c.nombre.trim().toLowerCase() === nombreBase.trim().toLowerCase());
-    if (existe) return;
+function addNewProduct(baseName: string) {
+    const exists = purchaseCart.some(c => c.nombre.trim().toLowerCase() === baseName.trim().toLowerCase());
+    if (exists) return;
 
-    carritoCompras.push({
-        nombre: nombreBase || 'Nuevo Producto',
+    purchaseCart.push({
+        nombre: baseName || 'Nuevo Producto',
         costo: 0,
         precio_venta: 0,
         cantidad: 1,
@@ -125,25 +125,25 @@ function agregarProductoNuevo(nombreBase: string) {
     });
 }
 
-export async function renderCompras(container: HTMLElement) {
-    carritoCompras = [];
-    inventarioGlobal = [];
-    categoriasGlobal = [];
+export async function renderPurchases(container: HTMLElement) {
+    purchaseCart = [];
+    globalInventory = [];
+    globalCategories = [];
 
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando inventario...</h2>';
 
     try {
-        const [productos, inventarios, categorias] = await Promise.all([
-            api.getProductos(),
-            api.getInventarios(),
-            api.getCategorias(),
+        const [products, inventories, categories] = await Promise.all([
+            api.getProducts(),
+            api.getInventories(),
+            api.getCategories(),
         ]);
 
-        categoriasGlobal = categorias;
+        globalCategories = categories;
         const stockMap: Record<string, number> = {};
-        inventarios.forEach(inv => stockMap[inv.ref_producto] = inv.cantidad_actual);
+        inventories.forEach(inv => stockMap[inv.ref_producto] = inv.cantidad_actual);
 
-        inventarioGlobal = productos.map(p => ({
+        globalInventory = products.map(p => ({
             ...p,
             stock: stockMap[p.ref] ?? 0,
             costo_promedio: Number(p.costo_promedio || 0),
@@ -202,18 +202,18 @@ export async function renderCompras(container: HTMLElement) {
             <div id="compra-feedback" class="pos-feedback" style="display: none;"></div>
         `;
 
-        const inputBuscador = document.getElementById('buscador-compras') as HTMLInputElement;
+        const searchInput = document.getElementById('buscador-compras') as HTMLInputElement;
         const dropdown = document.getElementById('dropdown-compras')!;
-        inputBuscador.focus();
+        searchInput.focus();
 
-        inputBuscador.addEventListener('input', () => {
-            const texto = inputBuscador.value.toLowerCase().trim();
-            if (!texto) { dropdown.style.display = 'none'; return; }
+        searchInput.addEventListener('input', () => {
+            const text = searchInput.value.toLowerCase().trim();
+            if (!text) { dropdown.style.display = 'none'; return; }
 
-            const resultados = inventarioGlobal.filter(p => p.nombre.toLowerCase().includes(texto)).slice(0, 10);
+            const results = globalInventory.filter(p => p.nombre.toLowerCase().includes(text)).slice(0, 10);
 
-            if (resultados.length > 0) {
-                dropdown.innerHTML = resultados.map(p => `
+            if (results.length > 0) {
+                dropdown.innerHTML = results.map(p => `
                     <div class="pos-dropdown-item" data-id="${p.ref}">
                         <span class="pos-dropdown-name">${p.nombre}</span>
                         <span class="pos-dropdown-meta">
@@ -234,46 +234,46 @@ export async function renderCompras(container: HTMLElement) {
             const itemDiv = target.closest('.pos-dropdown-item') as HTMLElement;
             if (!itemDiv || itemDiv.classList.contains('pos-dropdown-empty')) return;
 
-            const idProducto = itemDiv.getAttribute('data-id');
-            const producto = inventarioGlobal.find(p => p.ref === idProducto);
+            const productId = itemDiv.getAttribute('data-id');
+            const product = globalInventory.find(p => p.ref === productId);
 
-            if (producto) {
-                agregarProductoExistente(producto);
-                inputBuscador.value = '';
+            if (product) {
+                addExistingProduct(product);
+                searchInput.value = '';
                 dropdown.style.display = 'none';
-                inputBuscador.focus();
-                actualizarVisibilidad();
-                renderComprasCarrito();
+                searchInput.focus();
+                updateVisibility();
+                renderPurchaseCart();
             }
         });
 
-        inputBuscador.addEventListener('keydown', (e) => {
+        searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const texto = inputBuscador.value.trim();
-                if (!texto) return;
+                const text = searchInput.value.trim();
+                if (!text) return;
 
                 if (e.shiftKey) {
-                    const existeEnCarrito = carritoCompras.some(c => c.nombre.trim().toLowerCase() === texto.toLowerCase());
-                    const existeEnInventario = inventarioGlobal.some(p => p.nombre.trim().toLowerCase() === texto.toLowerCase());
-                    if (existeEnCarrito || existeEnInventario) {
-                        mostrarFeedback('error', `Ya existe un producto con el nombre "${texto}"`);
+                    const existsInCart = purchaseCart.some(c => c.nombre.trim().toLowerCase() === text.toLowerCase());
+                    const existsInInventory = globalInventory.some(p => p.nombre.trim().toLowerCase() === text.toLowerCase());
+                    if (existsInCart || existsInInventory) {
+                        showFeedback('error', `Ya existe un producto con el nombre "${text}"`);
                         return;
                     }
-                    agregarProductoNuevo(texto);
+                    addNewProduct(text);
                 } else {
-                    const primerItem = dropdown.querySelector('.pos-dropdown-item:not(.pos-dropdown-empty)') as HTMLElement;
-                    if (primerItem) {
-                        primerItem.click();
+                    const firstItem = dropdown.querySelector('.pos-dropdown-item:not(.pos-dropdown-empty)') as HTMLElement;
+                    if (firstItem) {
+                        firstItem.click();
                         return;
                     }
                 }
 
-                inputBuscador.value = '';
+                searchInput.value = '';
                 dropdown.style.display = 'none';
-                inputBuscador.focus();
-                actualizarVisibilidad();
-                renderComprasCarrito();
+                searchInput.focus();
+                updateVisibility();
+                renderPurchaseCart();
             }
         });
 
@@ -291,28 +291,28 @@ export async function renderCompras(container: HTMLElement) {
             const i = parseInt(index);
 
             if (target.classList.contains('pos-input-edit')) {
-                const field = target.getAttribute('data-field') as keyof ProductoCompraInfo;
+                const field = target.getAttribute('data-field') as keyof PurchaseProductInfo;
                 if (field === 'cantidad' || field === 'costo' || field === 'precio_venta') {
-                    (carritoCompras[i] as any)[field] = parseFloat(target.value) || 0;
+                    (purchaseCart[i] as any)[field] = parseFloat(target.value) || 0;
                 } else if (field === 'nombre') {
-                    const nuevoNombre = target.value.trim().toLowerCase();
-                    const dupEnCarrito = carritoCompras.some((c, ci) => ci !== i && c.nombre.trim().toLowerCase() === nuevoNombre);
-                    const dupEnInventario = inventarioGlobal.some(p =>
-                        p.ref !== carritoCompras[i].ref && p.nombre.trim().toLowerCase() === nuevoNombre
+                    const newName = target.value.trim().toLowerCase();
+                    const dupInCart = purchaseCart.some((c, ci) => ci !== i && c.nombre.trim().toLowerCase() === newName);
+                    const dupInInventory = globalInventory.some(p =>
+                        p.ref !== purchaseCart[i].ref && p.nombre.trim().toLowerCase() === newName
                     );
-                    if (dupEnCarrito || dupEnInventario) {
-                        mostrarFeedback('error', `Ya existe un producto con ese nombre`);
-                        target.value = carritoCompras[i].nombre;
+                    if (dupInCart || dupInInventory) {
+                        showFeedback('error', `Ya existe un producto con ese nombre`);
+                        target.value = purchaseCart[i].nombre;
                         return;
                     }
-                    carritoCompras[i].nombre = target.value;
+                    purchaseCart[i].nombre = target.value;
                 } else {
-                    (carritoCompras[i] as any)[field] = target.value;
+                    (purchaseCart[i] as any)[field] = target.value;
                 }
-                renderComprasCarrito();
+                renderPurchaseCart();
             } else if (target.classList.contains('pos-input-checkbox')) {
-                carritoCompras[i].solo_stock = (target as HTMLInputElement).checked;
-                renderComprasCarrito();
+                purchaseCart[i].solo_stock = (target as HTMLInputElement).checked;
+                renderPurchaseCart();
             }
         });
 
@@ -321,18 +321,18 @@ export async function renderCompras(container: HTMLElement) {
             const btn = target.closest('.btn-eliminar-compra');
             if (btn) {
                 const index = parseInt(btn.getAttribute('data-index') || '0');
-                carritoCompras.splice(index, 1);
-                actualizarVisibilidad();
-                renderComprasCarrito();
+                purchaseCart.splice(index, 1);
+                updateVisibility();
+                renderPurchaseCart();
             }
         });
 
         document.getElementById('btn-registrar-compra')!.addEventListener('click', async () => {
-            if (carritoCompras.length === 0) return;
+            if (purchaseCart.length === 0) return;
 
-            const dup = tieneDuplicados();
+            const dup = hasDuplicates();
             if (dup) {
-                mostrarFeedback('error', `Hay nombres duplicados en la lista: "${dup}"`);
+                showFeedback('error', `Hay nombres duplicados en la lista: "${dup}"`);
                 return;
             }
 
@@ -342,7 +342,7 @@ export async function renderCompras(container: HTMLElement) {
             btnReg.innerHTML = `<i class='bx bx-loader-alt bx-spin'></i> Procesando...`;
 
             try {
-                const payload = carritoCompras.map(c => ({
+                const payload = purchaseCart.map(c => ({
                     ref_producto: c.ref || null,
                     nombre: c.nombre,
                     costo: c.costo,
@@ -352,39 +352,39 @@ export async function renderCompras(container: HTMLElement) {
                     solo_stock: c.solo_stock
                 }));
 
-                const result: any = await api.registrarCompraRapida(payload);
+                const result: any = await api.registerQuickPurchase(payload);
 
-                carritoCompras = [];
-                actualizarVisibilidad();
-                renderComprasCarrito();
+                purchaseCart = [];
+                updateVisibility();
+                renderPurchaseCart();
 
-                await reloadInventarioSilent();
+                await reloadInventorySilent();
 
-                mostrarFeedback('success', `${result.mensaje} — Total: $${(result.compra?.total ?? 0).toFixed(2)}`);
+                showFeedback('success', `${result.mensaje} — Total: $${(result.compra?.total ?? 0).toFixed(2)}`);
 
             } catch (err: any) {
-                mostrarFeedback('error', err.message || 'Error al registrar');
+                showFeedback('error', err.message || 'Error al registrar');
             } finally {
-                btnReg.disabled = carritoCompras.length === 0;
-                btnReg.style.opacity = carritoCompras.length === 0 ? '0.5' : '1';
+                btnReg.disabled = purchaseCart.length === 0;
+                btnReg.style.opacity = purchaseCart.length === 0 ? '0.5' : '1';
                 btnReg.innerHTML = `<i class='bx bx-save' style="font-size: 1.1rem;"></i> Registrar Compra`;
             }
         });
 
-        function mostrarFeedback(tipo: 'success' | 'error', msg: string) {
+        function showFeedback(type: 'success' | 'error', msg: string) {
             const feedback = document.getElementById('compra-feedback')!;
-            feedback.className = `pos-feedback pos-feedback-${tipo}`;
-            const icon = tipo === 'success' ? 'bx-check-circle' : 'bx-error-circle';
+            feedback.className = `pos-feedback pos-feedback-${type}`;
+            const icon = type === 'success' ? 'bx-check-circle' : 'bx-error-circle';
             feedback.innerHTML = `<i class='bx ${icon}'></i> ${msg}`;
             feedback.style.display = 'flex';
             setTimeout(() => feedback.style.display = 'none', 5000);
         }
 
-        async function reloadInventarioSilent() {
-            const [prods, invs] = await Promise.all([api.getProductos(), api.getInventarios()]);
+        async function reloadInventorySilent() {
+            const [prods, invs] = await Promise.all([api.getProducts(), api.getInventories()]);
             const stkMap: Record<string, number> = {};
             invs.forEach(inv => stkMap[inv.ref_producto] = inv.cantidad_actual);
-            inventarioGlobal = prods.map(p => ({
+            globalInventory = prods.map(p => ({
                 ...p,
                 stock: stkMap[p.ref] ?? 0,
                 costo_promedio: Number(p.costo_promedio || 0),
@@ -397,14 +397,14 @@ export async function renderCompras(container: HTMLElement) {
     }
 }
 
-function actualizarVisibilidad() {
-    const tabla = document.getElementById('tabla-compras');
-    const vacio = document.getElementById('compras-vacio');
-    if (carritoCompras.length > 0) {
-        if (tabla) tabla.style.display = 'table';
-        if (vacio) vacio.style.display = 'none';
+function updateVisibility() {
+    const table = document.getElementById('tabla-compras');
+    const empty = document.getElementById('compras-vacio');
+    if (purchaseCart.length > 0) {
+        if (table) table.style.display = 'table';
+        if (empty) empty.style.display = 'none';
     } else {
-        if (tabla) tabla.style.display = 'none';
-        if (vacio) vacio.style.display = '';
+        if (table) table.style.display = 'none';
+        if (empty) empty.style.display = '';
     }
 }

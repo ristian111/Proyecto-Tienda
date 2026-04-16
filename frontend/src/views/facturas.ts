@@ -1,26 +1,26 @@
 import { api } from '../api/endpoints';
 
-function estadoBadge(estado: string): string {
+function statusBadge(status: string): string {
     const colors: Record<string, string> = {
         pagada: '#22c55e',
         emitida: '#eab308',
         anulada: '#ef4444',
     };
-    const color = colors[estado.toLowerCase()] || '#6b7280';
-    return `<span class="badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; text-transform: capitalize;">${estado}</span>`;
+    const color = colors[status.toLowerCase()] || '#6b7280';
+    return `<span class="badge" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40; padding: 2px 10px; border-radius: 999px; font-size: 0.8rem; text-transform: capitalize;">${status}</span>`;
 }
 
 let currentPage = 1;
 const itemsPerPage = 50;
-let allFacturas: any[] = [];
+let allInvoices: any[] = [];
 
-export async function renderFacturas(container: HTMLElement) {
+export async function renderInvoices(container: HTMLElement) {
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando facturas...</h2>';
 
     try {
-        allFacturas = await api.getFacturas();
+        allInvoices = await api.getInvoices();
 
-        if (allFacturas.length === 0) {
+        if (allInvoices.length === 0) {
             container.innerHTML = `
                 <div class="page-header"><h1>Facturas</h1></div>
                 <p style="color: #9ca3af; font-style: italic; padding: 20px;">No hay facturas registradas aún.</p>
@@ -38,10 +38,10 @@ function renderPage(container: HTMLElement, page: number) {
     currentPage = page;
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    const itemsToShow = allFacturas.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(allFacturas.length / itemsPerPage);
+    const itemsToShow = allInvoices.slice(startIndex, endIndex);
+    const totalPages = Math.ceil(allInvoices.length / itemsPerPage);
 
-    const filasHTML = itemsToShow.map((f, index) => {
+    const rowsHTML = itemsToShow.map((f, index) => {
         const uniqueId = `factura-detalles-${startIndex + index}`;
         const total = Number(f.total) || 0;
 
@@ -69,7 +69,7 @@ function renderPage(container: HTMLElement, page: number) {
                 <td><span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 2px 8px; border-radius: 999px; font-weight: 600;">${f.cantidad_productos || 0} items</span></td>
                 <td style="font-weight: 600;">$${total.toFixed(2)}</td>
                 <td style="color: #9ca3af;">${formattedDate}</td>
-                <td>${estadoBadge(f.estado)}</td>
+                <td>${statusBadge(f.estado)}</td>
             </tr>
             <tr id="${uniqueId}" class="hidden" style="background: #111827;">
                 <td colspan="5" style="padding: 0; border-bottom: 1px solid #1f2937;">
@@ -108,13 +108,13 @@ function renderPage(container: HTMLElement, page: number) {
                 </tr>
             </thead>
             <tbody>
-                ${filasHTML}
+                ${rowsHTML}
             </tbody>
         </table>
         
         <div class="pagination-controls">
             <button class="pagination-btn" id="btn-prev" ${currentPage === 1 ? 'disabled' : ''}>&larr; Anterior</button>
-            <span style="color: #d1d5db; font-weight: 500;">Página ${currentPage} de ${totalPages || 1} <span style="color:#6b7280; font-size: 0.85em; margin-left: 8px;">(${allFacturas.length} registros)</span></span>
+            <span style="color: #d1d5db; font-weight: 500;">Página ${currentPage} de ${totalPages || 1} <span style="color:#6b7280; font-size: 0.85em; margin-left: 8px;">(${allInvoices.length} registros)</span></span>
             <button class="pagination-btn" id="btn-next" ${currentPage >= totalPages ? 'disabled' : ''}>Siguiente &rarr;</button>
         </div>
     `;

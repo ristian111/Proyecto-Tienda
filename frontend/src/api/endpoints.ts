@@ -1,6 +1,6 @@
 import { API_URL, getAuthHeaders } from './config';
 
-export interface Producto {
+export interface Product {
     ref: string;
     nombre: string;
     precio_venta: number | string;
@@ -9,13 +9,13 @@ export interface Producto {
     ref_categoria: string;
 }
 
-export interface Categoria {
+export interface Category {
     ref: string;
     nombre: string;
     descripcion: string;
 }
 
-export interface Factura {
+export interface Invoice {
     ref: string;
     numero_factura: string;
     total: number;
@@ -24,7 +24,7 @@ export interface Factura {
     ref_pedido: string;
 }
 
-export interface Inventario {
+export interface Inventory {
     ref: string;
     cantidad_actual: number;
     cantidad_reservada: number;
@@ -51,14 +51,14 @@ export const api = {
         return handleRes(res);
     },
 
-    getProductos: async (): Promise<Producto[]> => {
+    getProducts: async (): Promise<Product[]> => {
         const res = await fetch(`${API_URL}/v1/productos/`, {
             headers: getAuthHeaders(),
         });
         return handleRes(res);
     },
 
-    createProducto: async (data: {
+    createProduct: async (data: {
         nombre: string;
         precio_venta: number;
         costo_promedio: number;
@@ -74,7 +74,7 @@ export const api = {
         return handleRes(res);
     },
 
-    updateProducto: async (uuid: string, data: {
+    updateProduct: async (uuid: string, data: {
         nombre: string;
         precio_venta: number;
         costo_promedio: number;
@@ -89,7 +89,7 @@ export const api = {
         return handleRes(res);
     },
 
-    deleteProducto: async (uuid: string) => {
+    deleteProduct: async (uuid: string) => {
         const res = await fetch(`${API_URL}/v1/productos/${uuid}`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
@@ -97,14 +97,14 @@ export const api = {
         return handleRes(res);
     },
 
-    getCategorias: async (): Promise<Categoria[]> => {
+    getCategories: async (): Promise<Category[]> => {
         const res = await fetch(`${API_URL}/v1/categorias/`, {
             headers: getAuthHeaders(),
         });
         return handleRes(res);
     },
 
-    createCategoria: async (data: { nombre: string; descripcion: string }) => {
+    createCategory: async (data: { nombre: string; descripcion: string }) => {
         const res = await fetch(`${API_URL}/v1/categorias/`, {
             method: 'POST',
             headers: getAuthHeaders(),
@@ -113,7 +113,7 @@ export const api = {
         return handleRes(res);
     },
 
-    updateCategoria: async (uuid: string, data: { nombre: string; descripcion: string }) => {
+    updateCategory: async (uuid: string, data: { nombre: string; descripcion: string }) => {
         const res = await fetch(`${API_URL}/v1/categorias/${uuid}`, {
             method: 'PUT',
             headers: getAuthHeaders(),
@@ -122,7 +122,7 @@ export const api = {
         return handleRes(res);
     },
 
-    deleteCategoria: async (uuid: string) => {
+    deleteCategory: async (uuid: string) => {
         const res = await fetch(`${API_URL}/v1/categorias/${uuid}`, {
             method: 'DELETE',
             headers: getAuthHeaders(),
@@ -130,21 +130,21 @@ export const api = {
         return handleRes(res);
     },
 
-    getInventarios: async (): Promise<Inventario[]> => {
+    getInventories: async (): Promise<Inventory[]> => {
         const res = await fetch(`${API_URL}/v1/inventarios/`, {
             headers: getAuthHeaders(),
         });
         return handleRes(res);
     },
 
-    getFacturas: async (): Promise<Factura[]> => {
+    getInvoices: async (): Promise<Invoice[]> => {
         const res = await fetch(`${API_URL}/v1/facturas/`, {
             headers: getAuthHeaders(),
         });
         return handleRes(res);
     },
 
-    registrarVentaRapida: async (items: { ref_producto: string; cantidad: number; precio_unitario: number }[]) => {
+    registerQuickSale: async (items: { ref_producto: string; cantidad: number; precio_unitario: number }[]) => {
         const res = await fetch(`${API_URL}/v1/ventas/rapida`, {
             method: 'POST',
             headers: getAuthHeaders(),
@@ -153,7 +153,7 @@ export const api = {
         return handleRes(res);
     },
 
-    registrarCompraRapida: async (items: any[]) => {
+    registerQuickPurchase: async (items: any[]) => {
         const res = await fetch(`${API_URL}/v1/compras/rapida`, {
             method: 'POST',
             headers: getAuthHeaders(),
@@ -162,27 +162,27 @@ export const api = {
         return handleRes(res);
     },
 
-    getResumenHoy: async () => {
+    getTodaySummary: async () => {
         const res = await fetch(`${API_URL}/v1/estadisticas/resumen-hoy`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     },
-    getTopProductos: async (filtro: string = 'mensual') => {
-        const res = await fetch(`${API_URL}/v1/estadisticas/top-productos?filtro=${filtro}`, { headers: getAuthHeaders() });
+    getTopProducts: async (filter: string = 'mensual') => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/top-productos?filtro=${filter}`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     },
-    getIngresosGanancias: async (dias: number = 7) => {
-        const res = await fetch(`${API_URL}/v1/estadisticas/ingresos-ganancias?dias=${dias}`, { headers: getAuthHeaders() });
+    getRevenueProfit: async (days: number = 7) => {
+        const res = await fetch(`${API_URL}/v1/estadisticas/ingresos-ganancias?dias=${days}`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     },
-    getHorasPico: async () => {
+    getPeakHours: async () => {
         const res = await fetch(`${API_URL}/v1/estadisticas/horas-pico`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     },
-    getProductosEstancados: async () => {
+    getStagnantProducts: async () => {
         const res = await fetch(`${API_URL}/v1/estadisticas/productos-estancados`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     },
-    getPorcentajeCategorias: async () => {
+    getCategoryPercentages: async () => {
         const res = await fetch(`${API_URL}/v1/estadisticas/porcentaje-categorias`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
     }

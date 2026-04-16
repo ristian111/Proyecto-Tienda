@@ -17,7 +17,7 @@ export function renderLogin() {
     `;
 }
 
-// Escuchamos el submit a nivel global, easy,
+// Listen for submit at a global level
 document.addEventListener('submit', async (e) => {
     const target = e.target as HTMLFormElement;
     if (target.id === 'login-form') {

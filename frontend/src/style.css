@@ -1,6 +1,6 @@
 /* ======== Base & Reset ======== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-/* Si van a agregar un nuevo estilo complejo, háganlo aquí y mantengalo separado con separadores (obviamente). Si no, se vuelve inmantenible este codigo. */
+/* If you need to add a new complex style, do it here and keep it separated with dividers (obviously). Otherwise, this code becomes unmaintainable. */
 
 /* ────── General ──────── */
 
@@ -341,7 +341,7 @@ dialog form {
     margin-top: 20px;
 }
 
-/* ======== Status Badge (para stock, etc) ======== */
+/* ======== Status Badge (for stock, etc) ======== */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -383,7 +383,7 @@ dialog form {
     background: #3a3a3e;
 }
 
-/* ======== POS (Punto de Venta) ======== */
+/* ======== POS (Point of Sale) ======== */
 .pos-search-wrapper {
     position: relative;
     margin-top: 16px;
@@ -593,7 +593,7 @@ dialog form {
     }
 }
 
-/* Migre todo el codigo de estadisticas.ts aqui */
+/* Migrated all statistics code styles here */
 
 /* ———— Dashboard Layout ———— */
 .dashboard-header {

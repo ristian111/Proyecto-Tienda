@@ -1,31 +1,31 @@
 import { api } from '../api/endpoints';
-import type { Producto, Inventario } from '../api/endpoints';
-// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-interface ProductoConStock {
+import type { Product, Inventory } from '../api/endpoints';
+
+interface ProductWithStock {
     ref: string;
     nombre: string;
     precio_venta: number;
     stock: number;
 }
 
-interface ItemCarrito {
+interface CartItem {
     ref: string;
     nombre: string;
     precio: number;
     cantidad: number;
 }
 
-let inventarioGlobal: ProductoConStock[] = [];
-let carrito: ItemCarrito[] = [];
+let globalInventory: ProductWithStock[] = [];
+let cart: CartItem[] = [];
 
-function renderizarCarrito() {
+function renderCart() {
     const tbody = document.getElementById('tabla-carrito')!;
     const spanTotal = document.getElementById('total-venta')!;
-    const btnCobrar = document.getElementById('btn-cobrar') as HTMLButtonElement;
+    const btnCharge = document.getElementById('btn-cobrar') as HTMLButtonElement;
 
     let total = 0;
 
-    tbody.innerHTML = carrito.map((item, index) => {
+    tbody.innerHTML = cart.map((item, index) => {
         const subtotal = item.precio * item.cantidad;
         total += subtotal;
 
@@ -52,31 +52,31 @@ function renderizarCarrito() {
 
     spanTotal.textContent = total.toFixed(2);
 
-    // Habilitar/deshabilitar botón, que hueva
-    if (btnCobrar) {
-        btnCobrar.disabled = carrito.length === 0;
-        btnCobrar.style.opacity = carrito.length === 0 ? '0.5' : '1';
+    // Enable/disable button
+    if (btnCharge) {
+        btnCharge.disabled = cart.length === 0;
+        btnCharge.style.opacity = cart.length === 0 ? '0.5' : '1';
     }
 }
 
-export async function renderNuevaVenta(container: HTMLElement) {
-    carrito = [];
-    inventarioGlobal = [];
+export async function renderNewSale(container: HTMLElement) {
+    cart = [];
+    globalInventory = [];
 
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando productos...</h2>';
 
     try {
-        const [productos, inventarios]: [Producto[], Inventario[]] = await Promise.all([
-            api.getProductos(),
-            api.getInventarios(),
+        const [products, inventories]: [Product[], Inventory[]] = await Promise.all([
+            api.getProducts(),
+            api.getInventories(),
         ]);
 
         const stockMap: Record<string, number> = {};
-        inventarios.forEach(inv => {
+        inventories.forEach(inv => {
             stockMap[inv.ref_producto] = inv.cantidad_actual;
         });
 
-        inventarioGlobal = productos.map(p => ({
+        globalInventory = products.map(p => ({
             ref: p.ref,
             nombre: p.nombre,
             precio_venta: Number(p.precio_venta),
@@ -88,7 +88,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 <h1><i class='bx bx-dollar-circle' style="color: #6366f1; margin-right: 6px;"></i>Registrar Venta</h1>
             </div>
 
-            <!-- BUSCADOR -->
+            <!-- SEARCH BAR -->
             <div class="pos-search-wrapper">
                 <i class='bx bx-search pos-search-icon'></i>
                 <input
@@ -100,7 +100,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                 <div id="dropdown-resultados" class="pos-dropdown"></div>
             </div>
 
-            <!-- CARRITO VACÍO O TABLA, depende de si se selecciono algo -->
+            <!-- EMPTY CART OR TABLE -->
             <div id="carrito-vacio" class="pos-empty-state">
                 <i class='bx bx-cart' style="font-size: 3rem; color: #2a2a2e;"></i>
                 <p>Agrega productos usando el buscador</p>
@@ -133,37 +133,37 @@ export async function renderNuevaVenta(container: HTMLElement) {
             <!-- FEEDBACK -->
             <div id="venta-feedback" class="pos-feedback" style="display: none;"></div>
         `;
-        // Asi se ven 10 años de seniorio en UX, :v.
-        const inputBuscador = document.getElementById('buscador-productos') as HTMLInputElement;
+
+        const searchInput = document.getElementById('buscador-productos') as HTMLInputElement;
         const dropdown = document.getElementById('dropdown-resultados')!;
 
-        inputBuscador.focus();
+        searchInput.focus();
 
-        inputBuscador.addEventListener('input', () => {
-            const texto = inputBuscador.value.toLowerCase().trim();
+        searchInput.addEventListener('input', () => {
+            const text = searchInput.value.toLowerCase().trim();
 
-            if (texto.length === 0) {
+            if (text.length === 0) {
                 dropdown.style.display = 'none';
                 return;
             }
 
-            const resultados = inventarioGlobal.filter(p =>
-                p.nombre.toLowerCase().includes(texto)
+            const results = globalInventory.filter(p =>
+                p.nombre.toLowerCase().includes(text)
             ).slice(0, 10);
 
-            if (resultados.length > 0) {
-                dropdown.innerHTML = resultados.map(p => {
-                    const enCarrito = carrito.find(c => c.ref === p.ref)?.cantidad ?? 0;
-                    const stockDisponible = p.stock - enCarrito;
-                    const sinStock = stockDisponible <= 0;
+            if (results.length > 0) {
+                dropdown.innerHTML = results.map(p => {
+                    const inCart = cart.find(c => c.ref === p.ref)?.cantidad ?? 0;
+                    const availableStock = p.stock - inCart;
+                    const outOfStock = availableStock <= 0;
 
                     return `
-                    <div class="pos-dropdown-item ${sinStock ? 'pos-dropdown-disabled' : ''}" data-id="${p.ref}">
+                    <div class="pos-dropdown-item ${outOfStock ? 'pos-dropdown-disabled' : ''}" data-id="${p.ref}">
                         <span class="pos-dropdown-name">${p.nombre}</span>
                         <span class="pos-dropdown-meta">
-                            <span style="color: ${sinStock ? '#6b7280' : '#10b981'};">$${p.precio_venta.toFixed(2)}</span>
-                            <span class="pos-dropdown-stock" style="color: ${sinStock ? '#ef4444' : '#6b7280'};">
-                                ${sinStock ? 'Sin stock' : `Stock: ${stockDisponible}`}
+                            <span style="color: ${outOfStock ? '#6b7280' : '#10b981'};">$${p.precio_venta.toFixed(2)}</span>
+                            <span class="pos-dropdown-stock" style="color: ${outOfStock ? '#ef4444' : '#6b7280'};">
+                                ${outOfStock ? 'Sin stock' : `Stock: ${availableStock}`}
                             </span>
                         </span>
                     </div>
@@ -182,41 +182,41 @@ export async function renderNuevaVenta(container: HTMLElement) {
 
             if (!itemDiv || itemDiv.classList.contains('pos-dropdown-empty') || itemDiv.classList.contains('pos-dropdown-disabled')) return;
 
-            const idProducto = itemDiv.getAttribute('data-id');
-            const producto = inventarioGlobal.find(p => p.ref === idProducto);
+            const productId = itemDiv.getAttribute('data-id');
+            const product = globalInventory.find(p => p.ref === productId);
 
-            if (producto) {
-                const enCarrito = carrito.find(item => item.ref === producto.ref);
-                const cantidadActual = enCarrito?.cantidad ?? 0;
+            if (product) {
+                const inCart = cart.find(item => item.ref === product.ref);
+                const currentQuantity = inCart?.cantidad ?? 0;
 
-                if (cantidadActual >= producto.stock) return;
+                if (currentQuantity >= product.stock) return;
 
-                if (enCarrito) {
-                    enCarrito.cantidad += 1;
+                if (inCart) {
+                    inCart.cantidad += 1;
                 } else {
-                    carrito.push({
-                        ref: producto.ref,
-                        nombre: producto.nombre,
-                        precio: producto.precio_venta,
+                    cart.push({
+                        ref: product.ref,
+                        nombre: product.nombre,
+                        precio: product.precio_venta,
                         cantidad: 1,
                     });
                 }
 
-                inputBuscador.value = '';
+                searchInput.value = '';
                 dropdown.style.display = 'none';
-                inputBuscador.focus();
+                searchInput.focus();
 
                 updateTable();
-                renderizarCarrito();
+                renderCart();
             }
         });
 
-        inputBuscador.addEventListener('keydown', (e) => {
+        searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                const primerItem = dropdown.querySelector('.pos-dropdown-item:not(.pos-dropdown-empty)') as HTMLElement;
-                if (primerItem) {
-                    primerItem.click();
+                const firstItem = dropdown.querySelector('.pos-dropdown-item:not(.pos-dropdown-empty)') as HTMLElement;
+                if (firstItem) {
+                    firstItem.click();
                 }
             }
         });
@@ -237,52 +237,52 @@ export async function renderNuevaVenta(container: HTMLElement) {
             if (index === -1) return;
 
             if (btn.classList.contains('btn-sumar')) {
-                const prod = inventarioGlobal.find(p => p.ref === carrito[index].ref);
-                if (prod && carrito[index].cantidad >= prod.stock) return;
-                carrito[index].cantidad += 1;
+                const prod = globalInventory.find(p => p.ref === cart[index].ref);
+                if (prod && cart[index].cantidad >= prod.stock) return;
+                cart[index].cantidad += 1;
             } else if (btn.classList.contains('btn-restar')) {
-                carrito[index].cantidad -= 1;
-                if (carrito[index].cantidad <= 0) {
-                    carrito.splice(index, 1);
+                cart[index].cantidad -= 1;
+                if (cart[index].cantidad <= 0) {
+                    cart.splice(index, 1);
                 }
             } else if (btn.classList.contains('btn-eliminar-carrito')) {
-                carrito.splice(index, 1);
+                cart.splice(index, 1);
             }
 
             updateTable();
-            renderizarCarrito();
-            inputBuscador.focus();
+            renderCart();
+            searchInput.focus();
         });
 
         document.getElementById('btn-cobrar')!.addEventListener('click', async () => {
-            if (carrito.length === 0) return;
+            if (cart.length === 0) return;
 
-            const btnCobrar = document.getElementById('btn-cobrar') as HTMLButtonElement;
+            const btnCharge = document.getElementById('btn-cobrar') as HTMLButtonElement;
             const feedback = document.getElementById('venta-feedback')!;
 
-            btnCobrar.disabled = true;
-            btnCobrar.innerHTML = `<i class='bx bx-loader-alt bx-spin' style="font-size: 1.3rem;"></i> Procesando...`;
+            btnCharge.disabled = true;
+            btnCharge.innerHTML = `<i class='bx bx-loader-alt bx-spin' style="font-size: 1.3rem;"></i> Procesando...`;
 
             try {
-                const items = carrito.map(item => ({
+                const items = cart.map(item => ({
                     ref_producto: item.ref,
                     cantidad: item.cantidad,
                     precio_unitario: item.precio,
                 }));
 
-                const result: any = await api.registrarVentaRapida(items);
+                const result: any = await api.registerQuickSale(items);
 
-                carrito = [];
+                cart = [];
                 updateTable();
-                renderizarCarrito();
+                renderCart();
 
-                const nuevosInv = await api.getInventarios();
-                const nuevoStock: Record<string, number> = {};
-                nuevosInv.forEach(inv => {
-                    nuevoStock[inv.ref_producto] = inv.cantidad_actual;
+                const newInventories = await api.getInventories();
+                const newStock: Record<string, number> = {};
+                newInventories.forEach(inv => {
+                    newStock[inv.ref_producto] = inv.cantidad_actual;
                 });
-                inventarioGlobal.forEach(p => {
-                    p.stock = nuevoStock[p.ref] ?? 0;
+                globalInventory.forEach(p => {
+                    p.stock = newStock[p.ref] ?? 0;
                 });
 
                 feedback.className = 'pos-feedback pos-feedback-success';
@@ -293,7 +293,7 @@ export async function renderNuevaVenta(container: HTMLElement) {
                     feedback.style.display = 'none';
                 }, 4000);
 
-                inputBuscador.focus();
+                searchInput.focus();
             } catch (err: any) {
                 feedback.className = 'pos-feedback pos-feedback-error';
                 feedback.innerHTML = `<i class='bx bx-error-circle'></i> ${err.message || 'Error al registrar venta'}`;
@@ -303,9 +303,9 @@ export async function renderNuevaVenta(container: HTMLElement) {
                     feedback.style.display = 'none';
                 }, 5000);
             } finally {
-                btnCobrar.disabled = carrito.length === 0;
-                btnCobrar.style.opacity = carrito.length === 0 ? '0.5' : '1';
-                btnCobrar.innerHTML = `<i class='bx bx-check-circle' style="font-size: 1.3rem;"></i> Registrar Venta`;
+                btnCharge.disabled = cart.length === 0;
+                btnCharge.style.opacity = cart.length === 0 ? '0.5' : '1';
+                btnCharge.innerHTML = `<i class='bx bx-check-circle' style="font-size: 1.3rem;"></i> Registrar Venta`;
             }
         });
 
@@ -315,14 +315,14 @@ export async function renderNuevaVenta(container: HTMLElement) {
 }
 
 function updateTable() {
-    const tabla = document.getElementById('tabla-venta');
-    const vacio = document.getElementById('carrito-vacio');
+    const table = document.getElementById('tabla-venta');
+    const empty = document.getElementById('carrito-vacio');
 
-    if (carrito.length > 0) {
-        if (tabla) tabla.style.display = '';
-        if (vacio) vacio.style.display = 'none';
+    if (cart.length > 0) {
+        if (table) table.style.display = '';
+        if (empty) empty.style.display = 'none';
     } else {
-        if (tabla) tabla.style.display = 'none';
-        if (vacio) vacio.style.display = '';
+        if (table) table.style.display = 'none';
+        if (empty) empty.style.display = '';
     }
 }

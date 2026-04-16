@@ -4,9 +4,9 @@ export async function renderMisc(container: HTMLElement) {
     container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando misceláneas...</h2>';
 
     try {
-        const categorias = await api.getCategorias();
+        const categories = await api.getCategories();
 
-        const filasHTML = categorias.map(c => `
+        const rowsHTML = categories.map(c => `
             <tr>
                 <td style="color: #6b7280; font-weight: 500; font-size: 0.75rem;" title="${c.ref}">${c.ref.slice(0, 8)}…</td>
                 <td style="font-weight: 500; color: #f3f4f6;">${c.nombre}</td>
@@ -36,11 +36,11 @@ export async function renderMisc(container: HTMLElement) {
                     </tr>
                 </thead>
                 <tbody id="categorias-tbody">
-                    ${filasHTML}
+                    ${rowsHTML}
                 </tbody>
             </table>
             
-            <!-- Modal para Categorías -->
+            <!-- Category Modal -->
             <dialog id="category-modal">
                 <h2 id="modal-cat-title">Nueva Categoría</h2>
                 <form id="category-form">

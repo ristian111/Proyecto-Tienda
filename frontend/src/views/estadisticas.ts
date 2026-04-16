@@ -2,7 +2,7 @@
 
 import { api } from '../api/endpoints';
 
-// No cambias nada de aqui, cristian. Esto lo voy a migrar pa otro lado xd.
+// Don't change anything here, cristian. I'll migrate this elsewhere.
 declare var Chart: any;
 
 let chartTopProducts: any = null;
@@ -105,11 +105,11 @@ const formatCurrency = (amount: number) => {
 async function loadStatistics() {
     try {
         const [summary, topProducts, revenues, stagnantProducts, categories] = await Promise.all([
-            api.getResumenHoy(),
-            api.getTopProductos('mensual'),
-            api.getIngresosGanancias(7),
-            api.getProductosEstancados(),
-            api.getPorcentajeCategorias()
+            api.getTodaySummary(),
+            api.getTopProducts('mensual'),
+            api.getRevenueProfit(7),
+            api.getStagnantProducts(),
+            api.getCategoryPercentages()
         ]);
 
         const formatValue = (val: any) => formatCurrency(parseFloat(val || 0));
@@ -128,14 +128,14 @@ async function loadStatistics() {
         renderStagnantTable(stagnantProducts);
 
     } catch (err: any) {
-        console.error('Error al cargar estadísticas', err);
+        console.error('Error loading statistics', err);
     }
 }
 
 // Fetches top products based on selected filter and updates the respective chart
 async function loadTopProducts(filter: string) {
     try {
-        const topProducts = await api.getTopProductos(filter);
+        const topProducts = await api.getTopProducts(filter);
         renderTopProductsChart(topProducts);
     } catch (err: any) {
         console.error(err);
@@ -190,7 +190,7 @@ function renderStagnantTable(stagnantProducts: any[]) {
                 <td class="text-danger">${product.dias_estancado ?? 'None'} días</td> 
                 <td>${product.stock ?? 0} unds.</td>
             `;
-            tableBody.appendChild(tableRow); // Hay que cambiar la vaina esa de "nunca" dias, esta feo asi.
+            tableBody.appendChild(tableRow); // TODO: fix the "nunca" days display, it looks ugly.
         });
     }
 }

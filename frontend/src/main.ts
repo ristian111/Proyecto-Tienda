@@ -1,10 +1,10 @@
 import './style.css';
 import { renderLogin } from './views/login';
-import { renderInventario } from './views/inventario';
-import { renderNuevaVenta } from './views/venta';
-import { renderCompras } from './views/compras';
+import { renderInventory } from './views/inventario';
+import { renderNewSale } from './views/venta';
+import { renderPurchases } from './views/compras';
 import { renderSidebar } from './components/navbar';
-import { renderFacturas } from './views/facturas';
+import { renderInvoices } from './views/facturas';
 import { renderMisc } from './views/misc';
 import { renderStatistics } from './views/estadisticas';
 import { api } from './api/endpoints';
@@ -43,15 +43,15 @@ export function router() {
     const content = document.getElementById('content')!;
 
     if (hash === '#/venta') {
-        renderNuevaVenta(content);
+        renderNewSale(content);
     } else if (hash === '#/compras') {
-        renderCompras(content);
+        renderPurchases(content);
     } else if (hash === '#/inventario') {
-        renderInventario(content);
+        renderInventory(content);
     } else if (hash === '#/pedidos') {
         content.innerHTML = '<h1>Pedidos</h1><p style="color: #666;">Nada por aqui...</p>';
     } else if (hash === '#/facturas') {
-        renderFacturas(content);
+        renderInvoices(content);
     } else if (hash === '#/estadisticas') {
         renderStatistics(content);
     } else if (hash === '#/misc') {
@@ -75,9 +75,9 @@ document.addEventListener('click', async (e) => {
         const uuid = target.getAttribute('data-uuid');
         if (uuid && confirm(`¿Seguro que quieres eliminar este producto?`)) {
             try {
-                await api.deleteProducto(uuid);
+                await api.deleteProduct(uuid);
                 const content = document.getElementById('content');
-                if (content) renderInventario(content);
+                if (content) renderInventory(content);
             } catch (err: any) {
                 alert(err.message || 'Error al eliminar');
             }
@@ -149,7 +149,7 @@ document.addEventListener('click', async (e) => {
         const uuid = target.getAttribute('data-uuid');
         if (uuid && confirm(`¿Seguro que quieres eliminar esta categoría?`)) {
             try {
-                await api.deleteCategoria(uuid);
+                await api.deleteCategory(uuid);
                 const content = document.getElementById('content');
                 if (content) renderMisc(content);
             } catch (err: any) {
@@ -222,16 +222,16 @@ document.addEventListener('submit', async (e) => {
 
         try {
             if (uuid) {
-                await api.updateProducto(uuid, data);
+                await api.updateProduct(uuid, data);
             } else {
-                await api.createProducto(data);
+                await api.createProduct(data);
             }
 
             const modal = document.getElementById('product-modal') as HTMLDialogElement;
             if (modal) modal.close();
 
             const content = document.getElementById('content');
-            if (content) renderInventario(content);
+            if (content) renderInventory(content);
         } catch (err: any) {
             errorEl.textContent = err.message || 'Error al guardar';
             errorEl.style.display = 'block';
@@ -259,9 +259,9 @@ document.addEventListener('submit', async (e) => {
 
         try {
             if (uuid) {
-                await api.updateCategoria(uuid, data);
+                await api.updateCategory(uuid, data);
             } else {
-                await api.createCategoria(data);
+                await api.createCategory(data);
             }
 
             const modal = document.getElementById('category-modal') as HTMLDialogElement;
