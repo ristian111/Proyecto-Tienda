@@ -31,7 +31,7 @@ function renderCart() {
 
         return `
             <tr>
-                <td style="font-weight: 500; color: #f3f4f6;">${item.nombre}</td>
+                <td class="cell-name">${item.nombre}</td>
                 <td>$${Number(item.precio).toFixed(2)}</td>
                 <td>
                     <div class="qty-controls">
@@ -40,10 +40,10 @@ function renderCart() {
                         <button class="btn-qty btn-sumar" data-index="${index}">+</button>
                     </div>
                 </td>
-                <td style="color: #10b981; font-weight: 600;">$${subtotal.toFixed(2)}</td>
+                <td class="cell-stock">${subtotal.toFixed(2)}</td>
                 <td>
                     <button class="btn btn-danger btn-sm btn-eliminar-carrito" data-index="${index}">
-                        <i class='bx bx-x' style="font-size: 1rem;"></i>
+                        <i class='bx bx-x fs-icon'></i>
                     </button>
                 </td>
             </tr>
@@ -63,7 +63,7 @@ export async function renderNewSale(container: HTMLElement) {
     cart = [];
     globalInventory = [];
 
-    container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando productos...</h2>';
+    container.innerHTML = '<h2 class="loading-state">Cargando productos...</h2>';
 
     try {
         const [products, inventories]: [Product[], Inventory[]] = await Promise.all([
@@ -85,7 +85,7 @@ export async function renderNewSale(container: HTMLElement) {
 
         container.innerHTML = `
             <div class="page-header">
-                <h1><i class='bx bx-dollar-circle' style="color: #6366f1; margin-right: 6px;"></i>Registrar Venta</h1>
+                <h1><i class='bx bx-dollar-circle text-accent mr-6'></i>Registrar Venta</h1>
             </div>
 
             <!-- SEARCH BAR -->
@@ -102,7 +102,7 @@ export async function renderNewSale(container: HTMLElement) {
 
             <!-- EMPTY CART OR TABLE -->
             <div id="carrito-vacio" class="pos-empty-state">
-                <i class='bx bx-cart' style="font-size: 3rem; color: #2a2a2e;"></i>
+                <i class='bx bx-cart empty-icon'></i>
                 <p>Agrega productos usando el buscador</p>
             </div>
 
@@ -125,7 +125,7 @@ export async function renderNewSale(container: HTMLElement) {
                     Total: <span class="pos-total-amount">$<span id="total-venta">0.00</span></span>
                 </div>
                 <button id="btn-cobrar" class="btn pos-btn-cobrar" disabled style="opacity: 0.5;">
-                    <i class='bx bx-check-circle' style="font-size: 1.3rem;"></i>
+                    <i class='bx bx-check-circle fs-icon-lg'></i>
                     Registrar Venta
                 </button>
             </div>
@@ -161,8 +161,8 @@ export async function renderNewSale(container: HTMLElement) {
                     <div class="pos-dropdown-item ${outOfStock ? 'pos-dropdown-disabled' : ''}" data-id="${p.ref}">
                         <span class="pos-dropdown-name">${p.nombre}</span>
                         <span class="pos-dropdown-meta">
-                            <span style="color: ${outOfStock ? '#6b7280' : '#10b981'};">$${p.precio_venta.toFixed(2)}</span>
-                            <span class="pos-dropdown-stock" style="color: ${outOfStock ? '#ef4444' : '#6b7280'};">
+                            <span class="${outOfStock ? 'text-secondary' : 'text-success'}">$${p.precio_venta.toFixed(2)}</span>
+                            <span class="pos-dropdown-stock ${outOfStock ? 'text-error' : ''}">
                                 ${outOfStock ? 'Sin stock' : `Stock: ${availableStock}`}
                             </span>
                         </span>
@@ -261,7 +261,7 @@ export async function renderNewSale(container: HTMLElement) {
             const feedback = document.getElementById('venta-feedback')!;
 
             btnCharge.disabled = true;
-            btnCharge.innerHTML = `<i class='bx bx-loader-alt bx-spin' style="font-size: 1.3rem;"></i> Procesando...`;
+            btnCharge.innerHTML = `<i class='bx bx-loader-alt bx-spin fs-icon-lg'></i> Procesando...`;
 
             try {
                 const items = cart.map(item => ({
@@ -305,12 +305,12 @@ export async function renderNewSale(container: HTMLElement) {
             } finally {
                 btnCharge.disabled = cart.length === 0;
                 btnCharge.style.opacity = cart.length === 0 ? '0.5' : '1';
-                btnCharge.innerHTML = `<i class='bx bx-check-circle' style="font-size: 1.3rem;"></i> Registrar Venta`;
+                btnCharge.innerHTML = `<i class='bx bx-check-circle fs-icon-lg'></i> Registrar Venta`;
             }
         });
 
     } catch (error) {
-        container.innerHTML = '<h2 style="color: #ef4444;">Error cargando productos</h2><p style="color: #9ca3af;">Verifica que el backend esté corriendo.</p>';
+        container.innerHTML = '<h2 class="error-state">Error cargando productos</h2><p class="error-hint">Verifica que el backend esté corriendo.</p>';
     }
 }
 

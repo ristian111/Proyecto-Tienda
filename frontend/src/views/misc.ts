@@ -1,22 +1,22 @@
 import { api } from '../api/endpoints';
 
 export async function renderMisc(container: HTMLElement) {
-    container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando misceláneas...</h2>';
+    container.innerHTML = '<h2 class="loading-state">Cargando misceláneas...</h2>';
 
     try {
         const categories = await api.getCategories();
 
         const rowsHTML = categories.map(c => `
             <tr>
-                <td style="color: #6b7280; font-weight: 500; font-size: 0.75rem;" title="${c.ref}">${c.ref.slice(0, 8)}…</td>
-                <td style="font-weight: 500; color: #f3f4f6;">${c.nombre}</td>
-                <td style="color: #9ca3af;">${c.descripcion || '-'}</td>
+                <td class="cell-ref" title="${c.ref}">${c.ref.slice(0, 8)}…</td>
+                <td class="cell-name">${c.nombre}</td>
+                <td class="cell-cost">${c.descripcion || '-'}</td>
                 <td>
                     <button class="btn btn-warning btn-sm btn-edit-cat"
                         data-uuid="${c.ref}"
                         data-nombre="${c.nombre}"
                         data-descripcion="${c.descripcion}">Editar</button>
-                    <button class="btn btn-danger btn-sm btn-delete-cat" data-uuid="${c.ref}" style="margin-left: 6px;">Eliminar</button>
+                    <button class="btn btn-danger btn-sm btn-delete-cat ml-6" data-uuid="${c.ref}">Eliminar</button>
                 </td>
             </tr>
         `).join('');
@@ -47,7 +47,7 @@ export async function renderMisc(container: HTMLElement) {
                     <input type="hidden" id="cat-uuid">
                     <input type="text" id="cat-nombre" placeholder="Nombre de la categoría" required>
                     <input type="text" id="cat-descripcion" placeholder="Descripción breve" required>
-                    <p id="form-cat-error" style="color: #ef4444; font-size: 0.85rem; display: none;"></p>
+                    <p id="form-cat-error" class="form-error"></p>
                     <div class="dialog-actions">
                         <button type="button" class="btn btn-danger btn-sm" id="btn-cancel-cat">Cancelar</button>
                         <button type="submit" class="btn btn-success btn-sm" id="btn-save-cat">Guardar</button>
@@ -57,6 +57,6 @@ export async function renderMisc(container: HTMLElement) {
         `;
 
     } catch (error) {
-        container.innerHTML = '<h2 style="color: #ef4444;">Error cargando categorías</h2><p style="color: #9ca3af;">Verifica que el backend esté corriendo.</p>';
+        container.innerHTML = '<h2 class="error-state">Error cargando categorías</h2><p class="error-hint">Verifica que el backend esté corriendo.</p>';
     }
 }

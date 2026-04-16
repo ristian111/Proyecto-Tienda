@@ -8,8 +8,8 @@ export function renderLogin() {
             <form id="login-form">
                 <input type="text" id="username" placeholder="Usuario" required>
                 <input type="password" id="password" placeholder="Contraseña" required>
-                <p id="login-error" style="color: #ef4444; font-size: 0.85rem; display: none; margin-top: 4px;"></p>
-                <button type="submit" class="btn" id="btn-login" style="margin-top: 8px; width: 100%; justify-content: center;">
+                <p id="login-error" class="form-error"></p>
+                <button type="submit" class="btn btn-fullwidth" id="btn-login">
                     Submit →
                 </button>
             </form>

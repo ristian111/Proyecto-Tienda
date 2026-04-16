@@ -1,8 +1,10 @@
-/* ======== Base & Reset ======== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-/* If you need to add a new complex style, do it here and keep it separated with dividers (obviously). Otherwise, this code becomes unmaintainable. */
+/* =========================
+   BASE & RESET
+   ========================= */
 
-/* ────── General ──────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ———— General ———— */
 
 *,
 *::before,
@@ -22,7 +24,32 @@ h1, h2, h3 {
     color: #f3f4f6;
 }
 
-/* ======== App Shell ======== */
+/* ———— Scrollbar ———— */
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2a2a2e;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3a3a3e;
+}
+
+
+/* =========================
+   APP SHELL & LAYOUT
+   ========================= */
+
+/* ———— App Container ———— */
+
 #app {
     height: 100vh;
     display: flex;
@@ -30,19 +57,36 @@ h1, h2, h3 {
     overflow: hidden;
 }
 
-/* ======== Login Layout ======== */
+/* ———— Login Layout ———— */
+
 #app.login-mode {
     justify-content: center;
     align-items: center;
     background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f0f 70%);
 }
 
-/* ======== Dashboard Layout ======== */
+/* ———— Dashboard Layout ———— */
+
 #app.dashboard-mode {
     flex-direction: row;
 }
 
-/* ======== Sidebar ======== */
+/* ———— Main Content ———— */
+
+.main-content {
+    flex: 1;
+    padding: 32px 40px;
+    overflow-y: auto;
+    background: #0f0f0f;
+}
+
+
+/* =========================
+   SIDEBAR
+   ========================= */
+
+/* ———— Sidebar Container ———— */
+
 .sidebar {
     width: 260px;
     min-width: 260px;
@@ -68,6 +112,8 @@ h1, h2, h3 {
 .sidebar-brand span {
     color: #6366f1;
 }
+
+/* ———— Navigation Links ———— */
 
 .nav-link {
     display: flex;
@@ -98,21 +144,21 @@ h1, h2, h3 {
     text-align: center;
 }
 
+/* ———— Sidebar Footer ———— */
+
 .sidebar-footer {
     margin-top: auto;
     padding-top: 16px;
     border-top: 1px solid #1f1f23;
 }
 
-/* ======== Main Content ======== */
-.main-content {
-    flex: 1;
-    padding: 32px 40px;
-    overflow-y: auto;
-    background: #0f0f0f;
-}
 
-/* ======== Buttons ======== */
+/* =========================
+   COMMON COMPONENTS
+   ========================= */
+
+/* ———— Buttons ———— */
+
 .btn {
     padding: 9px 18px;
     cursor: pointer;
@@ -174,37 +220,14 @@ h1, h2, h3 {
     font-size: 0.8rem;
 }
 
-/* ======== Login Box ======== */
-.login-card {
-    background: #16161a;
-    padding: 48px 40px;
-    border-radius: 16px;
-    border: 1px solid #1f1f23;
-    text-align: center;
+.btn-fullwidth {
+    margin-top: 8px;
     width: 100%;
-    max-width: 400px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+    justify-content: center;
 }
 
-.login-card h2 {
-    margin: 0 0 8px 0;
-    font-size: 1.5rem;
-    font-weight: 700;
-}
+/* ———— Inputs ———— */
 
-.login-card .subtitle {
-    color: #6b7280;
-    font-size: 0.9rem;
-    margin-bottom: 28px;
-}
-
-.login-card form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* ======== Inputs ======== */
 input[type="text"],
 input[type="password"],
 input[type="number"],
@@ -230,7 +253,25 @@ input::placeholder {
     color: #4b5563;
 }
 
-/* ======== Tables ======== */
+select {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #2a2a2e;
+    background: #1c1c20;
+    color: #e5e7eb;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+/* ———— Tables ———— */
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -269,44 +310,33 @@ tr:last-child td {
     border-bottom: none;
 }
 
-/* ======== Page Header ======== */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
+/* ———— Badges ———— */
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
 }
 
-.page-header h1 {
-    margin: 0;
-    font-size: 1.75rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+.badge-green {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
 }
 
-/* ======== Search Bar ======== */
-.search-bar {
-    margin-top: 16px;
-    margin-bottom: 8px;
-    position: relative;
+.badge-red {
+    background: rgba(239, 68, 68, 0.15);
+    color: #f87171;
 }
 
-.search-bar input {
-    width: 100%;
-    max-width: 360px;
-    padding-left: 38px;
+.badge-yellow {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
 }
 
-.search-bar::before {
-    content: '🔍';
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.85rem;
-}
+/* ———— Dialog / Modal ———— */
 
-/* ======== Dialog / Modal ======== */
 dialog {
     background: #1c1c20;
     color: #e5e7eb;
@@ -341,49 +371,239 @@ dialog form {
     margin-top: 20px;
 }
 
-/* ======== Status Badge (for stock, etc) ======== */
-.badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 999px;
-    font-size: 0.8rem;
+
+/* =========================
+   PAGE STRUCTURE
+   ========================= */
+
+/* ———— Page Header ———— */
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.page-header h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+/* ———— Search Bar ———— */
+
+.search-bar {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    max-width: 360px;
+    padding-left: 38px;
+}
+
+.search-bar::before {
+    content: '🔍';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+}
+
+
+/* =========================
+   SHARED UTILITY CLASSES
+   ========================= */
+
+/* ———— Text Colors ———— */
+
+.text-muted {
+    color: #4b5563;
+}
+
+.text-secondary {
+    color: #9ca3af;
+}
+
+.text-light {
+    color: #f3f4f6;
+}
+
+.text-danger {
+    color: #e74c3c !important;
+}
+
+.text-success {
+    color: #10b981;
+}
+
+.text-error {
+    color: #ef4444;
+}
+
+.text-accent {
+    color: #6366f1;
+}
+
+/* ———— Fonts ———— */
+
+.fw-500 {
+    font-weight: 500;
+}
+
+.fw-600 {
     font-weight: 600;
 }
 
-.badge-green {
-    background: rgba(16, 185, 129, 0.15);
-    color: #34d399;
+.fw-bold {
+    font-weight: bold;
 }
 
-.badge-red {
-    background: rgba(239, 68, 68, 0.15);
-    color: #f87171;
+.fs-sm {
+    font-size: 0.75rem;
 }
 
-.badge-yellow {
-    background: rgba(245, 158, 11, 0.15);
-    color: #fbbf24;
+.fs-icon {
+    font-size: 1.1rem;
 }
 
-/* ======== Scrollbar ======== */
-::-webkit-scrollbar {
-    width: 6px;
+.fs-icon-lg {
+    font-size: 1.3rem;
 }
 
-::-webkit-scrollbar-track {
-    background: transparent;
+/* ———— Layout Helpers ———— */
+
+.d-flex {
+    display: flex;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #2a2a2e;
-    border-radius: 3px;
+.align-center {
+    align-items: center;
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: #3a3a3e;
+.justify-center {
+    justify-content: center;
 }
 
-/* ======== POS (Point of Sale) ======== */
+.gap-4 {
+    gap: 4px;
+}
+
+.gap-6 {
+    gap: 6px;
+}
+
+.gap-8 {
+    gap: 8px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.ml-6 {
+    margin-left: 6px;
+}
+
+.mr-6 {
+    margin-right: 6px;
+}
+
+.mr-8 {
+    margin-right: 8px;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+/* ———— Loading & Error States ———— */
+
+.loading-state {
+    color: #4b5563;
+    padding-top: 40px;
+}
+
+.error-state {
+    color: #ef4444;
+}
+
+.error-hint {
+    color: #9ca3af;
+}
+
+.form-error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    display: none;
+}
+
+.empty-state-text {
+    color: #9ca3af;
+    font-style: italic;
+    padding: 20px;
+}
+
+.placeholder-text {
+    color: #666;
+}
+
+
+/* =========================
+   LOGIN
+   ========================= */
+
+/* ———— Login Card ———— */
+
+.login-card {
+    background: #16161a;
+    padding: 48px 40px;
+    border-radius: 16px;
+    border: 1px solid #1f1f23;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+}
+
+.login-card h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.login-card .subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 28px;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+
+/* =========================
+   POS (POINT OF SALE) - SHARED
+   ========================= */
+
+/* ———— POS Search ———— */
+
 .pos-search-wrapper {
     position: relative;
     margin-top: 16px;
@@ -405,6 +625,8 @@ dialog form {
     color: #4b5563;
     pointer-events: none;
 }
+
+/* ———— POS Dropdown ———— */
 
 .pos-dropdown {
     display: none;
@@ -474,7 +696,8 @@ dialog form {
     background: transparent;
 }
 
-/* ── Empty State ── */
+/* ———— POS Empty State ———— */
+
 .pos-empty-state {
     display: flex;
     flex-direction: column;
@@ -486,7 +709,18 @@ dialog form {
     font-size: 0.95rem;
 }
 
-/* ── Quantity Controls ── */
+.pos-empty-state .empty-icon {
+    font-size: 3rem;
+    color: #2a2a2e;
+}
+
+.pos-empty-state .empty-icon-sm {
+    font-size: 2.8rem;
+    color: #374151;
+}
+
+/* ———— Quantity Controls ———— */
+
 .qty-controls {
     display: inline-flex;
     align-items: center;
@@ -520,7 +754,8 @@ dialog form {
     color: #f3f4f6;
 }
 
-/* ── Footer ── */
+/* ———— POS Footer ———— */
+
 .pos-footer {
     margin-top: 28px;
     display: flex;
@@ -545,6 +780,8 @@ dialog form {
     margin-left: 8px;
 }
 
+/* ———— POS Charge Button ———— */
+
 .pos-btn-cobrar {
     background: #3b82f6;
     font-size: 0.95rem;
@@ -557,7 +794,8 @@ dialog form {
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
 }
 
-/* ── Feedback Toast ── */
+/* ———— POS Feedback Toast ———— */
+
 .pos-feedback {
     margin-top: 16px;
     padding: 14px 20px;
@@ -593,13 +831,363 @@ dialog form {
     }
 }
 
-/* Migrated all statistics code styles here */
+/* ———— Keyboard Hint ———— */
 
-/* ———— Dashboard Layout ———— */
+kbd {
+    background: #374151;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+}
+
+kbd.kbd-sm {
+    font-size: 0.75rem;
+}
+
+.pos-hint {
+    margin: 8px 0 2px;
+    font-size: 0.95rem;
+}
+
+.pos-hint-sub {
+    color: #6b7280;
+}
+
+
+/* =========================
+   VENTA (SALES)
+   ========================= */
+
+
+/* =========================
+   COMPRAS (PURCHASES)
+   ========================= */
+
+/* ———— Search Wrapper Override ———— */
+
+.pos-search-wrapper--compact {
+    margin-top: 12px;
+}
+
+/* ———— Purchase Table ———— */
+
+.compra-table-wrapper {
+    overflow-x: auto;
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.compra-table {
+    width: 100%;
+    table-layout: fixed;
+    min-width: 900px;
+}
+
+.compra-table th.col-producto   { width: 25%; }
+.compra-table th.col-categoria  { width: 15%; }
+.compra-table th.col-costo      { width: 14%; }
+.compra-table th.col-pventa     { width: 14%; }
+.compra-table th.col-cantidad   { width: 10%; }
+.compra-table th.col-opcion     { width: 14%; }
+.compra-table th.col-accion     { width: 8%; }
+
+/* ———— Purchase Row ———— */
+
+.compra-row--solo-stock {
+    opacity: 0.7;
+}
+
+.compra-cell-flex {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.compra-badge-new {
+    background: #6366f1;
+    color: #fff;
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* ———— Purchase Inputs ———— */
+
+.pos-input-edit,
+.compra-select {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.compra-price-cell {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.compra-dollar {
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+/* ———— Purchase Checkbox ———— */
+
+.compra-checkbox-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.compra-checkbox-label input[type="checkbox"] {
+    margin: 0;
+}
+
+/* ———— Purchase Register Button ———— */
+
+.pos-btn-registrar {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+
+/* =========================
+   INVENTARIO (INVENTORY)
+   ========================= */
+
+/* ———— Inventory Table Cells ———— */
+
+.cell-ref {
+    color: #6b7280;
+    font-weight: 500;
+    font-size: 0.75rem;
+}
+
+.cell-name {
+    font-weight: 500;
+    color: #f3f4f6;
+}
+
+.cell-price {
+    font-weight: 600;
+}
+
+.cell-cost {
+    color: #9ca3af;
+}
+
+.cell-unit {
+    color: #9ca3af;
+}
+
+.cell-stock {
+    font-weight: bold;
+    color: #10b981;
+}
+
+/* ———— Inventory Modal ———— */
+
+.container-cantidad-actual {
+    width: 100%;
+}
+
+.container-cantidad-actual input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   CATEGORIAS (MISC)
+   ========================= */
+
+/* ———— Category Table Cells ———— */
+/* (uses shared .cell-ref, .cell-name, .cell-cost classes) */
+
+
+/* =========================
+   FACTURAS (INVOICES)
+   ========================= */
+
+/* ———— Invoice Table ———— */
+
+.invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #1f2937;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.invoice-table thead {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ———— Invoice Rows ———— */
+
+.hover-row {
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.hover-row:hover {
+    background: #374151 !important;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.invoice-row-number {
+    font-weight: 500;
+    color: #f3f4f6;
+}
+
+.invoice-row-total {
+    font-weight: 600;
+}
+
+.invoice-row-date {
+    color: #9ca3af;
+}
+
+/* ———— Invoice Item Count Badge ———— */
+
+.invoice-items-badge {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+/* ———— Invoice Details (Expandable) ———— */
+
+.invoice-detail-row {
+    background: #111827;
+}
+
+.invoice-detail-row td {
+    padding: 0;
+    border-bottom: 1px solid #1f2937;
+}
+
+.invoice-detail-wrapper {
+    padding: 15px 30px;
+    border-left: 3px solid #3b82f6;
+}
+
+.invoice-detail-header {
+    color: #9ca3af;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.invoice-detail-line {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #374151;
+    padding: 8px 0;
+    color: #d1d5db;
+}
+
+.invoice-detail-name {
+    flex: 2;
+    padding-right: 15px;
+}
+
+.invoice-detail-qty {
+    flex: 1;
+    text-align: center;
+}
+
+.invoice-detail-price {
+    flex: 1;
+    text-align: right;
+    color: #10b981;
+}
+
+.invoice-detail-empty {
+    color: #9ca3af;
+    padding: 10px 0;
+}
+
+/* ———— Invoice Status Badges ———— */
+
+.invoice-status {
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    text-transform: capitalize;
+}
+
+/* ———— Pagination ———— */
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding: 15px 20px;
+    background: #1f2937;
+    border-radius: 8px;
+    border: 1px solid #374151;
+}
+
+.pagination-btn {
+    padding: 8px 16px;
+    background: #374151;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 500;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #4b5563;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    color: #d1d5db;
+    font-weight: 500;
+}
+
+.pagination-count {
+    color: #6b7280;
+    font-size: 0.85em;
+    margin-left: 8px;
+}
+
+
+/* =========================
+   ESTADISTICAS (STATISTICS)
+   ========================= */
+
+/* ———— Dashboard Header ———— */
+
 .dashboard-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
@@ -607,32 +1195,35 @@ dialog form {
     margin: 0;
 }
 
+/* ———— Stats Grid ———— */
+
 .stats-grid {
-    display: grid; 
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 20px; 
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
     margin-bottom: 20px;
 }
 
 .charts-grid-half {
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 20px; 
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     margin-bottom: 20px;
 }
 
 .charts-grid-full {
-    display: grid; 
-    grid-template-columns: 1fr; 
-    gap: 20px; 
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
     margin-bottom: 20px;
 }
 
 /* ———— Cards & Containers ———— */
+
 .card-container {
-    background: #1c1c20; 
-    padding: 20px; 
-    border-radius: 8px; 
+    background: #1c1c20;
+    padding: 20px;
+    border-radius: 8px;
     border: 1px solid #2a2a2e;
 }
 
@@ -641,9 +1232,10 @@ dialog form {
 }
 
 /* ———— Typography & Elements ———— */
+
 .stat-title {
-    color: #999; 
-    font-size: 13px; 
+    color: #999;
+    font-size: 13px;
     margin-bottom: 10px;
 }
 
@@ -657,19 +1249,23 @@ dialog form {
 .stat-orange { color: #e67e22; }
 
 .section-title {
-    margin-bottom: 15px; 
-    font-size: 15px; 
+    margin-bottom: 15px;
+    font-size: 15px;
     color: #e0e0e0;
 }
 
 .section-title-warning {
-    color: #e74c3c; 
+    color: #e74c3c;
+}
+
+.section-title--no-margin {
+    margin: 0;
 }
 
 .chart-header {
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
 }
 
@@ -679,18 +1275,19 @@ dialog form {
 }
 
 .filter-select {
-    padding: 5px; 
-    border-radius: 4px; 
-    border: 1px solid #3a3a3e; 
-    background: #16161a; 
-    color: #ccc; 
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #3a3a3e;
+    background: #16161a;
+    color: #ccc;
     font-size: 12px;
 }
 
 /* ———— Stagnant Products Table ———— */
+
 .data-table {
-    width: 100%; 
-    border-collapse: separate; 
+    width: 100%;
+    border-collapse: separate;
     border-spacing: 0;
 }
 
@@ -699,9 +1296,9 @@ dialog form {
 }
 
 .data-table th {
-    padding: 10px; 
-    border-bottom: 1px solid #2a2a2e; 
-    text-align: left; 
+    padding: 10px;
+    border-bottom: 1px solid #2a2a2e;
+    text-align: left;
     color: #999;
 }
 
@@ -714,17 +1311,15 @@ dialog form {
 }
 
 .data-table td {
-    padding: 10px; 
-    border-bottom: 1px solid #2a2a2e; 
+    padding: 10px;
+    border-bottom: 1px solid #2a2a2e;
     color: #ccc;
 }
 
-.text-danger {
-    color: #e74c3c !important;
-}
+/* ———— Empty Message ———— */
 
 .empty-message {
-    color: #888; 
-    margin-top: 10px; 
+    color: #888;
+    margin-top: 10px;
     display: none;
 }

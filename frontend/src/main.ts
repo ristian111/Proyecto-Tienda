@@ -49,7 +49,7 @@ export function router() {
     } else if (hash === '#/inventario') {
         renderInventory(content);
     } else if (hash === '#/pedidos') {
-        content.innerHTML = '<h1>Pedidos</h1><p style="color: #666;">Nada por aqui...</p>';
+        content.innerHTML = '<h1>Pedidos</h1><p class="placeholder-text">Nada por aqui...</p>';
     } else if (hash === '#/facturas') {
         renderInvoices(content);
     } else if (hash === '#/estadisticas') {

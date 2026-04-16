@@ -1,12 +1,12 @@
 import { api } from '../api/endpoints';
 
 function priceBadge(price: number | string): string {
-    return `<span style="font-weight: 600;">$${Number(price).toFixed(2)}</span>`;
+    return `<span class="cell-price">$${Number(price).toFixed(2)}</span>`;
 }
 
 
 export async function renderInventory(container: HTMLElement) {
-    container.innerHTML = '<h2 style="color: #4b5563; padding-top: 40px;">Cargando inventario...</h2>';
+    container.innerHTML = '<h2 class="loading-state">Cargando inventario...</h2>';
 
     try {
         const [products, categories, inventories] = await Promise.all([
@@ -23,12 +23,12 @@ export async function renderInventory(container: HTMLElement) {
 
         const rowsHTML = products.map(p => `
             <tr>
-                <td style="color: #6b7280; font-weight: 500; font-size: 0.75rem;" title="${p.ref}">${p.ref.slice(0, 8)}…</td>
-                <td style="font-weight: 500; color: #f3f4f6;">${p.nombre}</td>
+                <td class="cell-ref" title="${p.ref}">${p.ref.slice(0, 8)}…</td>
+                <td class="cell-name">${p.nombre}</td>
                 <td>${priceBadge(p.precio_venta)}</td>
-                <td style="color: #9ca3af;">$${Number(p.costo_promedio).toFixed(2)}</td>
-                <td style="color: #9ca3af;">${p.unidad_medida}</td>
-                <td style="font-weight: bold; color: #10b981;">${qtyPerProduct[p.ref] ?? 0}</td>
+                <td class="cell-cost">$${Number(p.costo_promedio).toFixed(2)}</td>
+                <td class="cell-unit">${p.unidad_medida}</td>
+                <td class="cell-stock">${qtyPerProduct[p.ref] ?? 0}</td>
                 <td>
                     <button class="btn btn-warning btn-sm btn-edit"
                         data-uuid="${p.ref}"
@@ -37,7 +37,7 @@ export async function renderInventory(container: HTMLElement) {
                         data-precio-compra="${p.costo_promedio}"
                         data-unidad="${p.unidad_medida}"
                         data-categoria="${p.ref_categoria}">Editar</button>
-                    <button class="btn btn-danger btn-sm btn-delete" data-uuid="${p.ref}" style="margin-left: 6px;">Eliminar</button>
+                    <button class="btn btn-danger btn-sm btn-delete ml-6" data-uuid="${p.ref}">Eliminar</button>
                 </td>
             </tr>
         `).join('');
@@ -79,14 +79,14 @@ export async function renderInventory(container: HTMLElement) {
                     <input type="number" id="product-precio-venta" placeholder="Precio de venta" step="0.01" min="0" required>
                     <input type="number" id="product-precio-compra" placeholder="Precio de compra" step="0.01" min="0" required>
                     <input type="text" id="product-unidad" placeholder="Unidad de medida (ej: unidad, kg)" required>
-                    <div id="container-cantidad-actual" style="margin-bottom: var(--spacing, 0); width: 100%;">
-                        <input type="number" id="product-cantidad-actual" placeholder="Cantidad actual en inventario" step="1" min="0" required style="width: 100%; box-sizing: border-box;">
+                    <div id="container-cantidad-actual" class="container-cantidad-actual">
+                        <input type="number" id="product-cantidad-actual" placeholder="Cantidad actual en inventario" step="1" min="0" required>
                     </div>
                     <select id="product-categoria" required>
                         <option value="" disabled selected>Seleccionar categoría</option>
                         ${categoriesOptions}
                     </select>
-                    <p id="form-error" style="color: #ef4444; font-size: 0.85rem; display: none;"></p>
+                    <p id="form-error" class="form-error"></p>
                     <div class="dialog-actions">
                         <button type="button" class="btn btn-danger btn-sm" id="btn-cancel-modal">Cancelar</button>
                         <button type="submit" class="btn btn-success btn-sm" id="btn-save-product">Guardar</button>
@@ -108,6 +108,6 @@ export async function renderInventory(container: HTMLElement) {
         });
 
     } catch (error) {
-        container.innerHTML = '<h2 style="color: #ef4444;">Error cargando la API</h2><p style="color: #9ca3af;">Verifica que el backend esté corriendo.</p>';
+        container.innerHTML = '<h2 class="error-state">Error cargando la API</h2><p class="error-hint">Verifica que el backend esté corriendo.</p>';
     }
 }

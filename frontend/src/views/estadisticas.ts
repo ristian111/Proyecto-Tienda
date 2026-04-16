@@ -40,7 +40,7 @@ export function renderStatistics(container: HTMLElement) {
             </div>
             <div class="card-container">
                 <div class="chart-header">
-                    <h3 class="section-title" style="margin:0;">Top 5 Productos</h3>
+                    <h3 class="section-title section-title--no-margin">Top 5 Productos</h3>
                     <select id="filter-top-products" class="filter-select">
                         <option value="diario">Hoy</option>
                         <option value="semanal">Esta Semana</option>
