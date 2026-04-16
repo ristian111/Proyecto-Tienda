@@ -1,93 +1,110 @@
+// ———— Imports & Globals ————
+
 import { api } from '../api/endpoints';
+
 // No cambias nada de aqui, cristian. Esto lo voy a migrar pa otro lado xd.
 declare var Chart: any;
 
-let chartTopProductos: any = null;
-let chartCategorias: any = null;
-let chartIngresos: any = null;
+let chartTopProducts: any = null;
+let chartCategories: any = null;
+let chartRevenues: any = null;
 
-export function renderEstadisticas(container: HTMLElement) {
+// ———— Main Render Function ————
+
+// Renders the main HTML structure and attaches initial event listeners
+export function renderStatistics(container: HTMLElement) {
     container.innerHTML = `
-        <div class="header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+        <div class="dashboard-header">
             <h2>Estadísticas</h2>
         </div>
         
-        <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
-            <div class="stat-card" style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e; text-align:center;">
-                <h3 style="color:#999; font-size:13px; margin-bottom:10px;">Ventas Hoy</h3>
-                <h2 id="ventas-hoy" style="color:#2ecc71; font-size:24px;">$0.00</h2>
+        <div class="stats-grid">
+            <div class="card-container stat-card">
+                <h3 class="stat-title">Ventas Hoy</h3>
+                <h2 id="sales-today" class="stat-value stat-green">$0.00</h2>
             </div>
-            <div class="stat-card" style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e; text-align:center;">
-                <h3 style="color:#999; font-size:13px; margin-bottom:10px;">Ganancia Hoy</h3>
-                <h2 id="ganancia-hoy" style="color:#3498db; font-size:24px;">$0.00</h2>
+            <div class="card-container stat-card">
+                <h3 class="stat-title">Ganancia Hoy</h3>
+                <h2 id="profit-today" class="stat-value stat-blue">$0.00</h2>
             </div>
-            <div class="stat-card" style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e; text-align:center;">
-                <h3 style="color:#999; font-size:13px; margin-bottom:10px;">Ticket Promedio</h3>
-                <h2 id="ticket-promedio" style="color:#e67e22; font-size:24px;">$0.00</h2>
+            <div class="card-container stat-card">
+                <h3 class="stat-title">Ticket Promedio</h3>
+                <h2 id="average-ticket" class="stat-value stat-orange">$0.00</h2>
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
-            <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e;">
-                <h3 style="margin-bottom: 15px; font-size: 15px; color:#e0e0e0;">Ventas por Categoría</h3>
-                <canvas id="chart-categorias" style="max-height: 250px;"></canvas>
+        <div class="charts-grid-half">
+            <div class="card-container">
+                <h3 class="section-title">Ventas por Categoría</h3>
+                <canvas id="chart-categories" class="chart-canvas"></canvas>
             </div>
-            <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
-                    <h3 style="font-size: 15px; color:#e0e0e0;">Top 5 Productos</h3>
-                    <select id="filtro-top-productos" style="padding: 5px; border-radius: 4px; border: 1px solid #3a3a3e; background:#16161a; color:#ccc; font-size:12px;">
+            <div class="card-container">
+                <div class="chart-header">
+                    <h3 class="section-title" style="margin:0;">Top 5 Productos</h3>
+                    <select id="filter-top-products" class="filter-select">
                         <option value="diario">Hoy</option>
                         <option value="semanal">Esta Semana</option>
                         <option value="mensual" selected>Este Mes</option>
                     </select>
                 </div>
-                <canvas id="chart-top-productos" style="max-height: 250px;"></canvas>
+                <canvas id="chart-top-products" class="chart-canvas"></canvas>
             </div>
         </div>
         
-        <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 20px;">
-            <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e;">
-                <h3 style="margin-bottom: 15px; font-size: 15px; color:#e0e0e0;">Ventas vs Ganancia (7 días)</h3>
-                <canvas id="chart-ingresos" style="max-height: 250px;"></canvas>
+        <div class="charts-grid-full">
+            <div class="card-container">
+                <h3 class="section-title">Ventas vs Ganancia (7 días)</h3>
+                <canvas id="chart-revenues" class="chart-canvas"></canvas>
             </div>
         </div>
         
-        <div style="background:#1c1c20; padding:20px; border-radius:8px; border:1px solid #2a2a2e; margin-bottom:20px;">
-            <h3 style="color:#e74c3c; margin-bottom: 15px; font-size: 15px;">
+        <div class="card-container">
+            <h3 class="section-title section-title-warning">
                 <i class='bx bx-error-circle'></i> Estancados (+30 días)
             </h3>
-            <table class="table" style="width: 100%; border-collapse: separate; border-spacing: 0;">
+            <table class="data-table">
                 <thead>
-                    <tr style="background:#16161a;">
-                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; border-top-left-radius: 4px; color:#999;">Ref</th>
-                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; color:#999;">Producto</th>
-                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; color:#999;">Días sin vender</th>
-                        <th style="padding: 10px; border-bottom: 1px solid #2a2a2e; text-align: left; border-top-right-radius: 4px; color:#999;">Stock</th>
+                    <tr>
+                        <th>Ref</th>
+                        <th>Producto</th>
+                        <th>Días sin vender</th>
+                        <th>Stock</th>
                     </tr>
                 </thead>
-                <tbody id="lista-estancados">
+                <tbody id="stagnant-list">
                 </tbody>
             </table>
-            <p id="msg-estancados-vacio" style="color: #888; margin-top: 10px; display: none;">Nada por aqui.</p>
+            <p id="msg-stagnant-empty" class="empty-message">Nada por aqui.</p>
         </div>
     `;
 
+    // Delays execution slightly to ensure DOM nodes are fully mounted
     setTimeout(() => {
-        loadEstadisticas();
-        document.getElementById('filtro-top-productos')?.addEventListener('change', (e) => {
+        loadStatistics();
+        document.getElementById('filter-top-products')?.addEventListener('change', (e) => {
             const value = (e.target as HTMLSelectElement).value;
-            loadTopProductos(value);
+            loadTopProducts(value);
         });
     }, 50);
 }
 
+// ———— Utilities ————
+
+// Formats a numeric value to COP currency format
 const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', minimumFractionDigits: 0 }).format(amount);
+    return new Intl.NumberFormat('es-CO', { 
+        style: 'currency', 
+        currency: 'COP', 
+        minimumFractionDigits: 0 
+    }).format(amount);
 };
 
-async function loadEstadisticas() {
+// ———— Data Fetching & Processing ————
+
+// Fetches all statistical data concurrently and updates the UI components
+async function loadStatistics() {
     try {
-        const [resumen, topProd, ingresos, estancados, categorias] = await Promise.all([
+        const [summary, topProducts, revenues, stagnantProducts, categories] = await Promise.all([
             api.getResumenHoy(),
             api.getTopProductos('mensual'),
             api.getIngresosGanancias(7),
@@ -95,100 +112,121 @@ async function loadEstadisticas() {
             api.getPorcentajeCategorias()
         ]);
 
-        const formatC = (val: any) => formatCurrency(parseFloat(val || 0));
+        const formatValue = (val: any) => formatCurrency(parseFloat(val || 0));
 
-        document.getElementById('ventas-hoy')!.textContent = formatC(resumen.ventas_hoy);
-        document.getElementById('ganancia-hoy')!.textContent = formatC(resumen.ganancia_hoy);
-        document.getElementById('ticket-promedio')!.textContent = formatC(resumen.ticket_promedio);
+        // Update top statistics cards
+        document.getElementById('sales-today')!.textContent = formatValue(summary.ventas_hoy);
+        document.getElementById('profit-today')!.textContent = formatValue(summary.ganancia_hoy);
+        document.getElementById('average-ticket')!.textContent = formatValue(summary.ticket_promedio);
 
-        const ctxCat = document.getElementById('chart-categorias') as HTMLCanvasElement;
-        if (chartCategorias) chartCategorias.destroy();
-        chartCategorias = new Chart(ctxCat, {
-            type: 'pie',
-            data: {
-                labels: categorias.map((c: any) => c.nombre),
-                datasets: [{
-                    data: categorias.map((c: any) => c.vendidos),
-                    backgroundColor: ['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#9b59b6', '#e67e22', '#1abc9c']
-                }]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#ccc' } } } }
-        });
+        // Update charts
+        renderCategoriesChart(categories);
+        renderTopProductsChart(topProducts);
+        renderRevenuesChart(revenues);
 
-        renderTopProductos(topProd);
-
-        const ctxIngresos = document.getElementById('chart-ingresos') as HTMLCanvasElement;
-        if (chartIngresos) chartIngresos.destroy();
-        chartIngresos = new Chart(ctxIngresos, {
-            type: 'line',
-            data: {
-                labels: ingresos.map((i: any) => i.fecha.slice(5)),
-                datasets: [
-                    {
-                        label: 'Ventas',
-                        data: ingresos.map((i: any) => i.ingreso),
-                        borderColor: '#2ecc71',
-                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    },
-                    {
-                        label: 'Ganancia',
-                        data: ingresos.map((i: any) => i.ganancia),
-                        borderColor: '#3498db',
-                        backgroundColor: 'transparent',
-                        borderDash: [5, 5],
-                        fill: false,
-                        tension: 0.3
-                    }
-                ]
-            },
-            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#ccc' } } }, scales: { x: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } }, y: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } } } }
-        });
-
-        const tbody = document.getElementById('lista-estancados')!;
-        const emptyMsg = document.getElementById('msg-estancados-vacio')!;
-        tbody.innerHTML = '';
-        if (estancados.length === 0) {
-            emptyMsg.style.display = 'block';
-        } else {
-            emptyMsg.style.display = 'none';
-            estancados.forEach((p: any) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.ref}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.nombre}</td>
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#e74c3c;">${p.dias_estancado ?? 'None'} días</td> 
-                    <td style="padding: 10px; border-bottom: 1px solid #2a2a2e; color:#ccc;">${p.stock ?? 0} unds.</td>
-                `;
-                tbody.appendChild(tr); // Hay que cambiar la vaina esa de "nunca" dias, esta feo asi.
-            });
-        }
+        // Update table
+        renderStagnantTable(stagnantProducts);
 
     } catch (err: any) {
         console.error('Error al cargar estadísticas', err);
     }
 }
 
-async function loadTopProductos(filtro: string) {
+// Fetches top products based on selected filter and updates the respective chart
+async function loadTopProducts(filter: string) {
     try {
-        const topProd = await api.getTopProductos(filtro);
-        renderTopProductos(topProd);
+        const topProducts = await api.getTopProductos(filter);
+        renderTopProductsChart(topProducts);
     } catch (err: any) {
         console.error(err);
     }
 }
 
-function renderTopProductos(topProd: any[]) {
-    const ctxTop = document.getElementById('chart-top-productos') as HTMLCanvasElement;
-    if (chartTopProductos) chartTopProductos.destroy();
-    chartTopProductos = new Chart(ctxTop, {
+// ———— UI Updaters ————
+
+// Renders the categories pie chart
+function renderCategoriesChart(categories: any[]) {
+    const canvasContext = document.getElementById('chart-categories') as HTMLCanvasElement;
+    if (chartCategories) chartCategories.destroy();
+    
+    const config = createPieChartConfig(categories);
+    chartCategories = new Chart(canvasContext, config);
+}
+
+// Renders the top products bar chart
+function renderTopProductsChart(topProducts: any[]) {
+    const canvasContext = document.getElementById('chart-top-products') as HTMLCanvasElement;
+    if (chartTopProducts) chartTopProducts.destroy();
+    
+    const config = createBarChartConfig(topProducts);
+    chartTopProducts = new Chart(canvasContext, config);
+}
+
+// Renders the revenues line chart
+function renderRevenuesChart(revenues: any[]) {
+    const canvasContext = document.getElementById('chart-revenues') as HTMLCanvasElement;
+    if (chartRevenues) chartRevenues.destroy();
+    
+    const config = createLineChartConfig(revenues);
+    chartRevenues = new Chart(canvasContext, config);
+}
+
+// Populates the stagnant products table
+function renderStagnantTable(stagnantProducts: any[]) {
+    const tableBody = document.getElementById('stagnant-list')!;
+    const emptyMessage = document.getElementById('msg-stagnant-empty')!;
+    
+    tableBody.innerHTML = '';
+    
+    if (stagnantProducts.length === 0) {
+        emptyMessage.style.display = 'block';
+    } else {
+        emptyMessage.style.display = 'none';
+        stagnantProducts.forEach((product: any) => {
+            const tableRow = document.createElement('tr');
+            tableRow.innerHTML = `
+                <td>${product.ref}</td>
+                <td>${product.nombre}</td>
+                <td class="text-danger">${product.dias_estancado ?? 'None'} días</td> 
+                <td>${product.stock ?? 0} unds.</td>
+            `;
+            tableBody.appendChild(tableRow); // Hay que cambiar la vaina esa de "nunca" dias, esta feo asi.
+        });
+    }
+}
+
+// ———— Chart Configuration Factories ————
+
+// Generates configuration object for the pie chart
+function createPieChartConfig(categories: any[]) {
+    return {
+        type: 'pie',
+        data: {
+            labels: categories.map((c: any) => c.nombre),
+            datasets:[{
+                data: categories.map((c: any) => c.vendidos),
+                backgroundColor:['#3498db', '#e74c3c', '#f1c40f', '#2ecc71', '#9b59b6', '#e67e22', '#1abc9c']
+            }]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { labels: { color: '#ccc' } } 
+            } 
+        }
+    };
+}
+
+// Generates configuration object for the bar chart
+function createBarChartConfig(topProducts: any[]) {
+    return {
         type: 'bar',
         data: {
-            labels: topProd.map((p: any) => p.nombre.length > 15 ? p.nombre.substring(0,15)+"..." : p.nombre),
-            datasets: [{
+            labels: topProducts.map((p: any) => p.nombre.length > 15 ? p.nombre.substring(0, 15) + "..." : p.nombre),
+            datasets:[{
                 label: 'Unidades Vendidas',
-                data: topProd.map((p: any) => p.cantidad),
+                data: topProducts.map((p: any) => p.cantidad),
                 backgroundColor: '#9b59b6'
             }]
         },
@@ -196,8 +234,53 @@ function renderTopProductos(topProd: any[]) {
             indexAxis: 'y', 
             responsive: true, 
             maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: '#ccc' } } },
-            scales: { x: { beginAtZero: true, ticks: { color: '#999' }, grid: { color: '#2a2a2e' } }, y: { ticks: { color: '#ccc' }, grid: { color: '#2a2a2e' } } }
+            plugins: { 
+                legend: { labels: { color: '#ccc' } } 
+            },
+            scales: { 
+                x: { beginAtZero: true, ticks: { color: '#999' }, grid: { color: '#2a2a2e' } }, 
+                y: { ticks: { color: '#ccc' }, grid: { color: '#2a2a2e' } } 
+            }
         }
-    });
+    };
+}
+
+// Generates configuration object for the line chart
+function createLineChartConfig(revenues: any[]) {
+    return {
+        type: 'line',
+        data: {
+            labels: revenues.map((i: any) => i.fecha.slice(5)),
+            datasets:[
+                {
+                    label: 'Ventas',
+                    data: revenues.map((i: any) => i.ingreso),
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: 'Ganancia',
+                    data: revenues.map((i: any) => i.ganancia),
+                    borderColor: '#3498db',
+                    backgroundColor: 'transparent',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.3
+                }
+            ]
+        },
+        options: { 
+            responsive: true, 
+            maintainAspectRatio: false, 
+            plugins: { 
+                legend: { labels: { color: '#ccc' } } 
+            }, 
+            scales: { 
+                x: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } }, 
+                y: { ticks: { color: '#999' }, grid: { color: '#2a2a2e' } } 
+            } 
+        }
+    };
 }
