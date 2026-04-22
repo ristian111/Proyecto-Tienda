@@ -1,77 +1,133 @@
 import { api } from '../api/endpoints';
 
-function statusBadge(status: string): string {
-    const colors: Record<string, string> = {
+function getStatusBadge(status: string): string {
+    const statusColors: Record<string, string> = {
         pagada: '#22c55e',
         emitida: '#eab308',
         anulada: '#ef4444',
     };
-    const color = colors[status.toLowerCase()] || '#6b7280';
-    return `<span class="badge invoice-status" style="background: ${color}20; color: ${color}; border: 1px solid ${color}40;">${status}</span>`;
+    const badgeColor = statusColors[status.toLowerCase()] || '#6b7280';
+    return `<span class="badge invoice-status" style="background: ${badgeColor}20; color: ${badgeColor}; border: 1px solid ${badgeColor}40;">${status}</span>`;
 }
 
-let currentPage = 1;
-const itemsPerPage = 50;
-let allInvoices: any[] = [];
+let currentPageIndex = 1;
+const itemsPerPageLimit = 50;
+
+let storedInvoices: any[] = [];
+
+let startDateFilter = '';
+let endDateFilter = '';
 
 export async function renderInvoices(container: HTMLElement) {
-    container.innerHTML = '<h2 class="loading-state">Cargando facturas...</h2>';
+
+    container.innerHTML = `
+        <div class="page-header">
+            <h1>Historial Compra/Venta</h1>
+        </div>
+
+        <div class="filter-bar invoice-filters">
+            <div class="filter-group">
+                <label for="fecha-inicio">Desde:</label>
+                <input type="date" id="fecha-inicio" value="${startDateFilter}" class="filter-input">
+            </div>
+            <div class="filter-group">
+                <label for="fecha-fin">Hasta:</label>
+                <input type="date" id="fecha-fin" value="${endDateFilter}" class="filter-input">
+            </div>
+            <div class="filter-actions">
+                <button id="btn-filtrar" class="btn-primary">Filtrar</button>
+                <button id="btn-limpiar" class="btn-secondary">Limpiar</button>
+            </div>
+        </div>
+        
+        <!-- FIX: We created a dedicated container JUST for the table/data -->
+        <div id="data-container">
+            <h2 class="loading-state">Cargando facturas...</h2>
+        </div>
+    `;
+
+    document.getElementById('btn-filtrar')?.addEventListener('click', async () => {
+        // Chapuza bien insana, carajo.
+        let rawStart = (document.getElementById('fecha-inicio') as HTMLInputElement).value;
+        let rawEnd = (document.getElementById('fecha-fin') as HTMLInputElement).value;
+
+        if (!rawStart && rawEnd) {
+            rawStart = '0666-01-01';
+        }
+        else if (rawStart && !rawEnd) {
+            rawEnd = '7777-01-01';
+        }
+
+        startDateFilter = rawStart;
+        endDateFilter = rawEnd;
+
+
+        await renderInvoices(container);
+    });
+
+    document.getElementById('btn-limpiar')?.addEventListener('click', async () => {
+        startDateFilter = '';
+        endDateFilter = '';
+        await renderInvoices(container);
+    });
+
+    const dataContainer = document.getElementById('data-container')!;
 
     try {
-        allInvoices = await api.getInvoices();
+        storedInvoices = await api.getInvoices(startDateFilter, endDateFilter);
 
-        if (allInvoices.length === 0) {
-            container.innerHTML = `
-                <div class="page-header"><h1>Facturas</h1></div>
+        if (storedInvoices.length === 0) {
+            dataContainer.innerHTML = `
                 <p class="empty-state-text">No hay facturas registradas aún.</p>
             `;
             return;
         }
 
-        renderPage(container, 1);
+        renderPage(dataContainer, 1);
     } catch (error) {
-        container.innerHTML = '<h2 class="error-state">Error cargando facturas</h2><p class="error-hint">Verifica que el backend esté corriendo.</p>';
+        dataContainer.innerHTML = '<h2 class="error-state">Error cargando facturas</h2><p class="error-hint">Verifica que el backend esté corriendo.</p>';
     }
 }
 
-function renderPage(container: HTMLElement, page: number) {
-    currentPage = page;
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const itemsToShow = allInvoices.slice(startIndex, endIndex);
-    const totalPages = Math.ceil(allInvoices.length / itemsPerPage);
+function renderPage(dataContainer: HTMLElement, pageIndex: number) {
+    currentPageIndex = pageIndex;
+    const startIndex = (pageIndex - 1) * itemsPerPageLimit;
+    const endIndex = startIndex + itemsPerPageLimit;
 
-    const rowsHTML = itemsToShow.map((f, index) => {
-        const uniqueId = `factura-detalles-${startIndex + index}`;
-        const total = Number(f.total) || 0;
+    const itemsToDisplay = storedInvoices.slice(startIndex, endIndex);
+    const totalPageCount = Math.ceil(storedInvoices.length / itemsPerPageLimit);
+
+    const rowsHTML = itemsToDisplay.map((invoice, index) => {
+        const uniqueElementId = `factura-detalles-${startIndex + index}`;
+        const invoiceTotal = Number(invoice.total) || 0;
 
         let detailsHTML = '';
-        if (f.detalles && f.detalles.length > 0) {
-            detailsHTML = f.detalles.map((d: any) => `
+        if (invoice.detalles && invoice.detalles.length > 0) {
+            detailsHTML = invoice.detalles.map((detail: any) => `
                 <div class="invoice-detail-line">
-                    <span class="invoice-detail-name">${d.nombre}</span>
-                    <span class="invoice-detail-qty">${d.cantidad} ud.</span>
-                    <span class="invoice-detail-price">$${Number(d.precio_unitario).toFixed(2)}</span>
+                    <span class="invoice-detail-name">${detail.nombre}</span>
+                    <span class="invoice-detail-qty">${detail.cantidad} ud.</span>
+                    <span class="invoice-detail-price">$${Number(detail.precio_unitario).toFixed(2)}</span>
                 </div>
             `).join('');
         } else {
             detailsHTML = '<div class="invoice-detail-empty">No hay detalles registrados.</div>';
         }
 
-        const formattedDate = new Date(f.fecha_emision).toLocaleString('es-MX', {
+        const formattedDate = new Date(invoice.fecha_emision).toLocaleString('es-MX', {
             year: 'numeric', month: 'short', day: 'numeric',
             hour: '2-digit', minute: '2-digit'
         });
 
         return `
-            <tr class="hover-row" onclick="document.getElementById('${uniqueId}').classList.toggle('hidden')">
-                <td class="invoice-row-number">${f.numero_factura}</td>
-                <td><span class="invoice-items-badge">${f.cantidad_productos || 0} items</span></td>
-                <td class="invoice-row-total">$${total.toFixed(2)}</td>
+            <tr class="hover-row" onclick="document.getElementById('${uniqueElementId}').classList.toggle('hidden')">
+                <td class="invoice-row-number">${invoice.numero_factura}</td>
+                <td><span class="invoice-items-badge">${invoice.cantidad_productos || 0} items</span></td>
+                <td class="invoice-row-total">$${invoiceTotal.toFixed(2)}</td>
                 <td class="invoice-row-date">${formattedDate}</td>
-                <td>${statusBadge(f.estado)}</td>
+                <td>${getStatusBadge(invoice.estado)}</td>
             </tr>
-            <tr id="${uniqueId}" class="hidden invoice-detail-row">
+            <tr id="${uniqueElementId}" class="hidden invoice-detail-row">
                 <td colspan="5">
                     <div class="invoice-detail-wrapper">
                         <h4 class="invoice-detail-header">
@@ -85,10 +141,7 @@ function renderPage(container: HTMLElement, page: number) {
         `;
     }).join('');
 
-    container.innerHTML = `
-        <div class="page-header">
-            <h1>Historial Compra/Venta (todavia no hay para ver compras)</h1>
-        </div>
+    dataContainer.innerHTML = `
         <table class="invoice-table">
             <thead>
                 <tr>
@@ -105,17 +158,18 @@ function renderPage(container: HTMLElement, page: number) {
         </table>
         
         <div class="pagination-controls">
-            <button class="pagination-btn" id="btn-prev" ${currentPage === 1 ? 'disabled' : ''}>&larr; Anterior</button>
-            <span class="pagination-info">Página ${currentPage} de ${totalPages || 1} <span class="pagination-count">(${allInvoices.length} registros)</span></span>
-            <button class="pagination-btn" id="btn-next" ${currentPage >= totalPages ? 'disabled' : ''}>Siguiente &rarr;</button>
+            <button class="pagination-btn" id="btn-prev" ${currentPageIndex === 1 ? 'disabled' : ''}>&larr; Anterior</button>
+            <span class="pagination-info">Página ${currentPageIndex} de ${totalPageCount || 1} <span class="pagination-count">(${storedInvoices.length} registros)</span></span>
+            <button class="pagination-btn" id="btn-next" ${currentPageIndex >= totalPageCount ? 'disabled' : ''}>Siguiente &rarr;</button>
         </div>
     `;
 
+    // FIX: Pagination listeners safely attached to the inner container elements
     document.getElementById('btn-prev')?.addEventListener('click', () => {
-        if (currentPage > 1) renderPage(container, currentPage - 1);
+        if (currentPageIndex > 1) renderPage(dataContainer, currentPageIndex - 1);
     });
 
     document.getElementById('btn-next')?.addEventListener('click', () => {
-        if (currentPage < totalPages) renderPage(container, currentPage + 1);
+        if (currentPageIndex < totalPageCount) renderPage(dataContainer, currentPageIndex + 1);
     });
 }

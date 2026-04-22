@@ -3,6 +3,7 @@
    ========================= */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* If you need to add a new complex style, do it here and keep it separated with dividers (obviously). Otherwise, this code becomes unmaintainable. */
 
 /* ———— General ———— */
 
@@ -20,7 +21,9 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     color: #f3f4f6;
 }
 
@@ -232,7 +235,8 @@ input[type="text"],
 input[type="password"],
 input[type="number"],
 input[type="email"],
-input[type="search"] {
+input[type="search"],
+input[type="datetime-local"] {
     padding: 10px 14px;
     border-radius: 8px;
     border: 1px solid #2a2a2e;
@@ -754,6 +758,91 @@ dialog form {
     color: #f3f4f6;
 }
 
+.qty-value-input {
+    width: 46px;
+    text-align: center;
+    background: transparent !important;
+    border: none !important;
+    color: #f3f4f6 !important;
+    font-weight: 700;
+    font-size: 0.95rem;
+    outline: none;
+    padding: 0;
+    -moz-appearance: textfield;
+}
+
+.qty-value-input::-webkit-outer-spin-button,
+.qty-value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.qty-value-input:focus {
+    box-shadow: none !important;
+}
+
+/* ———— Custom Spin Buttons for Price Inputs ———— */
+
+/* Hide native spinners */
+.compra-input--num::-webkit-outer-spin-button,
+.compra-input--num::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.compra-input--num {
+    -moz-appearance: textfield;
+}
+
+/* Spin wrapper layout */
+.compra-spin-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 1px solid #1f1f23;
+    margin-left: -5px; /* Pull it towards the input to remove gap */
+    overflow: hidden;
+    border-radius: 0 8px 8px 0;
+    height: 100%;
+}
+
+/* Spin buttons */
+.compra-spin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    flex: 1;
+    min-height: 16px;
+    background: #0f0f0f;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.65rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: background 0.12s ease, color 0.12s ease;
+    user-select: none;
+}
+
+.compra-spin-btn:hover {
+    background: #1c1c20;
+    color: #f3f4f6;
+}
+
+.compra-spin-btn:active {
+    background: #2a2a2e;
+}
+
+.compra-spin-btn--up {
+    border-bottom: 1px solid #2a2a2e;
+}
+
+.compra-price-cell .pos-input-edit {
+    flex: 1;
+    min-width: 0;
+}
+
 /* ———— POS Footer ———— */
 
 .pos-footer {
@@ -825,6 +914,7 @@ dialog form {
         opacity: 0;
         transform: translateY(-6px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -883,13 +973,31 @@ kbd.kbd-sm {
     min-width: 900px;
 }
 
-.compra-table th.col-producto   { width: 25%; }
-.compra-table th.col-categoria  { width: 15%; }
-.compra-table th.col-costo      { width: 14%; }
-.compra-table th.col-pventa     { width: 14%; }
-.compra-table th.col-cantidad   { width: 10%; }
-.compra-table th.col-opcion     { width: 14%; }
-.compra-table th.col-accion     { width: 8%; }
+/* Update column widths since the "Opción" column was removed */
+
+.compra-table th.col-producto {
+    width: 30%;
+}
+
+.compra-table th.col-categoria {
+    width: 20%;
+}
+
+.compra-table th.col-costo {
+    width: 15%;
+}
+
+.compra-table th.col-pventa {
+    width: 15%;
+}
+
+.compra-table th.col-cantidad {
+    width: 12%;
+}
+
+.compra-table th.col-accion {
+    width: 8%;
+}
 
 /* ———— Purchase Row ———— */
 
@@ -924,8 +1032,15 @@ kbd.kbd-sm {
 
 .compra-price-cell {
     display: flex;
-    align-items: center;
+    align-items: stretch;
+    height: 38px; /* Standardize height */
     gap: 4px;
+}
+
+.compra-price-cell .compra-input--num {
+    border-radius: 8px 0 0 8px; /* Flatten right side to join with spinner */
+    border-right: none;
+    margin-right: -4px; /* Pull spinner inwards */
 }
 
 .compra-dollar {
@@ -1244,9 +1359,17 @@ kbd.kbd-sm {
     margin: 0;
 }
 
-.stat-green { color: #2ecc71; }
-.stat-blue { color: #3498db; }
-.stat-orange { color: #e67e22; }
+.stat-green {
+    color: #2ecc71;
+}
+
+.stat-blue {
+    color: #3498db;
+}
+
+.stat-orange {
+    color: #e67e22;
+}
 
 .section-title {
     margin-bottom: 15px;
@@ -1322,4 +1445,90 @@ kbd.kbd-sm {
     color: #888;
     margin-top: 10px;
     display: none;
+}
+/* =========================
+   INVOICE FILTERS
+   ========================= */
+
+.invoice-filters {
+    background: #16161a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #1f1f23;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filter-input {
+    background: #1c1c20;
+    border: 1px solid #2a2a2e;
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #e5e7eb;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.filter-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-primary {
+    background: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: #4f46e5;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #9ca3af;
+    border: 1px solid #2a2a2e;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #1c1c20;
+    color: #e5e7eb;
+    border-color: #3f3f46;
 }

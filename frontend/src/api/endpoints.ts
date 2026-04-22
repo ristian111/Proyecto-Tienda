@@ -137,27 +137,33 @@ export const api = {
         return handleRes(res);
     },
 
-    getInvoices: async (): Promise<Invoice[]> => {
-        const res = await fetch(`${API_URL}/v1/facturas/`, {
+    getInvoices: async (fechaInicio?: string, fechaFin?: string): Promise<Invoice[]> => {
+        let url = `${API_URL}/v1/facturas/`;
+        const params = new URLSearchParams();
+        if (fechaInicio) params.append('fecha_inicio', fechaInicio);
+        if (fechaFin) params.append('fecha_fin', fechaFin);
+        if (params.toString()) url += `?${params.toString()}`;
+
+        const res = await fetch(url, {
             headers: getAuthHeaders(),
         });
         return handleRes(res);
     },
 
-    registerQuickSale: async (items: { ref_producto: string; cantidad: number; precio_unitario: number }[]) => {
+    registerQuickSale: async (data: { fecha?: string; items: { ref_producto: string; cantidad: number; precio_unitario: number }[] }) => {
         const res = await fetch(`${API_URL}/v1/ventas/rapida`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            body: JSON.stringify({ items }),
+            body: JSON.stringify(data),
         });
         return handleRes(res);
     },
 
-    registerQuickPurchase: async (items: any[]) => {
+    registerQuickPurchase: async (data: { fecha?: string; items: any[] }) => {
         const res = await fetch(`${API_URL}/v1/compras/rapida`, {
             method: 'POST',
             headers: getAuthHeaders(),
-            body: JSON.stringify({ items }),
+            body: JSON.stringify(data),
         });
         return handleRes(res);
     },

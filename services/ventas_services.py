@@ -4,11 +4,23 @@ import uuid as uuidGenerado
 from datetime import datetime
 
 
-def registrar_venta_rapida(items, usuario_uuid):
+def registrar_venta_rapida(items, usuario_uuid, fecha_manual=None):
     """
     Transacción atómica: crea pedido + detalles + descuenta inventario.
     items = [{ ref_producto, cantidad, precio_unitario }, ...]
     """
+    # Determinar la fecha a usar
+    if fecha_manual:
+        try:
+            if 'T' in fecha_manual:
+                fecha_obj = datetime.fromisoformat(fecha_manual)
+            else:
+                fecha_obj = datetime.strptime(fecha_manual, '%Y-%m-%d %H:%M:%S')
+        except Exception:
+            fecha_obj = datetime.now()
+    else:
+        fecha_obj = datetime.now()
+
     conn = current_app.mysql.connection
     cursor = conn.cursor(DictCursor)
 
@@ -26,9 +38,9 @@ def registrar_venta_rapida(items, usuario_uuid):
         # 3. Crear pedido (sin cliente, venta directa de mostrador)
         pedido_uuid = str(uuidGenerado.uuid4())
         cursor.execute(
-            """INSERT INTO pedidos (uuid, estado, total, usuario_id, usuario_uuid)
-               VALUES (%s, 'completado', %s, %s, %s)""",
-            (pedido_uuid, total, usuario_id, usuario_uuid)
+            """INSERT INTO pedidos (uuid, estado, total, usuario_id, usuario_uuid, fecha_hora)
+               VALUES (%s, 'completado', %s, %s, %s, %s)""",
+            (pedido_uuid, total, usuario_id, usuario_uuid, fecha_obj)
         )
         pedido_id = cursor.lastrowid
 
@@ -77,11 +89,11 @@ def registrar_venta_rapida(items, usuario_uuid):
 
         # Crear Factura Automáticamente
         factura_uuid = str(uuidGenerado.uuid4())
-        numero_factura = f"FAC-{datetime.now().strftime('%Y%m%d')}-{factura_uuid[:8]}"
+        numero_factura = f"FAC-{fecha_obj.strftime('%Y%m%d')}-{factura_uuid[:8]}"
         cursor.execute(
-            """INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id, usuario_uuid, tipo)
-               VALUES (%s, %s, %s, %s, %s, %s, %s)""",
-            (factura_uuid, numero_factura, total, 'pagada', pedido_id, usuario_uuid, 'venta')
+            """INSERT INTO facturas (uuid, numero_factura, total, estado, pedido_id, usuario_uuid, tipo, fecha_emision)
+               VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+            (factura_uuid, numero_factura, total, 'pagada', pedido_id, usuario_uuid, 'venta', fecha_obj)
         )
 
         conn.commit()
@@ -90,7 +102,7 @@ def registrar_venta_rapida(items, usuario_uuid):
             "ref": pedido_uuid,
             "total": total,
             "items": len(items),
-            "fecha": datetime.now().isoformat()
+            "fecha": fecha_obj.isoformat()
         }
 
     except Exception:

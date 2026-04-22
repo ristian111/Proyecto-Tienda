@@ -27,10 +27,11 @@ def venta_rapida_registro():
         if not isinstance(item['precio_unitario'], (int, float)) or item['precio_unitario'] <= 0:
             return jsonify({"mensaje": f"Item {i+1}: precio_unitario debe ser mayor a 0"}), 400
 
+    fecha = data.get('fecha')
     uuid_usuario = request.usuario['uuid']
 
     try:
-        resultado = ventas_services.registrar_venta_rapida(items, uuid_usuario)
+        resultado = ventas_services.registrar_venta_rapida(items, uuid_usuario, fecha)
         return jsonify({
             "mensaje": "Venta registrada exitosamente",
             "venta": resultado

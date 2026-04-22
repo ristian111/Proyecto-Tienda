@@ -86,6 +86,9 @@ export async function renderNewSale(container: HTMLElement) {
         container.innerHTML = `
             <div class="page-header">
                 <h1><i class='bx bx-dollar-circle text-accent mr-6'></i>Registrar Venta</h1>
+                <div class="header-actions">
+                    <input type="datetime-local" id="venta-fecha" class="pos-input-edit" title="Fecha de la venta" />
+                </div>
             </div>
 
             <!-- SEARCH BAR -->
@@ -133,6 +136,12 @@ export async function renderNewSale(container: HTMLElement) {
             <!-- FEEDBACK -->
             <div id="venta-feedback" class="pos-feedback" style="display: none;"></div>
         `;
+
+        // ———— Date Initialization ————
+        const dateInput = document.getElementById('venta-fecha') as HTMLInputElement;
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        dateInput.value = now.toISOString().slice(0, 16);
 
         const searchInput = document.getElementById('buscador-productos') as HTMLInputElement;
         const dropdown = document.getElementById('dropdown-resultados')!;
@@ -264,13 +273,19 @@ export async function renderNewSale(container: HTMLElement) {
             btnCharge.innerHTML = `<i class='bx bx-loader-alt bx-spin fs-icon-lg'></i> Procesando...`;
 
             try {
-                const items = cart.map(item => ({
+                const fechaSeleccionada = (document.getElementById('venta-fecha') as HTMLInputElement).value;
+                const itemsPayload = cart.map(item => ({
                     ref_producto: item.ref,
                     cantidad: item.cantidad,
                     precio_unitario: item.precio,
                 }));
 
-                const result: any = await api.registerQuickSale(items);
+                const requestData = {
+                    fecha: fechaSeleccionada,
+                    items: itemsPayload
+                };
+
+                const result: any = await api.registerQuickSale(requestData);
 
                 cart = [];
                 updateTable();

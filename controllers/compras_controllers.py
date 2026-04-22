@@ -23,10 +23,11 @@ def compra_rapida_registro():
         if 'costo' not in item or float(item['costo']) < 0:
             return jsonify({"mensaje": f"Item {i+1}: costo inválido"}), 400
 
+    fecha = data.get('fecha')
     uuid_usuario = request.usuario['uuid']
 
     try:
-        resultado = compras_services.registrar_compra_rapida(items, uuid_usuario)
+        resultado = compras_services.registrar_compra_rapida(items, uuid_usuario, fecha)
         return jsonify({
             "mensaje": "Compra registrada exitosamente",
             "compra": resultado

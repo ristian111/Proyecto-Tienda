@@ -6,17 +6,16 @@ from decoradores import manejo_errores
 @manejo_errores
 def fac_listado():
     uuid_usuario = request.usuario['uuid']
-    datos = facturas_services.listar_facturas(uuid_usuario)
+    fecha_inicio = request.args.get('fecha_inicio')
+    fecha_fin = request.args.get('fecha_fin')
+    
+    datos = facturas_services.listar_facturas(uuid_usuario, fecha_inicio, fecha_fin)
     return jsonify(datos), 200
 
 @manejo_errores
 def fac_registro(pedido_uuid):
-    tipo_venta = request.args.get('tipo', default=None)
-
-    if tipo_venta is None:
-        tipo_venta = False
-    
-    tipo_venta = True
+    tipo_venta_str = request.args.get('tipo', default='false')
+    tipo_venta = tipo_venta_str.lower() == 'true'
 
     uuid_usuario = request.usuario['uuid']
     pedido_id = pedidos_services.obtener_pedido_por_uuid(pedido_uuid, uuid_usuario)
@@ -32,7 +31,6 @@ def fac_registro(pedido_uuid):
 @manejo_errores
 def fac_eliminacion(uuid):
     uuid_usuario = request.usuario['uuid']
-    # Valida la existencia de la factura a través del uuid 
     factura = facturas_services.obtener_factura_por_uuid(uuid, uuid_usuario)
 
     if factura:
@@ -44,7 +42,6 @@ def fac_eliminacion(uuid):
     return jsonify({"mensaje": "La factura no existe"}), 404
 
 @manejo_errores
-# Se valida de la misma manera que al registrar
 def fac_actualizacion(uuid):
     data = request.get_json()
 

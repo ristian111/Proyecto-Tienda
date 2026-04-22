@@ -6,9 +6,7 @@ from models import Factura
 from .utils_db import manejar_error_base_de_datos
 from utils import errores
 
-# Toma las filas de la base de datos utilizando inner join para ref_pedido donde luego se convierte en un diccionario 
-def listar_facturas(usuario_uuid):
-        
+def listar_facturas(usuario_uuid, fecha_inicio=None, fecha_fin=None):
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = """
             SELECT
@@ -27,9 +25,20 @@ def listar_facturas(usuario_uuid):
             INNER JOIN detalle_pedido dp on f.pedido_id = dp.pedido_id
             INNER JOIN productos p on dp.producto_id = p.id
             WHERE f.usuario_uuid = %s
-            ORDER BY f.fecha_emision DESC
         """
-        cursor.execute(sql, (usuario_uuid,))
+        params = [usuario_uuid]
+        
+        if fecha_inicio and fecha_inicio.strip():
+            sql += " AND f.fecha_emision >= %s"
+            params.append(f"{fecha_inicio.strip()} 00:00:00")
+            
+        if fecha_fin and fecha_fin.strip():
+            sql += " AND f.fecha_emision <= %s"
+            params.append(f"{fecha_fin.strip()} 23:59:59")
+        
+        sql += " ORDER BY f.fecha_emision DESC"
+        
+        cursor.execute(sql, params)
         rows = cursor.fetchall()
         
         facturas_dict = {}
@@ -57,16 +66,13 @@ def listar_facturas(usuario_uuid):
             
         return list(facturas_dict.values())
     
-# Genera un uuid al momento de registrar y retorna un diccionario 
 def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
-
     conn = current_app.mysql.connection
 
     try:
         with conn.cursor(DictCursor) as cursor:
             conn.begin()
 
-            #Calcular total de detalle_pedido
             sql_pedido = "SELECT SUM(subtotal) as total FROM detalle_pedido WHERE pedido_id = %s"
             cursor.execute(sql_pedido, (pedido_id,))
             datos = cursor.fetchone()
@@ -76,11 +82,9 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
 
             total = datos["total"]
 
-            #Actualizar total del pedido
             sql_actualizar_pedido = "UPDATE pedidos SET total = %s WHERE id = %s"
             cursor.execute(sql_actualizar_pedido, (total, pedido_id))
 
-            #Validar stock
             sql_validar_stock = """
                 SELECT 
                     i.producto_id, 
@@ -99,7 +103,6 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
             if cursor.fetchall():
                 raise errores.ErrorNegocio("Stock insuficiente")
 
-            #Insertar factura
             factura_uuid = str(uuidGenerado.uuid4())
             numero_factura = f"FAC-{datetime.now().strftime('%Y%m%d')}-{factura_uuid[:8]}"
             estado = "pagada" if venta_presencial else "emitida"
@@ -111,7 +114,6 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
             cursor.execute(sql_insertar_factura, (factura_uuid, numero_factura, total, estado, pedido_id, usuario_uuid))
             factura_id = cursor.lastrowid
 
-            #Actualizar inventario
             sql_actualizar_inventario = """
                 UPDATE inventarios i INNER JOIN productos p on i.producto_id = p.id 
                 INNER JOIN detalle_pedido dp on p.id = dp.producto_id
@@ -121,9 +123,8 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
             """
             cursor.execute(sql_actualizar_inventario, (pedido_id,))
 
-            #Actualizar estado del pedido
             sql_actualizar_estado_pedido = "UPDATE pedidos SET estado = %s WHERE id = %s"
-            cursor.execute(sql_actualizar_estado_pedido, ("entregado" if not venta_presencial else "pendiente", pedido_id))
+            cursor.execute(sql_actualizar_estado_pedido, ("entregado" if venta_presencial else "pendiente", pedido_id))
 
             conn.commit()
 
@@ -135,9 +136,7 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
         conn.rollback()
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido")
 
-# Utiliza uuid para acceder a la factura y retorna True o False si modifico la factura
 def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uuid, usuario_uuid):
-    
     try:
         factura = Factura(None, uuid, numero_factura, total, datetime.now().isoformat(), estado, pedido_uuid)
         
@@ -152,7 +151,6 @@ def actualizar_factura(uuid, numero_factura, total, estado, pedido_id, pedido_uu
         manejar_error_base_de_datos(e, "factura", "registrar", "No puede haber dos facturas para este pedido") 
 
 def eliminar_factura(uuid, usuario_uuid):
-
     try:
         with current_app.mysql.connection.cursor() as cursor:
             sql = "DELETE FROM facturas WHERE uuid = %s AND usuario_uuid = %s"
@@ -164,11 +162,8 @@ def eliminar_factura(uuid, usuario_uuid):
         current_app.mysql.connection.rollback()
         raise 
 
-# Devuelve en forma de diccionario la fila de la factura para su uso en la validación de las demas tablas
 def obtener_factura_por_uuid(uuid, usuario_uuid):
-
     with current_app.mysql.connection.cursor(DictCursor) as cursor:
         sql = "SELECT * FROM facturas WHERE uuid = %s AND usuario_uuid = %s"
         cursor.execute(sql,(uuid, usuario_uuid))
         return cursor.fetchone()
-        
