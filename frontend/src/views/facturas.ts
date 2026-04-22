@@ -164,7 +164,6 @@ function renderPage(dataContainer: HTMLElement, pageIndex: number) {
         </div>
     `;
 
-    // FIX: Pagination listeners safely attached to the inner container elements
     document.getElementById('btn-prev')?.addEventListener('click', () => {
         if (currentPageIndex > 1) renderPage(dataContainer, currentPageIndex - 1);
     });
