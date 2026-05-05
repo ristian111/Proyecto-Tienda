@@ -32,3 +32,15 @@ def eliminar(uuid):
 def listar_pedidos_pendientes():
     datos = pedidos_controllers.ped_listar_pedidos_pendientes()
     return datos
+
+@pedidos_bp.route('/<string:uuid>/detalles', methods=['GET'])
+@token_requerido
+def listar_detalles(uuid):
+    datos = pedidos_controllers.ped_listar_detalles(uuid)
+    return datos
+
+@pedidos_bp.route('/rapida', methods=['POST'])
+@token_requerido
+def registrar_rapida():
+    datos = pedidos_controllers.ped_rapida_registro()
+    return datos

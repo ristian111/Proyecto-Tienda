@@ -7,6 +7,7 @@ import { renderSidebar } from './components/navbar';
 import { renderInvoices } from './views/facturas';
 import { renderMisc } from './views/misc';
 import { renderStatistics } from './views/estadisticas';
+import { renderPedidos } from './views/pedidos';
 import { api } from './api/endpoints';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -49,7 +50,7 @@ export function router() {
     } else if (hash === '#/inventario') {
         renderInventory(content);
     } else if (hash === '#/pedidos') {
-        content.innerHTML = '<h1>Pedidos</h1><p class="placeholder-text">Nada por aqui...</p>';
+        renderPedidos(content);
     } else if (hash === '#/facturas') {
         renderInvoices(content);
     } else if (hash === '#/estadisticas') {

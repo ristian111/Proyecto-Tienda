@@ -129,7 +129,7 @@ def registrar_factura(pedido_id, venta_presencial, pedido_uuid, usuario_uuid):
             conn.commit()
 
             fecha_emision = datetime.now()
-            resultado = Factura(factura_id, factura_uuid, numero_factura, total, fecha_emision, estado, pedido_uuid).fac_diccionario()
+            resultado = Factura(factura_id, factura_uuid, numero_factura, total, fecha_emision, estado, pedido_uuid, 'venta').fac_diccionario()
             return resultado
     
     except Exception as e:

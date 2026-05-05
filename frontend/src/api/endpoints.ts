@@ -168,6 +168,37 @@ export const api = {
         return handleRes(res);
     },
 
+    registerQuickPedido: async (data: { fecha?: string; items: any[] }) => {
+        const res = await fetch(`${API_URL}/v1/pedidos/rapida`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify(data),
+        });
+        return handleRes(res);
+    },
+
+    getPendingPedidos: async (): Promise<any[]> => {
+        const res = await fetch(`${API_URL}/v1/pedidos/pendientes`, {
+            headers: getAuthHeaders(),
+        });
+        return handleRes(res);
+    },
+
+    getPedidoDetails: async (pedidoUuid: string): Promise<any[]> => {
+        const res = await fetch(`${API_URL}/v1/pedidos/${pedidoUuid}/detalles`, {
+            headers: getAuthHeaders(),
+        });
+        return handleRes(res);
+    },
+
+    completePedido: async (pedidoUuid: string, presencial: boolean = true) => {
+        const res = await fetch(`${API_URL}/v1/facturas/${pedidoUuid}?tipo=${presencial}`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+        });
+        return handleRes(res);
+    },
+
     getTodaySummary: async () => {
         const res = await fetch(`${API_URL}/v1/estadisticas/resumen-hoy`, { headers: getAuthHeaders() });
         return handleRes<any>(res);
